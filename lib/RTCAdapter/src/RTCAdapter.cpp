@@ -1,7 +1,5 @@
 #include <sstream>
-#include <iomanip>
 #include "RTCAdapter.h"
-#include "SerialLogger.h"
 
 RTCAdapter::RTCAdapter(int offset) {
     id = ID++;
