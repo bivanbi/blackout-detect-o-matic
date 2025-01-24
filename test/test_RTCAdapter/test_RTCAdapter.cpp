@@ -4,8 +4,6 @@
 #include "RTCAdapter.h"
 #include "UnixTimeWithMilliSeconds.h"
 
-RTCAdapter rtcAdapter;
-
 void setUp(void) {
     rtcAdapter = RTCAdapter();
 }
