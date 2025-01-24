@@ -14,7 +14,7 @@ public:
         FILE_DATE,
     };
 
-    RTCAdapter(int offset = 0);
+    explicit RTCAdapter(int offset = 0);
 
     bool isTimeSet();
 
