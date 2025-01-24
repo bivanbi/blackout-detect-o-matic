@@ -43,3 +43,5 @@ int RTCAdapter::ID = 0;
 bool RTCAdapter::isTimeSet() {
     return clockSource == ClockSource::NTP || clockSource == ClockSource::FILE_DATE;
 }
+
+RTCAdapter rtcAdapter = RTCAdapter();
