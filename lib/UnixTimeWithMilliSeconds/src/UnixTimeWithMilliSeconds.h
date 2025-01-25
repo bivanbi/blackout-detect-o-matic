@@ -37,5 +37,4 @@ private:
     unsigned int milliSeconds = 0;
 };
 
-
 #endif //BLACKOUT_DETECT_O_MATIC_UNIX_TIME_WITH_MILLISECONDS_H
