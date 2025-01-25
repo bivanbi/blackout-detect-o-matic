@@ -22,6 +22,8 @@ public:
 
     bool greaterThan(UnixTimeWithMilliSeconds other);
 
+    bool greaterOrEqual(UnixTimeWithMilliSeconds other);
+
     bool lessThan(UnixTimeWithMilliSeconds other);
 
 private:

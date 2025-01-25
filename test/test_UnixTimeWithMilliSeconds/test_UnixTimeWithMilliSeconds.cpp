@@ -24,9 +24,16 @@ void test_equals_withDifferent() {
     TEST_ASSERT_FALSE(time1.equals(time2));
 }
 
-void test_greaterThan() {
+void test_greaterThan_milliSecondDifference() {
     UnixTimeWithMilliSeconds time1 = UnixTimeWithMilliSeconds(123, 456);
     UnixTimeWithMilliSeconds time2 = UnixTimeWithMilliSeconds(123, 457);
+    TEST_ASSERT_TRUE(time2.greaterThan(time1));
+    TEST_ASSERT_FALSE(time1.greaterThan(time2));
+}
+
+void test_greaterThan_lessThanOneSecondDifference() {
+    auto time1 = UnixTimeWithMilliSeconds(123, 456);
+    auto time2 = UnixTimeWithMilliSeconds(124, 7);
     TEST_ASSERT_TRUE(time2.greaterThan(time1));
     TEST_ASSERT_FALSE(time1.greaterThan(time2));
 }
@@ -36,6 +43,27 @@ void test_greaterThan_withEquals() {
     UnixTimeWithMilliSeconds time2 = UnixTimeWithMilliSeconds(123, 456);
     TEST_ASSERT_FALSE(time1.greaterThan(time2));
     TEST_ASSERT_FALSE(time2.greaterThan(time1));
+}
+
+void test_greaterOrEqual_withGreater() {
+    UnixTimeWithMilliSeconds time1 = UnixTimeWithMilliSeconds(123, 456);
+    UnixTimeWithMilliSeconds time2 = UnixTimeWithMilliSeconds(123, 457);
+    TEST_ASSERT_TRUE(time2.greaterOrEqual(time1));
+    TEST_ASSERT_FALSE(time1.greaterOrEqual(time2));
+}
+
+void test_greaterOrEqual_withEquals() {
+    UnixTimeWithMilliSeconds time1 = UnixTimeWithMilliSeconds(123, 456);
+    UnixTimeWithMilliSeconds time2 = UnixTimeWithMilliSeconds(123, 456);
+    TEST_ASSERT_TRUE(time1.greaterOrEqual(time2));
+    TEST_ASSERT_TRUE(time2.greaterOrEqual(time1));
+}
+
+void test_greaterOrEqual_withLess() {
+    UnixTimeWithMilliSeconds time1 = UnixTimeWithMilliSeconds(123, 456);
+    UnixTimeWithMilliSeconds time2 = UnixTimeWithMilliSeconds(123, 455);
+    TEST_ASSERT_TRUE(time1.greaterOrEqual(time2));
+    TEST_ASSERT_FALSE(time2.greaterOrEqual(time1));
 }
 
 void test_lessThan() {
@@ -80,8 +108,15 @@ int runUnityTests(void) {
     RUN_TEST(test_constructor_default);
     RUN_TEST(test_equals);
     RUN_TEST(test_equals_withDifferent);
-    RUN_TEST(test_greaterThan);
+
+    RUN_TEST(test_greaterThan_milliSecondDifference);
+    RUN_TEST(test_greaterThan_lessThanOneSecondDifference);
     RUN_TEST(test_greaterThan_withEquals);
+
+    RUN_TEST(test_greaterOrEqual_withGreater);
+    RUN_TEST(test_greaterOrEqual_withEquals);
+    RUN_TEST(test_greaterOrEqual_withLess);
+
     RUN_TEST(test_lessThan);
     RUN_TEST(test_lessThan_withEquals);
 

@@ -42,4 +42,8 @@ bool UnixTimeWithMilliSeconds::lessThan(UnixTimeWithMilliSeconds other) {
     return unixTime < other.unixTime || (unixTime == other.unixTime && milliSeconds < other.milliSeconds);
 }
 
+bool UnixTimeWithMilliSeconds::greaterOrEqual(UnixTimeWithMilliSeconds other) {
+    return greaterThan(other) || equals(other);
+}
+
 #pragma clang diagnostic pop
