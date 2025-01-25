@@ -3,7 +3,7 @@
 
 #include "UnixTimeWithMilliSeconds.h"
 
-UnixTimeWithMilliSeconds::UnixTimeWithMilliSeconds(time_t unixTime, unsigned long milliSeconds) {
+UnixTimeWithMilliSeconds::UnixTimeWithMilliSeconds(time_t unixTime, unsigned int milliSeconds) {
     this->unixTime = unixTime;
     this->milliSeconds = milliSeconds;
 }
@@ -12,7 +12,7 @@ unsigned long UnixTimeWithMilliSeconds::getUnixTime() {
     return unixTime;
 }
 
-unsigned long UnixTimeWithMilliSeconds::getMilliSeconds() {
+unsigned int UnixTimeWithMilliSeconds::getMilliSeconds() {
     return milliSeconds;
 }
 

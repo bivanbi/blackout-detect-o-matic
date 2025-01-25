@@ -12,7 +12,7 @@ public:
 
     unsigned long getUnixTime();
 
-    unsigned long getMilliSeconds();
+    unsigned int getMilliSeconds();
 
     String getFormattedTime(const String &format = "%Y-%m-%d %H:%M:%S");
 
@@ -26,7 +26,7 @@ public:
 
 private:
     time_t unixTime;
-    unsigned long milliSeconds;
+    unsigned int milliSeconds;
 };
 
 
