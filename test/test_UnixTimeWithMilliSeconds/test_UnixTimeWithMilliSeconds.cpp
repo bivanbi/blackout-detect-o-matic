@@ -9,6 +9,12 @@ void tearDown(void) {
 }
 
 void test_constructor_default() {
+    UnixTimeWithMilliSeconds time = UnixTimeWithMilliSeconds();
+    TEST_ASSERT_EQUAL(0, time.getUnixTime());
+    TEST_ASSERT_EQUAL(0, time.getMilliSeconds());
+}
+
+void test_constructor_withTimeStamp() {
     UnixTimeWithMilliSeconds time = UnixTimeWithMilliSeconds(123, 456);
     TEST_ASSERT_EQUAL(123, time.getUnixTime());
     TEST_ASSERT_EQUAL(456, time.getMilliSeconds());
@@ -186,6 +192,7 @@ int runUnityTests(void) {
     UNITY_BEGIN();
 
     RUN_TEST(test_constructor_default);
+    RUN_TEST(test_constructor_withTimeStamp);
 
     RUN_TEST(test_equals);
     RUN_TEST(test_equals_withDifferent);

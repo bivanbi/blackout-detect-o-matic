@@ -10,6 +10,8 @@
 
 class UnixTimeWithMilliSeconds {
 public:
+    UnixTimeWithMilliSeconds() = default;
+
     UnixTimeWithMilliSeconds(time_t unixTime, unsigned int milliSeconds);
 
     unsigned long getUnixTime();
@@ -31,8 +33,8 @@ public:
     Duration getDuration(UnixTimeWithMilliSeconds other);
 
 private:
-    time_t unixTime;
-    unsigned int milliSeconds;
+    time_t unixTime = 0;
+    unsigned int milliSeconds = 0;
 };
 
 
