@@ -3,32 +3,30 @@
 
 #include "Blackout.h"
 
-Blackout::Blackout(UnixTimeWithMilliSeconds start) {
-    setStart(start);
+Blackout::Blackout(UnixTimeWithMilliSeconds startTime) {
+    setStart(startTime);
 }
 
-Blackout::Blackout(UnixTimeWithMilliSeconds start, UnixTimeWithMilliSeconds end) {
-    setStart(start);
-    setEnd(end);
+Blackout::Blackout(UnixTimeWithMilliSeconds startTime, UnixTimeWithMilliSeconds endTime) {
+    setStart(startTime);
+    setEnd(endTime);
 }
 
 Blackout::Blackout(JsonDocument doc) {
-    UnixTimeWithMilliSeconds start = UnixTimeWithMilliSeconds(doc[BLACKOUT_FIELD_START], doc[BLACKOUT_FIELD_START_MILLIS]);
-    UnixTimeWithMilliSeconds end = UnixTimeWithMilliSeconds(doc[BLACKOUT_FIELD_END], doc[BLACKOUT_FIELD_END_MILLIS]);
-    setStart(start);
-    setEnd(end);
+    setStart(UnixTimeWithMilliSeconds(doc[BLACKOUT_FIELD_START], doc[BLACKOUT_FIELD_START_MILLIS]));
+    setEnd(UnixTimeWithMilliSeconds(doc[BLACKOUT_FIELD_END], doc[BLACKOUT_FIELD_END_MILLIS]));
 }
 
-void Blackout::setStart(UnixTimeWithMilliSeconds start) {
-    this->start = start;
+void Blackout::setStart(UnixTimeWithMilliSeconds startTime) {
+    start = startTime;
 }
 
 UnixTimeWithMilliSeconds Blackout::getStart() {
     return start;
 }
 
-void Blackout::setEnd(UnixTimeWithMilliSeconds end) {
-    this->end = end;
+void Blackout::setEnd(UnixTimeWithMilliSeconds endTime) {
+    end = endTime;
 }
 
 UnixTimeWithMilliSeconds Blackout::getEnd() {

@@ -14,15 +14,15 @@ class Blackout {
 public:
     Blackout() = default;
 
-    explicit Blackout(UnixTimeWithMilliSeconds start);
+    explicit Blackout(UnixTimeWithMilliSeconds startTime);
 
-    Blackout(UnixTimeWithMilliSeconds start, UnixTimeWithMilliSeconds end);
+    Blackout(UnixTimeWithMilliSeconds startTime, UnixTimeWithMilliSeconds endTime);
 
     explicit Blackout(JsonDocument doc);
 
-    void setStart(UnixTimeWithMilliSeconds start);
+    void setStart(UnixTimeWithMilliSeconds startTime);
 
-    void setEnd(UnixTimeWithMilliSeconds end);
+    void setEnd(UnixTimeWithMilliSeconds endTime);
 
     UnixTimeWithMilliSeconds getStart();
 
