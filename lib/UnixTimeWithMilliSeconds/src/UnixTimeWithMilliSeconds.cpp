@@ -46,4 +46,37 @@ bool UnixTimeWithMilliSeconds::greaterOrEqual(UnixTimeWithMilliSeconds other) {
     return greaterThan(other) || equals(other);
 }
 
+/**
+ * Returns the duration between this and another UnixTimeWithMilliSeconds.
+ * The sign is positive if this is greater than other, negative if this is less than other.
+ *
+ * @param other
+ * @return Duration between this and other
+ */
+UnixTimeWithMilliSeconds::Duration UnixTimeWithMilliSeconds::getDuration(UnixTimeWithMilliSeconds other) {
+    Duration result;
+    UnixTimeWithMilliSeconds greater = *this;
+    UnixTimeWithMilliSeconds lesser = other;
+    int sign = 1;
+
+    if (lessThan(other)) {
+        greater = other;
+        lesser = *this;
+        sign = -1;
+    }
+
+    auto milliSecondDifference = (int) (greater.milliSeconds - lesser.milliSeconds);
+    result.sign = sign;
+
+    if (milliSecondDifference < 0) {
+        result.seconds = static_cast<unsigned long>(greater.unixTime - lesser.unixTime - 1);
+        result.milliSeconds = (unsigned int) 1000 + milliSecondDifference;
+    } else {
+        result.seconds = static_cast<unsigned long>(greater.unixTime - lesser.unixTime);
+        result.milliSeconds = (unsigned int) milliSecondDifference;
+    }
+
+    return result;
+}
+
 #pragma clang diagnostic pop

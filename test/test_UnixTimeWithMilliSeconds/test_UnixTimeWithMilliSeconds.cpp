@@ -102,10 +102,89 @@ void test_getFormattedTime() {
     TEST_ASSERT_EQUAL_STRING("2023-01-01 00:00:00", formattedTime.c_str());
 }
 
+void test_getDuration_withGreater_milliSecondDifference() {
+    UnixTimeWithMilliSeconds start = UnixTimeWithMilliSeconds(1672531200, 456);
+    UnixTimeWithMilliSeconds end = UnixTimeWithMilliSeconds(1672531200, 457);
+
+    auto duration = end.getDuration(start);
+
+    TEST_ASSERT_EQUAL(1, duration.sign);
+    TEST_ASSERT_EQUAL(0, duration.seconds);
+    TEST_ASSERT_EQUAL(1, duration.milliSeconds);
+}
+
+void test_getDuration_withGreater_withLessThanOneSecondDifference() {
+    UnixTimeWithMilliSeconds start = UnixTimeWithMilliSeconds(1672531200, 999);
+    UnixTimeWithMilliSeconds end = UnixTimeWithMilliSeconds(1672531201, 123);
+
+    auto duration = end.getDuration(start);
+
+    TEST_ASSERT_EQUAL(1, duration.sign);
+    TEST_ASSERT_EQUAL(0, duration.seconds);
+    TEST_ASSERT_EQUAL(124, duration.milliSeconds);
+}
+
+void test_getDuration_withGreater_withMoreThanOneSecondDifference() {
+    UnixTimeWithMilliSeconds start = UnixTimeWithMilliSeconds(1672531200, 456);
+    UnixTimeWithMilliSeconds end = UnixTimeWithMilliSeconds(1672531201, 458);
+
+    auto duration = end.getDuration(start);
+
+    TEST_ASSERT_EQUAL(1, duration.sign);
+    TEST_ASSERT_EQUAL(1, duration.seconds);
+    TEST_ASSERT_EQUAL(2, duration.milliSeconds);
+}
+
+void test_getDuration_withEqual() {
+    UnixTimeWithMilliSeconds start = UnixTimeWithMilliSeconds(1672531200, 456);
+    UnixTimeWithMilliSeconds end = UnixTimeWithMilliSeconds(1672531200, 456);
+
+    auto duration = end.getDuration(start);
+
+    TEST_ASSERT_EQUAL(1, duration.sign);
+    TEST_ASSERT_EQUAL(0, duration.seconds);
+    TEST_ASSERT_EQUAL(0, duration.milliSeconds);
+}
+
+void test_getDuration_withLess_milliSecondDifference() {
+    UnixTimeWithMilliSeconds start = UnixTimeWithMilliSeconds(1672531200, 457);
+    UnixTimeWithMilliSeconds end = UnixTimeWithMilliSeconds(1672531200, 456);
+
+    auto duration = end.getDuration(start);
+
+    TEST_ASSERT_EQUAL(-1, duration.sign);
+    TEST_ASSERT_EQUAL(0, duration.seconds);
+    TEST_ASSERT_EQUAL(1, duration.milliSeconds);
+}
+
+void test_getDuration_withLess_secondDifference() {
+    UnixTimeWithMilliSeconds start = UnixTimeWithMilliSeconds(1672531201, 200);
+    UnixTimeWithMilliSeconds end = UnixTimeWithMilliSeconds(1672531200, 100);
+
+    auto duration = end.getDuration(start);
+
+    TEST_ASSERT_EQUAL(-1, duration.sign);
+    TEST_ASSERT_EQUAL(1, duration.seconds);
+    TEST_ASSERT_EQUAL(100, duration.milliSeconds);
+}
+
+void test_getDuration_withLess_withLessThanOneSecondDifference() {
+    UnixTimeWithMilliSeconds start = UnixTimeWithMilliSeconds(1672531201, 100);
+    UnixTimeWithMilliSeconds end = UnixTimeWithMilliSeconds(1672531200, 999);
+
+    auto duration = end.getDuration(start);
+
+    TEST_ASSERT_EQUAL(-1, duration.sign);
+    TEST_ASSERT_EQUAL(0, duration.seconds);
+    TEST_ASSERT_EQUAL(101, duration.milliSeconds);
+}
+
+
 int runUnityTests(void) {
     UNITY_BEGIN();
 
     RUN_TEST(test_constructor_default);
+
     RUN_TEST(test_equals);
     RUN_TEST(test_equals_withDifferent);
 
@@ -124,6 +203,14 @@ int runUnityTests(void) {
     RUN_TEST(test_getMillis);
     RUN_TEST(test_getMillisAsZeroPaddedString);
     RUN_TEST(test_getFormattedTime);
+
+    RUN_TEST(test_getDuration_withGreater_milliSecondDifference);
+    RUN_TEST(test_getDuration_withGreater_withLessThanOneSecondDifference);
+    RUN_TEST(test_getDuration_withGreater_withMoreThanOneSecondDifference);
+    RUN_TEST(test_getDuration_withEqual);
+    RUN_TEST(test_getDuration_withLess_milliSecondDifference);
+    RUN_TEST(test_getDuration_withLess_secondDifference);
+    RUN_TEST(test_getDuration_withLess_withLessThanOneSecondDifference);
 
     return UNITY_END();
 }

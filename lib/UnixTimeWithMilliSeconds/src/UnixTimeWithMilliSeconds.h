@@ -8,7 +8,13 @@
 
 class UnixTimeWithMilliSeconds {
 public:
-    UnixTimeWithMilliSeconds(time_t unixTime, unsigned long milliSeconds);
+    struct Duration {
+        int sign = 1;
+        unsigned long seconds = 0;
+        unsigned int milliSeconds = 0;
+    };
+
+    UnixTimeWithMilliSeconds(time_t unixTime, unsigned int milliSeconds);
 
     unsigned long getUnixTime();
 
@@ -25,6 +31,8 @@ public:
     bool greaterOrEqual(UnixTimeWithMilliSeconds other);
 
     bool lessThan(UnixTimeWithMilliSeconds other);
+
+    Duration getDuration(UnixTimeWithMilliSeconds other);
 
 private:
     time_t unixTime;
