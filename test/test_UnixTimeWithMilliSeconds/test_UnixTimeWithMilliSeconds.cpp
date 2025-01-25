@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "EmptyDeclOrStmt"
 #include "test_UnixTimeWithMilliSeconds.h"
 
 void setUp(void) {
@@ -221,3 +223,5 @@ void setup() {
 }
 
 void loop() {}
+
+#pragma clang diagnostic pop
