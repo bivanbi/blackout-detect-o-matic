@@ -1,5 +1,6 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "readability-make-member-function-const"
+
 #include "UnixTimeWithMilliSeconds.h"
 
 UnixTimeWithMilliSeconds::UnixTimeWithMilliSeconds(time_t unixTime, unsigned long milliSeconds) {
@@ -22,9 +23,9 @@ String UnixTimeWithMilliSeconds::getMillisAsZeroPaddedString() {
     return result.c_str();
 }
 
-String UnixTimeWithMilliSeconds::getFormattedTime(const String& format) {
-    char buffer [40];
-    struct tm * timeInfo = gmtime(&unixTime);
+String UnixTimeWithMilliSeconds::getFormattedTime(const String &format) {
+    char buffer[40];
+    struct tm *timeInfo = gmtime(&unixTime);
     strftime(buffer, 80, format.c_str(), timeInfo);
     return {buffer};
 }
