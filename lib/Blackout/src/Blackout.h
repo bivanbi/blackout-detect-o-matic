@@ -28,7 +28,7 @@ public:
 
     UnixTimeWithMilliSeconds getEnd();
 
-    UnixTimeWithMilliSeconds::Duration getDuration();
+    Duration getDuration();
 
     JsonDocument toJsonDocument();
 

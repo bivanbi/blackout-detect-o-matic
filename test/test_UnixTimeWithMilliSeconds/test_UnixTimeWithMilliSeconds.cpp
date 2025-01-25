@@ -108,9 +108,9 @@ void test_getDuration_withGreater_milliSecondDifference() {
 
     auto duration = end.getDuration(start);
 
-    TEST_ASSERT_EQUAL(1, duration.sign);
-    TEST_ASSERT_EQUAL(0, duration.seconds);
-    TEST_ASSERT_EQUAL(1, duration.milliSeconds);
+    TEST_ASSERT_EQUAL(1, duration.getSign());
+    TEST_ASSERT_EQUAL(0, duration.getSeconds());
+    TEST_ASSERT_EQUAL(1, duration.getMilliSeconds());
 }
 
 void test_getDuration_withGreater_withLessThanOneSecondDifference() {
@@ -119,9 +119,9 @@ void test_getDuration_withGreater_withLessThanOneSecondDifference() {
 
     auto duration = end.getDuration(start);
 
-    TEST_ASSERT_EQUAL(1, duration.sign);
-    TEST_ASSERT_EQUAL(0, duration.seconds);
-    TEST_ASSERT_EQUAL(124, duration.milliSeconds);
+    TEST_ASSERT_EQUAL(1, duration.getSign());
+    TEST_ASSERT_EQUAL(0, duration.getSeconds());
+    TEST_ASSERT_EQUAL(124, duration.getMilliSeconds());
 }
 
 void test_getDuration_withGreater_withMoreThanOneSecondDifference() {
@@ -130,9 +130,9 @@ void test_getDuration_withGreater_withMoreThanOneSecondDifference() {
 
     auto duration = end.getDuration(start);
 
-    TEST_ASSERT_EQUAL(1, duration.sign);
-    TEST_ASSERT_EQUAL(1, duration.seconds);
-    TEST_ASSERT_EQUAL(2, duration.milliSeconds);
+    TEST_ASSERT_EQUAL(1, duration.getSign());
+    TEST_ASSERT_EQUAL(1, duration.getSeconds());
+    TEST_ASSERT_EQUAL(2, duration.getMilliSeconds());
 }
 
 void test_getDuration_withEqual() {
@@ -141,9 +141,9 @@ void test_getDuration_withEqual() {
 
     auto duration = end.getDuration(start);
 
-    TEST_ASSERT_EQUAL(1, duration.sign);
-    TEST_ASSERT_EQUAL(0, duration.seconds);
-    TEST_ASSERT_EQUAL(0, duration.milliSeconds);
+    TEST_ASSERT_EQUAL(1, duration.getSign());
+    TEST_ASSERT_EQUAL(0, duration.getSeconds());
+    TEST_ASSERT_EQUAL(0, duration.getMilliSeconds());
 }
 
 void test_getDuration_withLess_milliSecondDifference() {
@@ -152,9 +152,9 @@ void test_getDuration_withLess_milliSecondDifference() {
 
     auto duration = end.getDuration(start);
 
-    TEST_ASSERT_EQUAL(-1, duration.sign);
-    TEST_ASSERT_EQUAL(0, duration.seconds);
-    TEST_ASSERT_EQUAL(1, duration.milliSeconds);
+    TEST_ASSERT_EQUAL(-1, duration.getSign());
+    TEST_ASSERT_EQUAL(0, duration.getSeconds());
+    TEST_ASSERT_EQUAL(1, duration.getMilliSeconds());
 }
 
 void test_getDuration_withLess_secondDifference() {
@@ -163,9 +163,9 @@ void test_getDuration_withLess_secondDifference() {
 
     auto duration = end.getDuration(start);
 
-    TEST_ASSERT_EQUAL(-1, duration.sign);
-    TEST_ASSERT_EQUAL(1, duration.seconds);
-    TEST_ASSERT_EQUAL(100, duration.milliSeconds);
+    TEST_ASSERT_EQUAL(-1, duration.getSign());
+    TEST_ASSERT_EQUAL(1, duration.getSeconds());
+    TEST_ASSERT_EQUAL(100, duration.getMilliSeconds());
 }
 
 void test_getDuration_withLess_withLessThanOneSecondDifference() {
@@ -174,9 +174,9 @@ void test_getDuration_withLess_withLessThanOneSecondDifference() {
 
     auto duration = end.getDuration(start);
 
-    TEST_ASSERT_EQUAL(-1, duration.sign);
-    TEST_ASSERT_EQUAL(0, duration.seconds);
-    TEST_ASSERT_EQUAL(101, duration.milliSeconds);
+    TEST_ASSERT_EQUAL(-1, duration.getSign());
+    TEST_ASSERT_EQUAL(0, duration.getSeconds());
+    TEST_ASSERT_EQUAL(101, duration.getMilliSeconds());
 }
 
 

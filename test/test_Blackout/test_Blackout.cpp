@@ -131,43 +131,43 @@ void test_isValid_withStart_withEnd() {
 }
 
 void test_getDuration_withNoStart_withNoEnd() {
-    TEST_ASSERT_EQUAL(1, blackout.getDuration().sign);
-    TEST_ASSERT_EQUAL(0, blackout.getDuration().seconds);
-    TEST_ASSERT_EQUAL(0, blackout.getDuration().milliSeconds);
+    TEST_ASSERT_EQUAL(1, blackout.getDuration().getSign());
+    TEST_ASSERT_EQUAL(0, blackout.getDuration().getSeconds());
+    TEST_ASSERT_EQUAL(0, blackout.getDuration().getMilliSeconds());
 }
 
 void test_getDuration_withNoStart() {
     blackout.setEnd(UnixTimeWithMilliSeconds(200, 300));
 
-    TEST_ASSERT_EQUAL(1, blackout.getDuration().sign);
-    TEST_ASSERT_EQUAL(200, blackout.getDuration().seconds);
-    TEST_ASSERT_EQUAL(300, blackout.getDuration().milliSeconds);
+    TEST_ASSERT_EQUAL(1, blackout.getDuration().getSign());
+    TEST_ASSERT_EQUAL(200, blackout.getDuration().getSeconds());
+    TEST_ASSERT_EQUAL(300, blackout.getDuration().getMilliSeconds());
 }
 
 void test_getDuration_withNoEnd() {
     blackout.setStart(UnixTimeWithMilliSeconds(200, 300));
 
-    TEST_ASSERT_EQUAL(-1, blackout.getDuration().sign);
-    TEST_ASSERT_EQUAL(200, blackout.getDuration().seconds);
-    TEST_ASSERT_EQUAL(300, blackout.getDuration().milliSeconds);
+    TEST_ASSERT_EQUAL(-1, blackout.getDuration().getSign());
+    TEST_ASSERT_EQUAL(200, blackout.getDuration().getSeconds());
+    TEST_ASSERT_EQUAL(300, blackout.getDuration().getMilliSeconds());
 }
 
 void test_getDuration_withEndTimeBeforeStartTime() {
     blackout.setStart(UnixTimeWithMilliSeconds(300, 400));
     blackout.setEnd(UnixTimeWithMilliSeconds(100, 200));
 
-    TEST_ASSERT_EQUAL(-1, blackout.getDuration().sign);
-    TEST_ASSERT_EQUAL(200, blackout.getDuration().seconds);
-    TEST_ASSERT_EQUAL(200, blackout.getDuration().milliSeconds);
+    TEST_ASSERT_EQUAL(-1, blackout.getDuration().getSign());
+    TEST_ASSERT_EQUAL(200, blackout.getDuration().getSeconds());
+    TEST_ASSERT_EQUAL(200, blackout.getDuration().getMilliSeconds());
 }
 
 void test_getDuration_withStart_withEnd() {
     blackout.setStart(UnixTimeWithMilliSeconds(100, 200));
     blackout.setEnd(UnixTimeWithMilliSeconds(300, 400));
 
-    TEST_ASSERT_EQUAL(1, blackout.getDuration().sign);
-    TEST_ASSERT_EQUAL(200, blackout.getDuration().seconds);
-    TEST_ASSERT_EQUAL(200, blackout.getDuration().milliSeconds);
+    TEST_ASSERT_EQUAL(1, blackout.getDuration().getSign());
+    TEST_ASSERT_EQUAL(200, blackout.getDuration().getSeconds());
+    TEST_ASSERT_EQUAL(200, blackout.getDuration().getMilliSeconds());
 }
 
 void test_toJsonDocument() {

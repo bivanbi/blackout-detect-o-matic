@@ -53,30 +53,30 @@ bool UnixTimeWithMilliSeconds::greaterOrEqual(UnixTimeWithMilliSeconds other) {
  * @param other
  * @return Duration between this and other
  */
-UnixTimeWithMilliSeconds::Duration UnixTimeWithMilliSeconds::getDuration(UnixTimeWithMilliSeconds other) {
-    Duration result;
+Duration UnixTimeWithMilliSeconds::getDuration(UnixTimeWithMilliSeconds other) {
     UnixTimeWithMilliSeconds greater = *this;
     UnixTimeWithMilliSeconds lesser = other;
-    int sign = 1;
+    int resultSign = 1;
+    unsigned long resultSeconds = 0;
+    unsigned int resultMilliSeconds = 0;
 
     if (lessThan(other)) {
         greater = other;
         lesser = *this;
-        sign = -1;
+        resultSign = -1;
     }
 
     auto milliSecondDifference = (int) (greater.milliSeconds - lesser.milliSeconds);
-    result.sign = sign;
 
     if (milliSecondDifference < 0) {
-        result.seconds = static_cast<unsigned long>(greater.unixTime - lesser.unixTime - 1);
-        result.milliSeconds = (unsigned int) 1000 + milliSecondDifference;
+        resultSeconds = static_cast<unsigned long>(greater.unixTime - lesser.unixTime - 1);
+        resultMilliSeconds = (unsigned int) 1000 + milliSecondDifference;
     } else {
-        result.seconds = static_cast<unsigned long>(greater.unixTime - lesser.unixTime);
-        result.milliSeconds = (unsigned int) milliSecondDifference;
+        resultSeconds = static_cast<unsigned long>(greater.unixTime - lesser.unixTime);
+        resultMilliSeconds = (unsigned int) milliSecondDifference;
     }
 
-    return result;
+    return {resultSign, resultSeconds, resultMilliSeconds};
 }
 
 #pragma clang diagnostic pop

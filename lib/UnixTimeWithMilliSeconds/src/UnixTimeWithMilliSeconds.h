@@ -6,14 +6,10 @@
 #include <sstream>
 #include <iomanip>
 
+#include "Duration.h"
+
 class UnixTimeWithMilliSeconds {
 public:
-    struct Duration {
-        int sign = 1;
-        unsigned long seconds = 0;
-        unsigned int milliSeconds = 0;
-    };
-
     UnixTimeWithMilliSeconds(time_t unixTime, unsigned int milliSeconds);
 
     unsigned long getUnixTime();

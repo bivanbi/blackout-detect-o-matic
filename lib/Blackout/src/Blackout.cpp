@@ -33,7 +33,7 @@ UnixTimeWithMilliSeconds Blackout::getEnd() {
     return end;
 }
 
-UnixTimeWithMilliSeconds::Duration Blackout::getDuration() {
+Duration Blackout::getDuration() {
     return end.getDuration(start);
 }
 
