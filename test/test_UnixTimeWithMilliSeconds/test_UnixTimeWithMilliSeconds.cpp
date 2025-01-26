@@ -25,7 +25,7 @@ void test_constructor_withJsonDocument() {
     doc[UNIX_TIME_FIELD_SECONDS] = 123;
     doc[UNIX_TIME_FIELD_MILLI_SECONDS] = 456;
 
-    UnixTimeWithMilliSeconds time = UnixTimeWithMilliSeconds(doc);
+    UnixTimeWithMilliSeconds time = UnixTimeWithMilliSeconds(doc.as<JsonObject>());
     TEST_ASSERT_EQUAL(123, time.getUnixTime());
     TEST_ASSERT_EQUAL(456, time.getMilliSeconds());
 }

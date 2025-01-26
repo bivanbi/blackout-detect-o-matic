@@ -80,18 +80,6 @@ void test_constructor_withJsonDocument() {
     doc[SYSTEM_STATUS_FIELD_SHORTEST_BLACKOUT] = expectedShortestBlackout.toJsonDocument();
     doc[SYSTEM_STATUS_FIELD_LONGEST_BLACKOUT] = expectedLongestBlackout.toJsonDocument();
 
-//    JsonObject lastBlackoutJsonObject = doc[SYSTEM_STATUS_FIELD_LAST_BLACKOUT].to<JsonObject>();
-//    lastBlackoutJsonObject[BLACKOUT_FIELD_START] = expectedLastBlackout.getStart().getUnixTime();
-//    lastBlackoutJsonObject[BLACKOUT_FIELD_END] = expectedLastBlackout.getEnd().getUnixTime();
-//
-//    JsonObject shortestBlackoutJsonObject = doc[SYSTEM_STATUS_FIELD_SHORTEST_BLACKOUT].to<JsonObject>();
-//    shortestBlackoutJsonObject[BLACKOUT_FIELD_START] = expectedShortestBlackout.getStart().getUnixTime();
-//    shortestBlackoutJsonObject[BLACKOUT_FIELD_END] = expectedShortestBlackout.getEnd().getUnixTime();
-//
-//    JsonObject longestBlackoutJsonObject = doc[SYSTEM_STATUS_FIELD_LONGEST_BLACKOUT].to<JsonObject>();
-//    longestBlackoutJsonObject[BLACKOUT_FIELD_START] = expectedLongestBlackout.getStart().getUnixTime();
-//    longestBlackoutJsonObject[BLACKOUT_FIELD_END] = expectedLongestBlackout.getEnd().getMilliSeconds();
-
     systemStatus = SystemStatus(doc.as<JsonObject>());
 
     SystemStatus::Data actualStatus = systemStatus.getStatus();
