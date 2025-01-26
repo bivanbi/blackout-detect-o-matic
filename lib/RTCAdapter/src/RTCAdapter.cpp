@@ -15,7 +15,7 @@ void RTCAdapter::setTime(RTCAdapter::ClockSource source, unsigned long unixTime,
 }
 
 UnixTimeWithMilliSeconds RTCAdapter::getTime() {
-    return {getUnixTime(), getMillis()};
+    return {rtc.getEpoch(), rtc.getMillis()};
 }
 
 int RTCAdapter::getOffset() const {
@@ -24,14 +24,6 @@ int RTCAdapter::getOffset() const {
 
 RTCAdapter::ClockSource RTCAdapter::getClockSource() {
     return clockSource;
-}
-
-time_t RTCAdapter::getUnixTime() {
-    return (time_t) rtc.getEpoch();
-}
-
-unsigned long RTCAdapter::getMillis() {
-    return rtc.getMillis();
 }
 
 unsigned long RTCAdapter::getMicros() {

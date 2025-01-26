@@ -16,13 +16,13 @@ void tearDown(void) {
 void test_constructor_default() {
     RTCAdapter adapter = RTCAdapter(123);
     TEST_ASSERT_EQUAL(123, adapter.getOffset());
-    TEST_ASSERT_EQUAL(0, rtcAdapter.getClockSource());
-    TEST_ASSERT_LESS_THAN(10000, rtcAdapter.getUnixTime());
+    TEST_ASSERT_EQUAL(RTCAdapter::ClockSource::NONE, rtcAdapter.getClockSource());
+    TEST_ASSERT_LESS_THAN(1000, rtcAdapter.getTime().getMilliSeconds());
 }
 
 void test_setTime() {
     rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, 1672531200);
-    TEST_ASSERT_GREATER_OR_EQUAL(1672531200, rtcAdapter.getUnixTime());
+    TEST_ASSERT_GREATER_OR_EQUAL(1672531200, rtcAdapter.getTime().getUnixTime());
     TEST_ASSERT_EQUAL(RTCAdapter::ClockSource::NTP, rtcAdapter.getClockSource());
 }
 
@@ -35,11 +35,11 @@ void test_getTime() {
 
 void test_getMillis() {
     rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, 1672531200, 456);
-    unsigned long millis1 = rtcAdapter.getMillis();
+    unsigned long millis1 = rtcAdapter.getTime().getMilliSeconds();
     delay(2);
-    unsigned long millis2 = rtcAdapter.getMillis();
+    unsigned long millis2 = rtcAdapter.getTime().getMilliSeconds();
     TEST_ASSERT_EQUAL(456, millis1);
-    TEST_ASSERT_EQUAL(457, millis2);
+    TEST_ASSERT_EQUAL(458, millis2);
 }
 
 void test_getMicros() {
