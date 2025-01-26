@@ -15,6 +15,12 @@ void test_constructor_default() {
 }
 
 void test_constructor_withTimeStamp() {
+    UnixTimeWithMilliSeconds time = UnixTimeWithMilliSeconds(123);
+    TEST_ASSERT_EQUAL(123, time.getUnixTime());
+    TEST_ASSERT_EQUAL(0, time.getMilliSeconds());
+}
+
+void test_constructor_withMilliSecondTimeStamp() {
     UnixTimeWithMilliSeconds time = UnixTimeWithMilliSeconds(123, 456);
     TEST_ASSERT_EQUAL(123, time.getUnixTime());
     TEST_ASSERT_EQUAL(456, time.getMilliSeconds());
@@ -211,6 +217,7 @@ int runUnityTests(void) {
 
     RUN_TEST(test_constructor_default);
     RUN_TEST(test_constructor_withTimeStamp);
+    RUN_TEST(test_constructor_withMilliSecondTimeStamp);
     RUN_TEST(test_constructor_withJsonDocument);
 
     RUN_TEST(test_equals);

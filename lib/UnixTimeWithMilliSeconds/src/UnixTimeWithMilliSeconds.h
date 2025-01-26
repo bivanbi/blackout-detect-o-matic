@@ -16,7 +16,9 @@ class UnixTimeWithMilliSeconds {
 public:
     UnixTimeWithMilliSeconds() = default;
 
-    explicit UnixTimeWithMilliSeconds(time_t unixTime, unsigned int milliSeconds = 0);
+    explicit UnixTimeWithMilliSeconds(unsigned long unixTime);
+
+    UnixTimeWithMilliSeconds(unsigned long unixTime, unsigned int milliSeconds);
 
     explicit UnixTimeWithMilliSeconds(JsonDocument doc);
 
@@ -41,7 +43,7 @@ public:
     JsonDocument toJsonDocument();
 
 private:
-    time_t unixTime = 0;
+    unsigned long unixTime = 0;
     unsigned int milliSeconds = 0;
 };
 

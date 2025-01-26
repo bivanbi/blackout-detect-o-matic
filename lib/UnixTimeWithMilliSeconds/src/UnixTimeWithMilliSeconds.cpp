@@ -3,7 +3,11 @@
 
 #include "UnixTimeWithMilliSeconds.h"
 
-UnixTimeWithMilliSeconds::UnixTimeWithMilliSeconds(time_t unixTime, unsigned int milliSeconds) {
+UnixTimeWithMilliSeconds::UnixTimeWithMilliSeconds(unsigned long unixTime) {
+    this->unixTime = unixTime;
+}
+
+UnixTimeWithMilliSeconds::UnixTimeWithMilliSeconds(unsigned long unixTime, unsigned int milliSeconds) {
     this->unixTime = unixTime;
     this->milliSeconds = milliSeconds;
 }
@@ -30,7 +34,7 @@ String UnixTimeWithMilliSeconds::getMillisAsZeroPaddedString() {
 
 String UnixTimeWithMilliSeconds::getFormattedTime(const String &format) {
     char buffer[40];
-    struct tm *timeInfo = gmtime(&unixTime);
+    struct tm *timeInfo = gmtime(reinterpret_cast<const time_t *>(&unixTime));
     strftime(buffer, 80, format.c_str(), timeInfo);
     return {buffer};
 }
