@@ -2,17 +2,23 @@
 #define BLACKOUT_DETECT_O_MATIC_UNIX_TIME_WITH_MILLISECONDS_H
 
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include <ctime>
 #include <sstream>
 #include <iomanip>
 
 #include "Duration.h"
 
+#define UNIX_TIME_FIELD_SECONDS "unixTime"
+#define UNIX_TIME_FIELD_MILLI_SECONDS "milliSeconds"
+
 class UnixTimeWithMilliSeconds {
 public:
     UnixTimeWithMilliSeconds() = default;
 
     UnixTimeWithMilliSeconds(time_t unixTime, unsigned int milliSeconds);
+
+    explicit UnixTimeWithMilliSeconds(JsonDocument doc);
 
     unsigned long getUnixTime();
 
@@ -31,6 +37,8 @@ public:
     bool lessThan(UnixTimeWithMilliSeconds other);
 
     Duration getDuration(UnixTimeWithMilliSeconds other);
+
+    JsonDocument toJsonDocument();
 
 private:
     time_t unixTime = 0;

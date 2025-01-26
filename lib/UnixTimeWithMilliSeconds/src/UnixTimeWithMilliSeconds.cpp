@@ -8,6 +8,11 @@ UnixTimeWithMilliSeconds::UnixTimeWithMilliSeconds(time_t unixTime, unsigned int
     this->milliSeconds = milliSeconds;
 }
 
+UnixTimeWithMilliSeconds::UnixTimeWithMilliSeconds(JsonDocument doc) {
+    unixTime = doc[UNIX_TIME_FIELD_SECONDS];
+    milliSeconds = doc[UNIX_TIME_FIELD_MILLI_SECONDS];
+}
+
 unsigned long UnixTimeWithMilliSeconds::getUnixTime() {
     return unixTime;
 }
@@ -77,6 +82,13 @@ Duration UnixTimeWithMilliSeconds::getDuration(UnixTimeWithMilliSeconds other) {
     }
 
     return {resultSign, resultSeconds, resultMilliSeconds};
+}
+
+JsonDocument UnixTimeWithMilliSeconds::toJsonDocument() {
+    JsonDocument doc;
+    doc[UNIX_TIME_FIELD_SECONDS] = unixTime;
+    doc[UNIX_TIME_FIELD_MILLI_SECONDS] = milliSeconds;
+    return doc;
 }
 
 #pragma clang diagnostic pop

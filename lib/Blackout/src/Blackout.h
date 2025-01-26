@@ -6,9 +6,7 @@
 #include "UnixTimeWithMilliSeconds.h"
 
 #define BLACKOUT_FIELD_START "start"
-#define BLACKOUT_FIELD_START_MILLIS "startMillis"
 #define BLACKOUT_FIELD_END "end"
-#define BLACKOUT_FIELD_END_MILLIS "endMillis"
 
 class Blackout {
 public:

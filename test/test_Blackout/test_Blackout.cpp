@@ -1,10 +1,7 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EmptyDeclOrStmt"
 
-#include <unity.h>
-#include <Arduino.h>
-
-#include "Blackout.h"
+#include "test_Blackout.h"
 
 Blackout blackout;
 
@@ -43,10 +40,8 @@ void test_constructor_initStartAndEndTime() {
 
 void test_constructor_withJsonDocument() {
     JsonDocument doc;
-    doc[BLACKOUT_FIELD_START] = 100;
-    doc[BLACKOUT_FIELD_START_MILLIS] = 200;
-    doc[BLACKOUT_FIELD_END] = 300;
-    doc[BLACKOUT_FIELD_END_MILLIS] = 400;
+    doc[BLACKOUT_FIELD_START] = UnixTimeWithMilliSeconds(100, 200).toJsonDocument();
+    doc[BLACKOUT_FIELD_END] = UnixTimeWithMilliSeconds(300, 400).toJsonDocument();
 
     blackout = Blackout(doc);
 
@@ -175,10 +170,10 @@ void test_toJsonDocument() {
     blackout.setEnd(UnixTimeWithMilliSeconds(300, 400));
 
     JsonDocument doc = blackout.toJsonDocument();
-    TEST_ASSERT_EQUAL(100, doc[BLACKOUT_FIELD_START]);
-    TEST_ASSERT_EQUAL(200, doc[BLACKOUT_FIELD_START_MILLIS]);
-    TEST_ASSERT_EQUAL(300, doc[BLACKOUT_FIELD_END]);
-    TEST_ASSERT_EQUAL(400, doc[BLACKOUT_FIELD_END_MILLIS]);
+    TEST_ASSERT_EQUAL(100, doc[BLACKOUT_FIELD_START][UNIX_TIME_FIELD_SECONDS]);
+    TEST_ASSERT_EQUAL(200, doc[BLACKOUT_FIELD_START][UNIX_TIME_FIELD_MILLI_SECONDS]);
+    TEST_ASSERT_EQUAL(300, doc[BLACKOUT_FIELD_END][UNIX_TIME_FIELD_SECONDS]);
+    TEST_ASSERT_EQUAL(400, doc[BLACKOUT_FIELD_END][UNIX_TIME_FIELD_MILLI_SECONDS]);
 }
 
 int runUnityTests(void) {

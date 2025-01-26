@@ -20,6 +20,16 @@ void test_constructor_withTimeStamp() {
     TEST_ASSERT_EQUAL(456, time.getMilliSeconds());
 }
 
+void test_constructor_withJsonDocument() {
+    JsonDocument doc = JsonDocument();
+    doc[UNIX_TIME_FIELD_SECONDS] = 123;
+    doc[UNIX_TIME_FIELD_MILLI_SECONDS] = 456;
+
+    UnixTimeWithMilliSeconds time = UnixTimeWithMilliSeconds(doc);
+    TEST_ASSERT_EQUAL(123, time.getUnixTime());
+    TEST_ASSERT_EQUAL(456, time.getMilliSeconds());
+}
+
 void test_equals() {
     UnixTimeWithMilliSeconds time1 = UnixTimeWithMilliSeconds(123, 456);
     UnixTimeWithMilliSeconds time2 = UnixTimeWithMilliSeconds(123, 456);
@@ -187,12 +197,21 @@ void test_getDuration_withLess_withLessThanOneSecondDifference() {
     TEST_ASSERT_EQUAL(101, duration.getMilliSeconds());
 }
 
+void test_toJsonDocument() {
+    UnixTimeWithMilliSeconds time = UnixTimeWithMilliSeconds(1672531200, 456);
+    JsonDocument doc = time.toJsonDocument();
+
+    TEST_ASSERT_EQUAL(1672531200, time.getUnixTime());
+    TEST_ASSERT_EQUAL(1672531200, doc[UNIX_TIME_FIELD_SECONDS]);
+    TEST_ASSERT_EQUAL(456, doc[UNIX_TIME_FIELD_MILLI_SECONDS]);
+}
 
 int runUnityTests(void) {
     UNITY_BEGIN();
 
     RUN_TEST(test_constructor_default);
     RUN_TEST(test_constructor_withTimeStamp);
+    RUN_TEST(test_constructor_withJsonDocument);
 
     RUN_TEST(test_equals);
     RUN_TEST(test_equals_withDifferent);
@@ -220,6 +239,8 @@ int runUnityTests(void) {
     RUN_TEST(test_getDuration_withLess_milliSecondDifference);
     RUN_TEST(test_getDuration_withLess_secondDifference);
     RUN_TEST(test_getDuration_withLess_withLessThanOneSecondDifference);
+
+    RUN_TEST(test_toJsonDocument);
 
     return UNITY_END();
 }

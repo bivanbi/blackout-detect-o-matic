@@ -13,8 +13,8 @@ Blackout::Blackout(UnixTimeWithMilliSeconds startTime, UnixTimeWithMilliSeconds 
 }
 
 Blackout::Blackout(JsonDocument doc) {
-    setStart(UnixTimeWithMilliSeconds(doc[BLACKOUT_FIELD_START], doc[BLACKOUT_FIELD_START_MILLIS]));
-    setEnd(UnixTimeWithMilliSeconds(doc[BLACKOUT_FIELD_END], doc[BLACKOUT_FIELD_END_MILLIS]));
+    setStart(UnixTimeWithMilliSeconds(doc[BLACKOUT_FIELD_START].as<JsonObject>()));
+    setEnd(UnixTimeWithMilliSeconds(doc[BLACKOUT_FIELD_END].as<JsonObject>()));
 }
 
 void Blackout::setStart(UnixTimeWithMilliSeconds startTime) {
@@ -47,10 +47,8 @@ bool Blackout::isValid() {
 
 JsonDocument Blackout::toJsonDocument() {
     JsonDocument doc;
-    doc[BLACKOUT_FIELD_START] = start.getUnixTime();
-    doc[BLACKOUT_FIELD_START_MILLIS] = start.getMilliSeconds();
-    doc[BLACKOUT_FIELD_END] = end.getUnixTime();
-    doc[BLACKOUT_FIELD_END_MILLIS] = end.getMilliSeconds();
+    doc[BLACKOUT_FIELD_START] = start.toJsonDocument();
+    doc[BLACKOUT_FIELD_END] = end.toJsonDocument();
 
     return doc;
 }
