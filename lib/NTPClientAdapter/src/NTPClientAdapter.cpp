@@ -1,6 +1,4 @@
-#include <WiFiUdp.h>
 #include "NTPClientAdapter.h"
-#include "SharedSecrets.h"
 
 NTPClientAdapter::NTPClientAdapter(NTPClient ntpClient) : ntpClient(std::move(ntpClient)) {}
 

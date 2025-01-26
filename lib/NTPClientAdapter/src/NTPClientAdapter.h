@@ -1,9 +1,13 @@
+#ifndef BLACKOUT_DETECT_O_MATIC_NTP_CLIENT_ADAPTER_H
+#define BLACKOUT_DETECT_O_MATIC_NTP_CLIENT_ADAPTER_H
+
 #include <optional>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
-#ifndef BLACKOUT_DETECT_O_MATIC_NTP_CLIENT_ADAPTER_H
-#define BLACKOUT_DETECT_O_MATIC_NTP_CLIENT_ADAPTER_H
+#include "NTPClientAdapter.h"
+#include "SharedSecrets.h"
+#include "UnixTimeWithMilliSeconds.h"
 
 class NTPClientAdapter {
     public:
