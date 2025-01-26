@@ -53,4 +53,8 @@ JsonDocument Blackout::toJsonDocument() {
     return doc;
 }
 
+bool Blackout::equals(Blackout other) {
+    return start.equals(other.getStart()) && end.equals(other.getEnd());
+}
+
 #pragma clang diagnostic pop

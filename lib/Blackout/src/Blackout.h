@@ -34,6 +34,8 @@ public:
 
     bool isValid(); // true if start and end are set and they are consistent
 
+    bool equals(Blackout other);
+
 private:
     UnixTimeWithMilliSeconds start = {0, 0};
     UnixTimeWithMilliSeconds end = {0, 0};

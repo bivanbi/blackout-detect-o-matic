@@ -176,6 +176,27 @@ void test_toJsonDocument() {
     TEST_ASSERT_EQUAL(400, doc[BLACKOUT_FIELD_END][UNIX_TIME_FIELD_MILLI_SECONDS]);
 }
 
+void test_equals_withEquals() {
+    Blackout blackout1 = Blackout(UnixTimeWithMilliSeconds(100, 200), UnixTimeWithMilliSeconds(300, 400));
+    Blackout blackout2 = Blackout(UnixTimeWithMilliSeconds(100, 200), UnixTimeWithMilliSeconds(300, 400));
+
+    TEST_ASSERT_TRUE(blackout1.equals(blackout2));
+}
+
+void test_equals_withDifferentStart() {
+    Blackout blackout1 = Blackout(UnixTimeWithMilliSeconds(100, 200), UnixTimeWithMilliSeconds(300, 400));
+    Blackout blackout2 = Blackout(UnixTimeWithMilliSeconds(200, 200), UnixTimeWithMilliSeconds(300, 400));
+
+    TEST_ASSERT_FALSE(blackout1.equals(blackout2));
+}
+
+void test_equals_withDifferentEnd() {
+    Blackout blackout1 = Blackout(UnixTimeWithMilliSeconds(100, 200), UnixTimeWithMilliSeconds(300, 400));
+    Blackout blackout2 = Blackout(UnixTimeWithMilliSeconds(100, 200), UnixTimeWithMilliSeconds(400, 400));
+
+    TEST_ASSERT_FALSE(blackout1.equals(blackout2));
+}
+
 int runUnityTests(void) {
     UNITY_BEGIN();
 
@@ -204,6 +225,10 @@ int runUnityTests(void) {
     RUN_TEST(test_getDuration_withNoEnd);
     RUN_TEST(test_getDuration_withEndTimeBeforeStartTime);
     RUN_TEST(test_getDuration_withStart_withEnd);
+
+    RUN_TEST(test_equals_withEquals);
+    RUN_TEST(test_equals_withDifferentStart);
+    RUN_TEST(test_equals_withDifferentEnd);
 
     RUN_TEST(test_toJsonDocument);
 
