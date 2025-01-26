@@ -11,12 +11,12 @@ void NTPClientAdapter::update() {
     ntpClient.update();
 }
 
-String NTPClientAdapter::getFormattedTime() {
-    char buffer [40];
-    auto unixTime = (time_t) ntpClient.getEpochTime();
-    struct tm * timeInfo = localtime(&unixTime);
-    strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", timeInfo);
-    return {buffer};
+bool NTPClientAdapter::isTimeSet() const {
+    return ntpClient.isTimeSet();
+}
+
+UnixTimeWithMilliSeconds NTPClientAdapter::getUnixTime() {
+    return UnixTimeWithMilliSeconds(ntpClient.getEpochTime());
 }
 
 WiFiUDP ntpUdp;

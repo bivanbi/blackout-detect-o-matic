@@ -10,13 +10,19 @@
 #include "UnixTimeWithMilliSeconds.h"
 
 class NTPClientAdapter {
-    public:
-        explicit NTPClientAdapter(NTPClient ntpClient);
-        void begin();
-        void update();
-        String getFormattedTime();
-    private:
-        NTPClient ntpClient;
+public:
+    explicit NTPClientAdapter(NTPClient ntpClient);
+
+    void begin();
+
+    void update();
+
+    UnixTimeWithMilliSeconds getUnixTime();
+
+    bool isTimeSet() const;
+
+private:
+    NTPClient ntpClient;
 };
 
 extern NTPClientAdapter ntpClientAdapter;
