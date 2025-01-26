@@ -1,4 +1,3 @@
-#include <sstream>
 #include "RTCAdapter.h"
 
 RTCAdapter::RTCAdapter(int offset) {
