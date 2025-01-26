@@ -11,9 +11,9 @@ public:
 
     Duration(int sign, unsigned long seconds, unsigned int milliSeconds);
 
-    bool greaterThan(Duration duration);
+    bool greaterThan(Duration other);
 
-    bool lessThan(Duration duration);
+    bool lessThan(Duration other);
 
 private:
     int sign;
