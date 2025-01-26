@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "EmptyDeclOrStmt"
 #include <unity.h>
 #include <Arduino.h>
 
@@ -81,3 +83,4 @@ void setup() {
 }
 
 void loop() {}
+#pragma clang diagnostic pop
