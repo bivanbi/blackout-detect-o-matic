@@ -28,6 +28,12 @@ public:
 
     Duration getDuration();
 
+    /**
+     * Returns a JsonDocument representation of this object.
+     * Trying to create and return a JsonObject did not work, so lets stick with the JsonDocument.
+     *
+     * @return JsonDocument
+     */
     JsonDocument toJsonDocument();
 
     bool isActive();

@@ -40,6 +40,12 @@ public:
 
     Duration getDuration(UnixTimeWithMilliSeconds other);
 
+    /**
+     * Returns a JsonDocument representation of this object.
+     * Trying to create and return a JsonObject did not work, so lets stick with the JsonDocument.
+     *
+     * @return JsonDocument
+     */
     JsonDocument toJsonDocument();
 
 private:
