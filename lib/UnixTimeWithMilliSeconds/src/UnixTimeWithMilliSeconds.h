@@ -20,7 +20,7 @@ public:
 
     UnixTimeWithMilliSeconds(unsigned long unixTime, unsigned int milliSeconds);
 
-    explicit UnixTimeWithMilliSeconds(JsonDocument doc);
+    explicit UnixTimeWithMilliSeconds(JsonObject doc);
 
     unsigned long getUnixTime();
 

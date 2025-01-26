@@ -52,7 +52,7 @@ public:
 
     explicit SystemStatus(Data status);
 
-    explicit SystemStatus(JsonDocument doc);
+    explicit SystemStatus(JsonObject doc);
 
     Data getStatus();
 

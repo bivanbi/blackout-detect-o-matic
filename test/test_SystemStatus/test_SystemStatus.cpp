@@ -92,7 +92,7 @@ void test_constructor_withJsonDocument() {
 //    longestBlackoutJsonObject[BLACKOUT_FIELD_START] = expectedLongestBlackout.getStart().getUnixTime();
 //    longestBlackoutJsonObject[BLACKOUT_FIELD_END] = expectedLongestBlackout.getEnd().getMilliSeconds();
 
-    systemStatus = SystemStatus(doc);
+    systemStatus = SystemStatus(doc.as<JsonObject>());
 
     SystemStatus::Data actualStatus = systemStatus.getStatus();
 

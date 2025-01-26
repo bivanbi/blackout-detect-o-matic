@@ -7,7 +7,7 @@ SystemStatus::SystemStatus(SystemStatus::Data status) {
     data = status;
 }
 
-SystemStatus::SystemStatus(JsonDocument doc) {
+SystemStatus::SystemStatus(JsonObject doc) {
     data.wifiStatus = doc[SYSTEM_STATUS_FIELD_WIFI_STATUS];
     data.isPersistentStorageFailed = doc[SYSTEM_STATUS_FIELD_IS_PERSISTENT_STORAGE_FAILED];
     data.isTimeSet = doc[SYSTEM_STATUS_FIELD_IS_TIME_SET];

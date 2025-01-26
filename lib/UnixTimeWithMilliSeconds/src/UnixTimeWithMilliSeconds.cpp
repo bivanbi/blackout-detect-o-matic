@@ -12,7 +12,7 @@ UnixTimeWithMilliSeconds::UnixTimeWithMilliSeconds(unsigned long unixTime, unsig
     this->milliSeconds = milliSeconds;
 }
 
-UnixTimeWithMilliSeconds::UnixTimeWithMilliSeconds(JsonDocument doc) {
+UnixTimeWithMilliSeconds::UnixTimeWithMilliSeconds(JsonObject doc) {
     unixTime = doc[UNIX_TIME_FIELD_SECONDS];
     milliSeconds = doc[UNIX_TIME_FIELD_MILLI_SECONDS];
 }
