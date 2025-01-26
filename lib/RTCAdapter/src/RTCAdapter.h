@@ -16,7 +16,7 @@ public:
 
     bool isTimeSet();
 
-    void setTime(ClockSource source, unsigned long unixTime, int millis = 0);
+    void setTime(ClockSource source, UnixTimeWithMilliSeconds unixTime);
 
     UnixTimeWithMilliSeconds getTime();
 

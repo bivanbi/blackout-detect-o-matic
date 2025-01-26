@@ -21,20 +21,20 @@ void test_constructor_default() {
 }
 
 void test_setTime() {
-    rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, 1672531200);
+    rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, UnixTimeWithMilliSeconds(1672531200));
     TEST_ASSERT_GREATER_OR_EQUAL(1672531200, rtcAdapter.getTime().getUnixTime());
     TEST_ASSERT_EQUAL(RTCAdapter::ClockSource::NTP, rtcAdapter.getClockSource());
 }
 
 void test_getTime() {
-    rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, 1672531200, 456);
+    rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, UnixTimeWithMilliSeconds(1672531200, 456));
     UnixTimeWithMilliSeconds time = rtcAdapter.getTime();
     TEST_ASSERT_EQUAL(1672531200, time.getUnixTime());
     TEST_ASSERT_EQUAL(456, time.getMilliSeconds());
 }
 
 void test_getMillis() {
-    rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, 1672531200, 456);
+    rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, UnixTimeWithMilliSeconds(1672531200, 456));
     unsigned long millis1 = rtcAdapter.getTime().getMilliSeconds();
     delay(2);
     unsigned long millis2 = rtcAdapter.getTime().getMilliSeconds();
@@ -53,13 +53,13 @@ void test_getMicros() {
 
 void test_isTimeSet_withNTP() {
     TEST_ASSERT_FALSE(rtcAdapter.isTimeSet());
-    rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, 1672531200);
+    rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, UnixTimeWithMilliSeconds(1672531200));
     TEST_ASSERT_TRUE(rtcAdapter.isTimeSet());
 }
 
 void test_isTimeSet_withFileDate() {
     TEST_ASSERT_FALSE(rtcAdapter.isTimeSet());
-    rtcAdapter.setTime(RTCAdapter::ClockSource::FILE_DATE, 1672531200);
+    rtcAdapter.setTime(RTCAdapter::ClockSource::FILE_DATE, UnixTimeWithMilliSeconds(1672531200));
     TEST_ASSERT_TRUE(rtcAdapter.isTimeSet());
 }
 

@@ -7,9 +7,9 @@ RTCAdapter::RTCAdapter(int offset) {
     rtc = ESP32Time(offset);
 }
 
-void RTCAdapter::setTime(RTCAdapter::ClockSource source, unsigned long unixTime, int millis) {
-    int microSeconds = millis * 1000;
-    rtc.setTime(unixTime, microSeconds); // ms is a lie. it is us
+void RTCAdapter::setTime(RTCAdapter::ClockSource source, UnixTimeWithMilliSeconds time) {
+    int microSeconds = (int) time.getMilliSeconds() * 1000;
+    rtc.setTime(time.getUnixTime(), microSeconds); // ms is a lie. it is us
     clockSource = source;
 }
 
