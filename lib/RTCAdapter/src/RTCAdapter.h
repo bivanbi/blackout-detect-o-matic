@@ -4,8 +4,6 @@
 #include <ESP32Time.h>
 #include "UnixTimeWithMilliSeconds.h"
 
-#define RTC_OFFSET 3600
-
 class RTCAdapter {
 public:
     enum ClockSource {
