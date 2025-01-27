@@ -2,12 +2,11 @@
 #pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
 #include <WiFi.h>
 #include "WifiClient.h"
-#include "SharedSecrets.h"
 
 WifiClient::WifiClient() = default;
 
-void WifiClient::connect() {
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+void WifiClient::connect(const String& ssid, const String& secret) {
+    WiFi.begin(ssid, secret);
 }
 
 bool WifiClient::isConnected() {

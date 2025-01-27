@@ -4,7 +4,7 @@
 class WifiClient {
     public:
         WifiClient();
-        void connect();
+        void connect(const String& ssid, const String& secret);
         String getMacAddress();
         String getIpAddress();
         bool isConnected();
