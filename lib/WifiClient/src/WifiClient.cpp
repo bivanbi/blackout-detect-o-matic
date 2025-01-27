@@ -1,6 +1,6 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
-#include <WiFi.h>
+
 #include "WifiClient.h"
 
 WifiClient::WifiClient() = default;
