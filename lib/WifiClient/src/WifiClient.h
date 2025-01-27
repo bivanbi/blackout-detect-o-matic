@@ -11,6 +11,8 @@ class WifiClient {
         String getMacAddress();
         String getIpAddress();
         bool isConnected();
+        String statusToString(wl_status_t status);
+        wl_status_t getStatus();
 };
 
 extern WifiClient wifiClient;
