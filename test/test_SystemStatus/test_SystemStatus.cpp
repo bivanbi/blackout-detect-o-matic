@@ -230,7 +230,7 @@ void test_clearAlarm() {
     TEST_ASSERT_EQUAL(200, systemStatus.getLastAlarmClearedTimeStamp().getMilliSeconds());
 }
 
-void test_reset() {
+void test_reset_withNoActiveBlackout() {
     Blackout initialBlackout = Blackout();
 
     systemStatus.persistentStorageFailed(UnixTimeWithMilliSeconds(50, 50));
@@ -258,6 +258,30 @@ void test_reset() {
 
     TEST_ASSERT_FALSE(systemStatus.isPersistentStorageFailed());
     TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getLastBlackout()));
+    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getShortestBlackout()));
+    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getLongestBlackout()));
+}
+
+void test_reset_withActiveBlackout() {
+    Blackout initialBlackout = Blackout();
+
+    systemStatus.persistentStorageFailed(UnixTimeWithMilliSeconds(50, 50));
+    systemStatus.rebootDetected(UnixTimeWithMilliSeconds(100, 100));
+    systemStatus.setPowerStatus(UnixTimeWithMilliSeconds(200, 200), SystemStatus::POWER_OFFLINE);
+    systemStatus.setPowerStatus(UnixTimeWithMilliSeconds(300, 300), SystemStatus::POWER_ONLINE);
+    systemStatus.setPowerStatus(UnixTimeWithMilliSeconds(400, 400), SystemStatus::POWER_OFFLINE);
+    systemStatus.setPowerStatus(UnixTimeWithMilliSeconds(500, 500), SystemStatus::POWER_ONLINE);
+    systemStatus.setPowerStatus(UnixTimeWithMilliSeconds(550, 550), SystemStatus::POWER_OFFLINE);
+    systemStatus.setLastSnapshotTimeStamp(UnixTimeWithMilliSeconds(600, 600));
+
+    systemStatus.reset(UnixTimeWithMilliSeconds(800, 800));
+
+    TEST_ASSERT_TRUE(systemStatus.isAlarmActive());
+    TEST_ASSERT_TRUE(systemStatus.isBlackoutDetected());
+
+    TEST_ASSERT_EQUAL(1, systemStatus.getBlackoutCount());
+    TEST_ASSERT_EQUAL(800, systemStatus.getLastResetTimeStamp().getUnixTime());
+    TEST_ASSERT_EQUAL(550, systemStatus.getLastBlackout().getStart().getUnixTime());
     TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getShortestBlackout()));
     TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getLongestBlackout()));
 }
@@ -369,7 +393,8 @@ int runUnityTests(void) {
     RUN_TEST(test_setPowerStatus_withPowerGoingOnline_withoutActiveBlackout);
 
     RUN_TEST(test_clearAlarm);
-    RUN_TEST(test_reset);
+    RUN_TEST(test_reset_withNoActiveBlackout);
+    RUN_TEST(test_reset_withActiveBlackout);
     RUN_TEST(test_lastSnapshotTimestamp);
     RUN_TEST(test_wifiStatus);
     RUN_TEST(test_timeStatus);

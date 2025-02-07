@@ -158,14 +158,20 @@ UnixTimeWithMilliSeconds SystemStatus::getLastResetTimeStamp() {
 }
 
 void SystemStatus::reset(UnixTimeWithMilliSeconds timeStamp) {
-    data.isAlarmActive = false;
     data.isPersistentStorageFailed = false;
-    data.blackoutCount = 0;
     data.rebootCount = 0;
-    data.lastBlackout = Blackout();
     data.shortestBlackout = Blackout();
     data.longestBlackout = Blackout();
     data.lastResetTimeStamp = timeStamp;
+
+    if (getLastBlackout().isActive()) {
+        data.blackoutCount = 1;
+    } else {
+        data.lastBlackout = Blackout();
+        data.blackoutCount = 0;
+        data.isAlarmActive = false;
+    }
+
 }
 
 JsonDocument SystemStatus::toJsonDocument() {
