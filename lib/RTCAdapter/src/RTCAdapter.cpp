@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
 #include "RTCAdapter.h"
 
 RTCAdapter::RTCAdapter(int offset) {
@@ -56,3 +58,5 @@ String RTCAdapter::clockSourceToString(RTCAdapter::ClockSource source) {
 }
 
 RTCAdapter rtcAdapter = RTCAdapter();
+
+#pragma clang diagnostic pop
