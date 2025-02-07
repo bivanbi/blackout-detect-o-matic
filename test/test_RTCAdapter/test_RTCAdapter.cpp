@@ -1,10 +1,7 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EmptyDeclOrStmt"
-#include <unity.h>
-#include <Arduino.h>
 
-#include "RTCAdapter.h"
-#include "UnixTimeWithMilliSeconds.h"
+#include "test_RTCAdapter.h"
 
 void setUp(void) {
     rtcAdapter = RTCAdapter();
