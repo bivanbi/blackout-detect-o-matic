@@ -79,8 +79,13 @@ public:
     void setPowerStatus(UnixTimeWithMilliSeconds timeStamp, bool isPowerOnline);
 
     void clearAlarm(UnixTimeWithMilliSeconds timeStamp); // clear current alarm without resetting status
-    void
-    reset(UnixTimeWithMilliSeconds timeStamp); // clear blackout and reboot counters, shortest / longest blackout. Does not clear last timestamps
+
+    /**
+     * Clear blackout and reboot counters, shortest / longest blackout. Does not clear last timestamps
+     *
+     * @param timeStamp
+     */
+    void reset(UnixTimeWithMilliSeconds timeStamp);
 
     bool isAlarmActive();
 
