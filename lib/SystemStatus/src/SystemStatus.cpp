@@ -15,7 +15,7 @@ SystemStatus::SystemStatus(JsonObject doc) {
     data.lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds(
             doc[SYSTEM_STATUS_FIELD_LAST_PERSISTENT_STORAGE_FAILED_TIMESTAMP].as<JsonObject>());
     data.lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds(
-            doc[SYSTEM_STATUS_FIELD_LAST_STATUS_TIMESTAMP].as<JsonObject>());
+            doc[SYSTEM_STATUS_FIELD_LAST_STATUS_SNAPSHOT_TIMESTAMP].as<JsonObject>());
     data.lastRebootTimeStamp = UnixTimeWithMilliSeconds(
             doc[SYSTEM_STATUS_FIELD_LAST_REBOOT_TIMESTAMP].as<JsonObject>());
     data.lastResetTimeStamp = UnixTimeWithMilliSeconds(doc[SYSTEM_STATUS_FIELD_LAST_RESET_TIMESTAMP].as<JsonObject>());
@@ -181,7 +181,7 @@ JsonDocument SystemStatus::toJsonDocument() {
     doc[SYSTEM_STATUS_FIELD_IS_TIME_SET] = data.isTimeSet;
     doc[SYSTEM_STATUS_FIELD_IS_ALARM_ACTIVE] = data.isAlarmActive;
     doc[SYSTEM_STATUS_FIELD_LAST_PERSISTENT_STORAGE_FAILED_TIMESTAMP] = data.lastPersistentStorageFailedTimeStamp.toJsonDocument();
-    doc[SYSTEM_STATUS_FIELD_LAST_STATUS_TIMESTAMP] = data.lastStatusSnapshotTimeStamp.toJsonDocument();
+    doc[SYSTEM_STATUS_FIELD_LAST_STATUS_SNAPSHOT_TIMESTAMP] = data.lastStatusSnapshotTimeStamp.toJsonDocument();
     doc[SYSTEM_STATUS_FIELD_LAST_REBOOT_TIMESTAMP] = data.lastRebootTimeStamp.toJsonDocument();
     doc[SYSTEM_STATUS_FIELD_LAST_RESET_TIMESTAMP] = data.lastResetTimeStamp.toJsonDocument();
     doc[SYSTEM_STATUS_FIELD_LAST_ALARM_CLEARED_TIMESTAMP] = data.lastAlarmClearedTimeStamp.toJsonDocument();
