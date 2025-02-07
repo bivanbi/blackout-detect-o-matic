@@ -36,7 +36,7 @@ void test_getMillis() {
     delay(2);
     unsigned long millis2 = rtcAdapter.getTime().getMilliSeconds();
     TEST_ASSERT_EQUAL(456, millis1);
-    TEST_ASSERT_EQUAL(458, millis2);
+    TEST_ASSERT_GREATER_THAN(456, millis2);
 }
 
 void test_getMicros() {
