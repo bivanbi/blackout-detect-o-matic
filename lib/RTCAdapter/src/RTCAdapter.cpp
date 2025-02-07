@@ -35,4 +35,24 @@ bool RTCAdapter::isTimeSet() {
     return clockSource == ClockSource::NTP || clockSource == ClockSource::FILE_DATE;
 }
 
+String RTCAdapter::clockSourceToString(RTCAdapter::ClockSource source) {
+    String sourceString = "Unknown";
+
+    switch (source) {
+        case ClockSource::NONE:
+            sourceString = "None";
+            break;
+
+        case ClockSource::NTP:
+            sourceString = "NTP";
+            break;
+
+        case ClockSource::FILE_DATE:
+            sourceString = "File Date";
+            break;
+    }
+
+    return sourceString + " (" + String(source) + ")";
+}
+
 RTCAdapter rtcAdapter = RTCAdapter();

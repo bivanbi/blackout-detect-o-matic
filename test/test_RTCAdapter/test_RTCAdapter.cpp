@@ -60,6 +60,12 @@ void test_isTimeSet_withFileDate() {
     TEST_ASSERT_TRUE(rtcAdapter.isTimeSet());
 }
 
+void test_clockSourceToString() {
+    TEST_ASSERT_EQUAL_STRING("None (0)", rtcAdapter.clockSourceToString(RTCAdapter::ClockSource::NONE).c_str());
+    TEST_ASSERT_EQUAL_STRING("NTP (1)", rtcAdapter.clockSourceToString(RTCAdapter::ClockSource::NTP).c_str());
+    TEST_ASSERT_EQUAL_STRING("File Date (2)", rtcAdapter.clockSourceToString(RTCAdapter::ClockSource::FILE_DATE).c_str());
+}
+
 int runUnityTests(void) {
     UNITY_BEGIN();
 
@@ -70,6 +76,7 @@ int runUnityTests(void) {
     RUN_TEST(test_getMicros);
     RUN_TEST(test_isTimeSet_withNTP);
     RUN_TEST(test_isTimeSet_withFileDate);
+    RUN_TEST(test_clockSourceToString);
 
     return UNITY_END();
 }

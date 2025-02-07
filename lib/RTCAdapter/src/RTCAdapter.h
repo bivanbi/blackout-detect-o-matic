@@ -26,6 +26,8 @@ public:
 
     ClockSource getClockSource();
 
+    String clockSourceToString(ClockSource source);
+
     int getID() const {
         return id;
     }
