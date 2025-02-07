@@ -353,6 +353,56 @@ void test_toJsonDocument() {
             expectedLongestBlackout.equals(Blackout(doc[SYSTEM_STATUS_FIELD_LONGEST_BLACKOUT].as<JsonObject>())));
 }
 
+void test_toHumanReadableJsonDocument() {
+    Blackout expectedLastBlackout = Blackout(UnixTimeWithMilliSeconds(100, 100), UnixTimeWithMilliSeconds(200, 200));
+    Blackout expectedShortestBlackout = Blackout(UnixTimeWithMilliSeconds(300, 300),
+                                                 UnixTimeWithMilliSeconds(400, 400));
+    Blackout expectedLongestBlackout = Blackout(UnixTimeWithMilliSeconds(500, 500), UnixTimeWithMilliSeconds(600, 600));
+
+    SystemStatus::Data status;
+    status.wifiStatus = WL_CONNECTED;
+    status.isPersistentStorageFailed = true;
+    status.isTimeSet = true;
+    status.isAlarmActive = true;
+    status.lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds(50, 100);
+    status.lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds(500, 200);
+    status.lastRebootTimeStamp = UnixTimeWithMilliSeconds(600, 300);
+    status.lastResetTimeStamp = UnixTimeWithMilliSeconds(700, 400);
+    status.lastAlarmClearedTimeStamp = UnixTimeWithMilliSeconds(800, 500);
+    status.rebootCount = 5;
+    status.blackoutCount = 3;
+    status.lastBlackout = expectedLastBlackout;
+    status.shortestBlackout = expectedShortestBlackout;
+    status.longestBlackout = expectedLongestBlackout;
+
+    systemStatus = SystemStatus(status);
+
+    JsonDocument doc = systemStatus.toHumanReadableJsonDocument();
+
+    TEST_ASSERT_EQUAL(true, doc[SYSTEM_STATUS_FIELD_IS_TIME_SET]);
+    TEST_ASSERT_EQUAL(true, doc[SYSTEM_STATUS_FIELD_IS_ALARM_ACTIVE]);
+    TEST_ASSERT_EQUAL(true, doc[SYSTEM_STATUS_FIELD_IS_PERSISTENT_STORAGE_FAILED]);
+    TEST_ASSERT_EQUAL_STRING("1970-01-01 00:00:50.100", doc[SYSTEM_STATUS_FIELD_LAST_PERSISTENT_STORAGE_FAILED_TIMESTAMP]);
+    TEST_ASSERT_EQUAL_STRING("1970-01-01 00:08:20.200", doc[SYSTEM_STATUS_FIELD_LAST_STATUS_SNAPSHOT_TIMESTAMP]);
+    TEST_ASSERT_EQUAL_STRING("1970-01-01 00:10:00.300", doc[SYSTEM_STATUS_FIELD_LAST_REBOOT_TIMESTAMP]);
+    TEST_ASSERT_EQUAL_STRING("1970-01-01 00:11:40.400", doc[SYSTEM_STATUS_FIELD_LAST_RESET_TIMESTAMP]);
+    TEST_ASSERT_EQUAL_STRING("1970-01-01 00:13:20.500", doc[SYSTEM_STATUS_FIELD_LAST_ALARM_CLEARED_TIMESTAMP]);
+    TEST_ASSERT_EQUAL(5, doc[SYSTEM_STATUS_FIELD_REBOOT_COUNT]);
+    TEST_ASSERT_EQUAL(3, doc[SYSTEM_STATUS_FIELD_BLACKOUT_COUNT]);
+
+    TEST_ASSERT_EQUAL_STRING(expectedLastBlackout.getStart().getFormattedTime().c_str(), doc[SYSTEM_STATUS_FIELD_LAST_BLACKOUT][BLACKOUT_FIELD_START]);
+    TEST_ASSERT_EQUAL_STRING(expectedLastBlackout.getEnd().getFormattedTime().c_str(), doc[SYSTEM_STATUS_FIELD_LAST_BLACKOUT][BLACKOUT_FIELD_END]);
+    TEST_ASSERT_EQUAL_STRING(expectedLastBlackout.getDuration().getFormattedDuration().c_str(), doc[SYSTEM_STATUS_FIELD_LAST_BLACKOUT][BLACKOUT_FIELD_DURATION]);
+
+    TEST_ASSERT_EQUAL_STRING(expectedShortestBlackout.getStart().getFormattedTime().c_str(), doc[SYSTEM_STATUS_FIELD_SHORTEST_BLACKOUT][BLACKOUT_FIELD_START]);
+    TEST_ASSERT_EQUAL_STRING(expectedShortestBlackout.getEnd().getFormattedTime().c_str(), doc[SYSTEM_STATUS_FIELD_SHORTEST_BLACKOUT][BLACKOUT_FIELD_END]);
+    TEST_ASSERT_EQUAL_STRING(expectedShortestBlackout.getDuration().getFormattedDuration().c_str(), doc[SYSTEM_STATUS_FIELD_SHORTEST_BLACKOUT][BLACKOUT_FIELD_DURATION]);
+
+    TEST_ASSERT_EQUAL_STRING(expectedLongestBlackout.getStart().getFormattedTime().c_str(), doc[SYSTEM_STATUS_FIELD_LONGEST_BLACKOUT][BLACKOUT_FIELD_START]);
+    TEST_ASSERT_EQUAL_STRING(expectedLongestBlackout.getEnd().getFormattedTime().c_str(), doc[SYSTEM_STATUS_FIELD_LONGEST_BLACKOUT][BLACKOUT_FIELD_END]);
+    TEST_ASSERT_EQUAL_STRING(expectedLongestBlackout.getDuration().getFormattedDuration().c_str(), doc[SYSTEM_STATUS_FIELD_LONGEST_BLACKOUT][BLACKOUT_FIELD_DURATION]);
+}
+
 bool statusEquals(SystemStatus::Data status1, SystemStatus::Data status2) {
     return status1.wifiStatus == status2.wifiStatus
            && status1.isPersistentStorageFailed == status2.isPersistentStorageFailed
@@ -399,6 +449,7 @@ int runUnityTests(void) {
     RUN_TEST(test_wifiStatus);
     RUN_TEST(test_timeStatus);
     RUN_TEST(test_toJsonDocument);
+    RUN_TEST(test_toHumanReadableJsonDocument);
 
     return UNITY_END();
 }

@@ -176,6 +176,19 @@ void test_toJsonDocument() {
     TEST_ASSERT_EQUAL(400, doc[BLACKOUT_FIELD_END][UNIX_TIME_FIELD_MILLI_SECONDS]);
 }
 
+void test_toHumanReadableJsonDocument() {
+    UnixTimeWithMilliSeconds expectedBegin = UnixTimeWithMilliSeconds(100, 200);
+    UnixTimeWithMilliSeconds expectedEnd = UnixTimeWithMilliSeconds(300, 400);
+    Duration expectedDuration = expectedBegin.getDuration(expectedEnd);
+    blackout = Blackout(expectedBegin, expectedEnd);
+
+    JsonDocument doc = blackout.toHumanReadableJsonDocument();
+
+    TEST_ASSERT_EQUAL_STRING(expectedBegin.getFormattedTime().c_str(), doc[BLACKOUT_FIELD_START]);
+    TEST_ASSERT_EQUAL_STRING(expectedEnd.getFormattedTime().c_str(), doc[BLACKOUT_FIELD_END]);
+    TEST_ASSERT_EQUAL_STRING(expectedDuration.getFormattedDuration().c_str(), doc[BLACKOUT_FIELD_DURATION]);
+}
+
 void test_equals_withEquals() {
     Blackout blackout1 = Blackout(UnixTimeWithMilliSeconds(100, 200), UnixTimeWithMilliSeconds(300, 400));
     Blackout blackout2 = Blackout(UnixTimeWithMilliSeconds(100, 200), UnixTimeWithMilliSeconds(300, 400));
@@ -231,6 +244,7 @@ int runUnityTests(void) {
     RUN_TEST(test_equals_withDifferentEnd);
 
     RUN_TEST(test_toJsonDocument);
+    RUN_TEST(test_toHumanReadableJsonDocument);
 
     return UNITY_END();
 }

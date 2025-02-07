@@ -194,6 +194,27 @@ JsonDocument SystemStatus::toJsonDocument() {
     return doc;
 }
 
+JsonDocument SystemStatus::toHumanReadableJsonDocument() {
+    JsonDocument doc;
+
+    doc[SYSTEM_STATUS_FIELD_IS_TIME_SET] = data.isTimeSet;
+    doc[SYSTEM_STATUS_FIELD_IS_ALARM_ACTIVE] = data.isAlarmActive;
+    doc[SYSTEM_STATUS_FIELD_IS_PERSISTENT_STORAGE_FAILED] = data.isPersistentStorageFailed;
+    doc[SYSTEM_STATUS_FIELD_LAST_PERSISTENT_STORAGE_FAILED_TIMESTAMP] = data.lastPersistentStorageFailedTimeStamp.getFormattedTime() + "." + String(data.lastPersistentStorageFailedTimeStamp.getMilliSeconds());
+    doc[SYSTEM_STATUS_FIELD_LAST_STATUS_SNAPSHOT_TIMESTAMP] = data.lastStatusSnapshotTimeStamp.getFormattedTime() + "." + String(data.lastStatusSnapshotTimeStamp.getMilliSeconds());
+    doc[SYSTEM_STATUS_FIELD_LAST_REBOOT_TIMESTAMP] = data.lastRebootTimeStamp.getFormattedTime() + "." + String(data.lastRebootTimeStamp.getMilliSeconds());
+    doc[SYSTEM_STATUS_FIELD_LAST_RESET_TIMESTAMP] = data.lastResetTimeStamp.getFormattedTime() + "." + String(data.lastResetTimeStamp.getMilliSeconds());
+    doc[SYSTEM_STATUS_FIELD_LAST_ALARM_CLEARED_TIMESTAMP] = data.lastAlarmClearedTimeStamp.getFormattedTime() + "." + String(data.lastAlarmClearedTimeStamp.getMilliSeconds());
+    doc[SYSTEM_STATUS_FIELD_REBOOT_COUNT] = data.rebootCount;
+    doc[SYSTEM_STATUS_FIELD_BLACKOUT_COUNT] = data.blackoutCount;
+
+    doc[SYSTEM_STATUS_FIELD_LAST_BLACKOUT] = data.lastBlackout.toHumanReadableJsonDocument();
+    doc[SYSTEM_STATUS_FIELD_SHORTEST_BLACKOUT] = data.shortestBlackout.toHumanReadableJsonDocument();
+    doc[SYSTEM_STATUS_FIELD_LONGEST_BLACKOUT] = data.longestBlackout.toHumanReadableJsonDocument();
+
+    return doc;
+}
+
 void SystemStatus::persistentStorageFailed(UnixTimeWithMilliSeconds timeStamp) {
     data.isAlarmActive = true;
     data.isPersistentStorageFailed = true;

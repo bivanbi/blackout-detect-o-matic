@@ -7,6 +7,7 @@
 
 #define BLACKOUT_FIELD_START "start"
 #define BLACKOUT_FIELD_END "end"
+#define BLACKOUT_FIELD_DURATION "duration"
 
 class Blackout {
 public:
@@ -35,6 +36,8 @@ public:
      * @return JsonDocument
      */
     JsonDocument toJsonDocument();
+
+    JsonDocument toHumanReadableJsonDocument();
 
     bool isActive();
 

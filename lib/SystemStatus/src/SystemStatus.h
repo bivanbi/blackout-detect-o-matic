@@ -117,6 +117,8 @@ public:
      */
     JsonDocument toJsonDocument();
 
+    JsonDocument toHumanReadableJsonDocument();
+
 private:
     Data data;
 

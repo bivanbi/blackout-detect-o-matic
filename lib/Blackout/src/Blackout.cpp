@@ -53,6 +53,15 @@ JsonDocument Blackout::toJsonDocument() {
     return doc;
 }
 
+JsonDocument Blackout::toHumanReadableJsonDocument() {
+    JsonDocument doc;
+    doc[BLACKOUT_FIELD_START] = start.getFormattedTime();
+    doc[BLACKOUT_FIELD_END] = end.getFormattedTime();
+    doc[BLACKOUT_FIELD_DURATION] = getDuration().getFormattedDuration();
+
+    return doc;
+}
+
 bool Blackout::equals(Blackout other) {
     return start.equals(other.getStart()) && end.equals(other.getEnd());
 }

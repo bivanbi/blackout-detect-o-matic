@@ -63,6 +63,11 @@ void test_greaterThan_withLesser_withSecondDifference(void) {
     TEST_ASSERT_TRUE(duration1.lessThan(duration2));
 }
 
+void test_getFormattedDuration(void) {
+    Duration duration = Duration(1, 14948, 25);
+    TEST_ASSERT_EQUAL_STRING("04:09:08.025", duration.getFormattedDuration().c_str());
+}
+
 int runUnityTests(void) {
     UNITY_BEGIN();
 
@@ -78,6 +83,7 @@ int runUnityTests(void) {
     RUN_TEST(test_greaterThan_withLesser_withLessThanOneSecondDifference);
     RUN_TEST(test_greaterThan_withLesser_withSecondDifference);
 
+    RUN_TEST(test_getFormattedDuration);
     return UNITY_END();
 }
 

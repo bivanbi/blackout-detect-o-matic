@@ -1,6 +1,9 @@
 #ifndef BLACKOUT_DETECT_O_MATIC_DURATION_H
 #define BLACKOUT_DETECT_O_MATIC_DURATION_H
 
+#include <cstdio>
+#include <WString.h>
+
 class Duration {
 public:
     int getSign();
@@ -14,6 +17,8 @@ public:
     bool greaterThan(Duration other);
 
     bool lessThan(Duration other);
+
+    String getFormattedDuration();
 
 private:
     int sign;
