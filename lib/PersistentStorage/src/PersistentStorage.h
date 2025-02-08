@@ -20,25 +20,25 @@ public:
 
     bool isMounted();
 
-    bool exists(String path);
+    bool exists(const String& path);
 
-    bool createDirectory(String path);
+    bool createDirectory(const String& path);
 
-    bool removeDirectory(String path);
+    bool removeDirectory(const String& path);
 
-    bool recursiveRemovePath(String path, int maxDepth = 99);
+    bool recursiveRemovePath(const String& path, int maxDepth = 99);
 
     void unMount();
 
-    bool writeFile(String path, String content);
+    bool writeFile(const String& path, const String& content);
 
-    bool appendFile(String path, String content);
+    bool appendFile(const String& path, const String& content);
 
-    String readFile(String path);
+    String readFile(const String& path);
 
-    bool removeFile(String path);
+    bool removeFile(const String& path);
 
-    UnixTimeWithMilliSeconds getLastModificationDate(String path);
+    UnixTimeWithMilliSeconds getLastModificationDate(const String& path);
 
     /**
      * Get total space on the storage media.

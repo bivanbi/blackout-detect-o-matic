@@ -15,21 +15,21 @@ bool PersistentStorage::isMounted() {
     return SD_MMC.exists("/");
 }
 
-bool PersistentStorage::exists(String path) {
+bool PersistentStorage::exists(const String& path) {
     return SD_MMC.exists(path);
 }
 
-bool PersistentStorage::createDirectory(String path) {
+bool PersistentStorage::createDirectory(const String& path) {
     return SD_MMC.mkdir(path);
 }
 
-bool PersistentStorage::removeDirectory(String path) {
+bool PersistentStorage::removeDirectory(const String& path) {
     return SD_MMC.rmdir(path);
 }
 
-bool PersistentStorage::recursiveRemovePath(String path, int maxDepth) {
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "misc-no-recursion"
+bool PersistentStorage::recursiveRemovePath(const String& path, int maxDepth) {
     if (maxDepth <= 0) { // prevent endless loops
         return false;
     }
@@ -52,7 +52,7 @@ bool PersistentStorage::recursiveRemovePath(String path, int maxDepth) {
 }
 #pragma clang diagnostic pop
 
-String PersistentStorage::readFile(String path) {
+String PersistentStorage::readFile(const String& path) {
     File file = SD_MMC.open(path);
     if (!file) {
         return "";
@@ -67,7 +67,7 @@ String PersistentStorage::readFile(String path) {
     return content;
 }
 
-bool PersistentStorage::writeFile(String path, String content) {
+bool PersistentStorage::writeFile(const String& path, const String& content) {
     File file = SD_MMC.open(path, FILE_WRITE);
     if (!file) {
         return false;
@@ -78,7 +78,7 @@ bool PersistentStorage::writeFile(String path, String content) {
     return bytesWritten == content.length();
 }
 
-bool PersistentStorage::appendFile(String path, String content) {
+bool PersistentStorage::appendFile(const String& path, const String& content) {
     File file = SD_MMC.open(path, FILE_APPEND);
     if (!file) {
         return false;
@@ -89,14 +89,14 @@ bool PersistentStorage::appendFile(String path, String content) {
     return bytesWritten == content.length();
 }
 
-bool PersistentStorage::removeFile(String path) {
+bool PersistentStorage::removeFile(const String& path) {
     return SD_MMC.remove(path);
 }
 
-UnixTimeWithMilliSeconds PersistentStorage::getLastModificationDate(String path) {
+UnixTimeWithMilliSeconds PersistentStorage::getLastModificationDate(const String& path) {
     File file = SD_MMC.open(path);
     if (!file) {
-        return UnixTimeWithMilliSeconds();
+        return {};
     }
 
     time_t lastModificationTime = file.getLastWrite();
