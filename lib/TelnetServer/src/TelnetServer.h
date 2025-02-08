@@ -5,6 +5,7 @@
 #include <ESPTelnet.h>
 #include "CommandLineInterface.h"
 #include "SerialLogger.h"
+#include "SystemStatusLoader.h"
 
 class TelnetServer {
 public:

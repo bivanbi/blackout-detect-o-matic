@@ -5,6 +5,7 @@ void setup() {
     serialLogger.info("main::setup(): initial delay to allow serial monitor to connect");
     delay(3000);
     serialLogger.info("main::setup(): begin");
+    persistentStorage.mount();
     initConfiguration();
     initWiFi();
     initNTP();

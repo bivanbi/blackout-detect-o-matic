@@ -52,6 +52,7 @@ void TelnetServer::onInputReceived(String input) {
         telnet.println(TelnetServer::getHelp());
         telnet.print(prompt);
     } else if (input.equals("reboot")) {
+        SystemStatusLoader::save();
         reboot();
     } else {
         telnet.println(commandLineInterface.executeCommand(input));
