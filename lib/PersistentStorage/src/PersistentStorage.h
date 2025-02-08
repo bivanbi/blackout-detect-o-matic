@@ -59,4 +59,6 @@ public:
     uint64_t getFreeSpace();
 };
 
+extern PersistentStorage persistentStorage;
+
 #endif //BLACKOUT_DETECT_O_MATIC_PERSISTENT_STORAGE_H
