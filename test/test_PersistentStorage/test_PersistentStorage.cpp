@@ -57,11 +57,11 @@ void test_writeFile() {
     String expectedContent = "Testing File Write";
     storage.writeFile(path, expectedContent);
     TEST_ASSERT_TRUE(storage.exists(path));
-    TEST_ASSERT_TRUE(expectedContent.equals(storage.readFile(path)));
+    TEST_ASSERT_EQUAL_STRING(expectedContent.c_str(), storage.readFile(path).c_str());
 
     expectedContent = "Test File Is Overwritten, Not Appended to";
     storage.writeFile(path, expectedContent);
-    TEST_ASSERT_TRUE(expectedContent.equals(storage.readFile(path)));
+    TEST_ASSERT_EQUAL_STRING(expectedContent.c_str(), storage.readFile(path).c_str());
 }
 
 void test_appendFile() {
@@ -71,11 +71,11 @@ void test_appendFile() {
 
     storage.appendFile(path, expectedContent);
     TEST_ASSERT_TRUE(storage.exists(path));
-    TEST_ASSERT_TRUE(expectedContent.equals(storage.readFile(path)));
+    TEST_ASSERT_EQUAL_STRING(expectedContent.c_str(), storage.readFile(path).c_str());
 
     expectedContent += appendContent;
     storage.appendFile(path, appendContent);
-    TEST_ASSERT_TRUE(expectedContent.equals(storage.readFile(path)));
+    TEST_ASSERT_EQUAL_STRING(expectedContent.c_str(), storage.readFile(path).c_str());
 }
 
 void test_removeFile() {
