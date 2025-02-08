@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
 #include "PersistentStorage.h"
 
 bool PersistentStorage::mount() {
@@ -26,6 +28,8 @@ bool PersistentStorage::removeDirectory(String path) {
 }
 
 bool PersistentStorage::recursiveRemovePath(String path, int maxDepth) {
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "misc-no-recursion"
     if (maxDepth <= 0) { // prevent endless loops
         return false;
     }
@@ -46,6 +50,7 @@ bool PersistentStorage::recursiveRemovePath(String path, int maxDepth) {
         return SD_MMC.remove(path);
     }
 }
+#pragma clang diagnostic pop
 
 String PersistentStorage::readFile(String path) {
     File file = SD_MMC.open(path);
@@ -110,3 +115,6 @@ uint64_t PersistentStorage::getUsedSpace() {
 uint64_t PersistentStorage::getFreeSpace() {
     return SD_MMC.totalBytes() - SD_MMC.usedBytes();
 }
+
+PersistentStorage persistentStorage;
+#pragma clang diagnostic pop
