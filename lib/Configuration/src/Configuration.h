@@ -16,11 +16,11 @@
 #endif
 
 #ifndef HEARTBEAT_SERIAL_LOG_INTERVAL
-#define HEARTBEAT_SERIAL_LOG_INTERVAL 60000 // milliseconds, e.g. 60000 = 60 seconds
+#define HEARTBEAT_SERIAL_LOG_INTERVAL 60 // seconds, e.g. 60000 = 60 seconds
 #endif
 
 #ifndef HEARTBEAT_FILE_LOG_INTERVAL
-#define HEARTBEAT_FILE_LOG_INTERVAL 3600000 // milliseconds, e.g. 3600000 = 1 hour
+#define HEARTBEAT_FILE_LOG_INTERVAL 3600 // seconds, e.g. 3600000 = 1 hour
 #endif
 
 #ifndef LOG_DIRECTORY
@@ -116,11 +116,31 @@ private:
 
     String wifiSSID = WIFI_SSID;
     String wifiSecret = WIFI_SECRET;
+
+    /**
+     * Hostname or IP address of the NTP server
+     */
     String ntpServer = NTP_SERVER;
+
+    /**
+     * Offset from UTC in seconds
+     */
     int ntpOffset = NTP_OFFSET;
+
+    /**
+     * NTP update interval in seconds
+     */
     int ntpUpdateInterval = NTP_UPDATE_INTERVAL;
     unsigned int telnetServerPort = TELNET_SERVER_PORT;
+
+    /**
+     * Interval in seconds for logging the heartbeat to the serial console
+     */
     unsigned long heartbeatSerialLogInterval = HEARTBEAT_SERIAL_LOG_INTERVAL;
+
+    /**
+     * Interval in seconds for logging the heartbeat to a file
+     */
     unsigned long heartbeatFileLogInterval = HEARTBEAT_FILE_LOG_INTERVAL;
 };
 
