@@ -1,7 +1,7 @@
 #ifndef BLACKOUT_DETECT_O_MATIC_CONFIGURATION_H
 #define BLACKOUT_DETECT_O_MATIC_CONFIGURATION_H
 
-#include "ArduinoJson.h"
+#include <ArduinoJson.h>
 
 #ifndef CONFIGURATION_FILE_PATH
 #define CONFIGURATION_FILE_PATH "/config.json"
