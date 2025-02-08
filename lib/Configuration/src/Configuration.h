@@ -72,7 +72,7 @@
 #endif
 
 #ifndef ALARM_LED_PIN
-#define ALARM_LED_PIN 15
+#define ALARM_LED_PIN 4
 #endif
 
 #define CONFIGURATION_FIELD_LOG_DIRECTORY "logDirectory"
