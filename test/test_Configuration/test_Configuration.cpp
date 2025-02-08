@@ -62,11 +62,25 @@ void test_toJsonDocument() {
     TEST_ASSERT_EQUAL(HEARTBEAT_FILE_LOG_INTERVAL, doc[CONFIGURATION_FIELD_HEARTBEAT_FILE_LOG_INTERVAL]);
 }
 
+void test_setSystemStatusFilePath() {
+    configuration.setSystemStatusFilePath("/dummy-system-status-file-path");
+    TEST_ASSERT_EQUAL_STRING("/dummy-system-status-file-path", configuration.getSystemStatusFilePath().c_str());
+}
+
+void test_setSystemStatusSaveInterval() {
+    configuration.setSystemStatusSaveInterval(1234567);
+    TEST_ASSERT_EQUAL(1234567, configuration.getSystemStatusSaveInterval());
+}
+
 int runUnityTests() {
     UNITY_BEGIN();
+
     RUN_TEST(test_constructor_default);
     RUN_TEST(test_constructor_withJsonDocument);
     RUN_TEST(test_toJsonDocument);
+    RUN_TEST(test_setSystemStatusFilePath);
+    RUN_TEST(test_setSystemStatusSaveInterval);
+
     UNITY_END();
     return 0;
 }

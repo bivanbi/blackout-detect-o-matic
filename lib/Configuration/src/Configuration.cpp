@@ -74,4 +74,12 @@ unsigned long Configuration::getHeartbeatFileLogInterval() const {
     return heartbeatFileLogInterval;
 }
 
+unsigned long Configuration::getSystemStatusSaveInterval() const {
+    return systemStatusSaveInterval;
+}
+
+void Configuration::setSystemStatusSaveInterval(unsigned long interval) {
+    systemStatusSaveInterval = interval;
+}
+
 Configuration configuration = Configuration();

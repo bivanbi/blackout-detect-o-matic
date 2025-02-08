@@ -31,6 +31,10 @@
 #define SYSTEM_STATUS_FILE_PATH "/status.json"
 #endif
 
+#ifndef SYSTEM_STATUS_SAVE_INTERVAL
+#define SYSTEM_STATUS_SAVE_INTERVAL 3600 // seconds
+#endif
+
 #ifndef WIFI_SSID
 #define WIFI_SSID "DummyWifiSSID"
 #endif
@@ -110,6 +114,10 @@ public:
 
     unsigned long getHeartbeatFileLogInterval() const;
 
+    unsigned long getSystemStatusSaveInterval() const;
+
+    void setSystemStatusSaveInterval(unsigned long interval);
+
     JsonDocument toJsonDocument();
 
 private:
@@ -144,6 +152,11 @@ private:
      * Interval in seconds for logging the heartbeat to a file
      */
     unsigned long heartbeatFileLogInterval = HEARTBEAT_FILE_LOG_INTERVAL;
+
+    /**
+     * Interval in seconds for saving the system status to a file
+     */
+    unsigned long systemStatusSaveInterval = SYSTEM_STATUS_SAVE_INTERVAL;
 };
 
 extern Configuration configuration;
