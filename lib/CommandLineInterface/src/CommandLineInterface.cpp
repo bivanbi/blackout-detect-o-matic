@@ -22,6 +22,13 @@ String CommandLineInterface::executeCommand(String command) {
         serialLogger.info("CommandLineInterface: resetStatus");
         systemStatus.reset(rtcAdapter.getTime());
         return "Status reset";
+    } else if (command.equals("saveStatus")) {
+        serialLogger.info("CommandLineInterface: saveStatus");
+        if (SystemStatusLoader::save()) {
+            return "Status saved";
+        } else {
+            return "Failed to save status";
+        }
     } else if (command.equals("help")) {
         return getHelp();
     } else {
@@ -41,7 +48,8 @@ String CommandLineInterface::getHelp() {
            "uptime - get the uptime\n"
            "status - get the status of the system\n"
            "clearAlarm - clear the alarm\n"
-           "resetStatus - reset reboot / blackout counters and clear alarm\n";
+           "resetStatus - reset reboot / blackout counters and clear alarm\n"
+           "saveStatus - save status to persistent storage (SD card)\n";
 }
 
 CommandLineInterface commandLineInterface;

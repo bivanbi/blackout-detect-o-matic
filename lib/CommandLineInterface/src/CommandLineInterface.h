@@ -6,6 +6,7 @@
 #include "SystemStatus.h"
 #include "RTCAdapter.h"
 #include "SerialLogger.h"
+#include "SystemStatusLoader.h"
 
 class CommandLineInterface {
 public:

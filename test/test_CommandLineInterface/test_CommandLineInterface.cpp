@@ -1,5 +1,6 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EmptyDeclOrStmt"
+
 #include "test_CommandLineInterface.h"
 
 void setUp(void) {
@@ -61,9 +62,29 @@ void test_help() {
                       "uptime - get the uptime\n"
                       "status - get the status of the system\n"
                       "clearAlarm - clear the alarm\n"
-                      "resetStatus - reset reboot / blackout counters and clear alarm\n";
+                      "resetStatus - reset reboot / blackout counters and clear alarm\n"
+                      "saveStatus - save status to persistent storage (SD card)\n";
 
     TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("help").c_str());
+}
+
+void test_saveSystemStatus() {
+    String testFilePath = "/testCommandLineInterfaceSystemStatus.json";
+    configuration.setSystemStatusFilePath(testFilePath);
+
+    if (!persistentStorage.isMounted()) {
+        persistentStorage.mount();
+    }
+
+    if (persistentStorage.exists(testFilePath)) {
+        persistentStorage.removeFile(testFilePath);
+    }
+
+    String response = commandLineInterface.executeCommand("saveStatus");
+
+    TEST_ASSERT_EQUAL_STRING("Status saved", response.c_str());
+    TEST_ASSERT_TRUE(persistentStorage.exists(testFilePath));
+    TEST_ASSERT_EQUAL_STRING(persistentStorage.readFile(testFilePath).c_str(), systemStatus.toJsonDocument().as<String>().c_str());
 }
 
 int runUnitTests() {
@@ -77,6 +98,7 @@ int runUnitTests() {
     RUN_TEST(test_executeCommand_resetStatus);
     RUN_TEST(test_uptime);
     RUN_TEST(test_help);
+    RUN_TEST(test_saveSystemStatus);
 
     return UNITY_END();
 }

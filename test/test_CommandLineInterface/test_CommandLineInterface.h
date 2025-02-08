@@ -6,5 +6,7 @@
 
 #include "CommandLineInterface.h"
 #include "SystemStatus.h"
+#include "PersistentStorage.h"
+#include "Configuration.h"
 
 #endif //BLACKOUT_DETECT_O_MATIC_TEST_COMMAND_LINE_INTERFACE_H
