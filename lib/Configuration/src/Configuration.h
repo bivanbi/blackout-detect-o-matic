@@ -55,6 +55,22 @@
 #define TELNET_SERVER_PORT 23
 #endif
 
+#ifndef POWER_DETECTOR_PIN
+#define POWER_DETECTOR_PIN 34
+#endif
+
+#ifndef CLEAR_ALARM_PIN
+#define CLEAR_ALARM_PIN 33
+#endif
+
+#ifndef RESET_SYSTEM_STATUS_PIN
+#define RESET_SYSTEM_STATUS_PIN 32
+#endif
+
+#ifndef ALARM_LED_PIN
+#define ALARM_LED_PIN 15
+#endif
+
 #define CONFIGURATION_FIELD_LOG_DIRECTORY "logDirectory"
 #define CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH "systemStatusFilePath"
 #define CONFIGURATION_FIELD_WIFI_SSID "wifiSSID"
