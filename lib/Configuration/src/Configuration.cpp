@@ -21,6 +21,10 @@ String Configuration::getSystemStatusFilePath() {
     return systemStatusFilePath;
 }
 
+void Configuration::setSystemStatusFilePath(String path) {
+    systemStatusFilePath = std::move(path);
+}
+
 String Configuration::getWifiSSID() const {
     return wifiSSID;
 }

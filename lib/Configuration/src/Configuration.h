@@ -92,6 +92,8 @@ public:
 
     String getSystemStatusFilePath();
 
+    void setSystemStatusFilePath(String path);
+
     String getWifiSSID() const;
 
     String getWifiSecret() const;
