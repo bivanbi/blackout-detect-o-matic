@@ -9,6 +9,8 @@ Configuration::Configuration(JsonObject doc) {
     ntpOffset = doc[CONFIGURATION_FIELD_NTP_OFFSET];
     ntpUpdateInterval = doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL];
     telnetServerPort = doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT];
+    heartbeatSerialLogInterval = doc[CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL];
+    heartbeatFileLogInterval = doc[CONFIGURATION_FIELD_HEARTBEAT_FILE_LOG_INTERVAL];
 }
 
 String Configuration::getLogDirectory() {
@@ -54,8 +56,18 @@ JsonDocument Configuration::toJsonDocument() {
     doc[CONFIGURATION_FIELD_NTP_OFFSET] = ntpOffset;
     doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL] = ntpUpdateInterval;
     doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT] = telnetServerPort;
+    doc[CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL] = heartbeatSerialLogInterval;
+    doc[CONFIGURATION_FIELD_HEARTBEAT_FILE_LOG_INTERVAL] = heartbeatFileLogInterval;
 
     return doc;
+}
+
+unsigned long Configuration::getHeartbeatSerialLogInterval() const {
+    return heartbeatSerialLogInterval;
+}
+
+unsigned long Configuration::getHeartbeatFileLogInterval() const {
+    return heartbeatFileLogInterval;
 }
 
 Configuration configuration = Configuration();

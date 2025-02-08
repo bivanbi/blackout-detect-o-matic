@@ -11,6 +11,18 @@
 #define OVERWRITE_CONFIGURATION false
 #endif
 
+#ifndef PERIODIC_TASK_INTERVAL
+#define PERIODIC_TASK_INTERVAL 1000 // milliseconds, e.g. 60000 = 60 seconds
+#endif
+
+#ifndef HEARTBEAT_SERIAL_LOG_INTERVAL
+#define HEARTBEAT_SERIAL_LOG_INTERVAL 60000 // milliseconds, e.g. 60000 = 60 seconds
+#endif
+
+#ifndef HEARTBEAT_FILE_LOG_INTERVAL
+#define HEARTBEAT_FILE_LOG_INTERVAL 3600000 // milliseconds, e.g. 3600000 = 1 hour
+#endif
+
 #ifndef LOG_DIRECTORY
 #define LOG_DIRECTORY "/log"
 #endif
@@ -51,6 +63,8 @@
 #define CONFIGURATION_FIELD_NTP_OFFSET "ntpOffset"
 #define CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL "ntpUpdateInterval"
 #define CONFIGURATION_FIELD_TELNET_SERVER_PORT "telnetServerPort"
+#define CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL "heartbeatSerialLogInterval"
+#define CONFIGURATION_FIELD_HEARTBEAT_FILE_LOG_INTERVAL "heartbeatFileLogInterval"
 
 class Configuration {
 public:
@@ -74,6 +88,10 @@ public:
 
     unsigned int getTelnetServerPort() const;
 
+    unsigned long getHeartbeatSerialLogInterval() const;
+
+    unsigned long getHeartbeatFileLogInterval() const;
+
     JsonDocument toJsonDocument();
 
 private:
@@ -86,6 +104,8 @@ private:
     int ntpOffset = NTP_OFFSET;
     int ntpUpdateInterval = NTP_UPDATE_INTERVAL;
     unsigned int telnetServerPort = TELNET_SERVER_PORT;
+    unsigned long heartbeatSerialLogInterval = HEARTBEAT_SERIAL_LOG_INTERVAL;
+    unsigned long heartbeatFileLogInterval = HEARTBEAT_FILE_LOG_INTERVAL;
 };
 
 extern Configuration configuration;
