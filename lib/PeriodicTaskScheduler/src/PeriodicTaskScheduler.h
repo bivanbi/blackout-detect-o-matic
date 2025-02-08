@@ -14,6 +14,7 @@
 #include "ResetSystemStatusEventProcessor.h"
 #include "ClearAlarmEventProcessor.h"
 #include "AlarmLED.h"
+#include "SystemStatusLoader.h"
 
 class PeriodicTaskScheduler {
     /**
@@ -23,6 +24,7 @@ class PeriodicTaskScheduler {
         unsigned long timeSync = 0;
         unsigned long serialHeartBeat = 0;
         unsigned long fileHeartBeat = 0;
+        unsigned long saveSystemStatus = 0;
     };
 
 public:
@@ -53,6 +55,10 @@ private:
     static void processEvents();
 
     static void heartBeat();
+
+    static void saveSystemStatus();
+
+    static bool isSystemStatusSaveDue();
 
     static bool isSerialHeartBeatDue();
 

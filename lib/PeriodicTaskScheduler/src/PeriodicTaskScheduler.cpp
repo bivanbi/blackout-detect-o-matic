@@ -19,6 +19,7 @@ void PeriodicTaskScheduler::loop() {
         processEvents();
         updateSystemStatus();
         AlarmLED::update(systemStatus.isAlarmActive());
+        saveSystemStatus();
         heartBeat();
         periodicTasksAreDue = false;
     }
@@ -52,6 +53,21 @@ void PeriodicTaskScheduler::processEvents() {
 void PeriodicTaskScheduler::updateSystemStatus() {
     systemStatus.setWifiStatus(wifiClientAdapter.getStatus());
     systemStatus.setClockStatus(ntpClientAdapter.isTimeSet());
+}
+
+void PeriodicTaskScheduler::saveSystemStatus() {
+    if (isSystemStatusSaveDue()) {
+        if (SystemStatusLoader::save()) {
+            serialLogger.info("System status saved");
+        } else {
+            serialLogger.error("Failed to save system status");
+        }
+        tickCounter.saveSystemStatus = 0;
+    }
+}
+
+bool PeriodicTaskScheduler::isSystemStatusSaveDue() {
+    return tickCounter.saveSystemStatus >= configuration.getSystemStatusSaveInterval() * 1000;
 }
 
 void PeriodicTaskScheduler::heartBeat() {
