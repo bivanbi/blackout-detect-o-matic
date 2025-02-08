@@ -3,7 +3,14 @@
 
 #include "test_CommandLineInterface.h"
 
+String systemStatusFilePath = "/testCommandLineInterfaceSystemStatus.json";
+
 void setUp(void) {
+    configuration.setSystemStatusFilePath(systemStatusFilePath);
+
+    if (!persistentStorage.isMounted()) {
+        persistentStorage.mount();
+    }
 }
 
 void tearDown(void) {
@@ -69,22 +76,15 @@ void test_help() {
 }
 
 void test_saveSystemStatus() {
-    String testFilePath = "/testCommandLineInterfaceSystemStatus.json";
-    configuration.setSystemStatusFilePath(testFilePath);
-
-    if (!persistentStorage.isMounted()) {
-        persistentStorage.mount();
-    }
-
-    if (persistentStorage.exists(testFilePath)) {
-        persistentStorage.removeFile(testFilePath);
+    if (persistentStorage.exists(systemStatusFilePath)) {
+        persistentStorage.removeFile(systemStatusFilePath);
     }
 
     String response = commandLineInterface.executeCommand("saveStatus");
 
     TEST_ASSERT_EQUAL_STRING("Status saved", response.c_str());
-    TEST_ASSERT_TRUE(persistentStorage.exists(testFilePath));
-    TEST_ASSERT_EQUAL_STRING(persistentStorage.readFile(testFilePath).c_str(), systemStatus.toJsonDocument().as<String>().c_str());
+    TEST_ASSERT_TRUE(persistentStorage.exists(systemStatusFilePath));
+    TEST_ASSERT_EQUAL_STRING(persistentStorage.readFile(systemStatusFilePath).c_str(), systemStatus.toJsonDocument().as<String>().c_str());
 }
 
 int runUnitTests() {
