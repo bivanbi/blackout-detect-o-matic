@@ -403,6 +403,65 @@ void test_toHumanReadableJsonDocument() {
     TEST_ASSERT_EQUAL_STRING(expectedLongestBlackout.getDuration().getFormattedDuration().c_str(), doc[SYSTEM_STATUS_FIELD_LONGEST_BLACKOUT][BLACKOUT_FIELD_DURATION]);
 }
 
+void test_equals_withEqual() {
+    SystemStatus::Data status;
+    status.wifiStatus = WL_CONNECTED;
+    status.isPersistentStorageFailed = true;
+    status.isTimeSet = true;
+    status.isAlarmActive = true;
+    status.lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds(50, 100);
+    status.lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds(150, 200);
+    status.lastRebootTimeStamp = UnixTimeWithMilliSeconds(250, 300);
+    status.lastResetTimeStamp = UnixTimeWithMilliSeconds(350, 400);
+    status.lastAlarmClearedTimeStamp = UnixTimeWithMilliSeconds(450, 500);
+    status.rebootCount = 5;
+    status.blackoutCount = 3;
+    status.lastBlackout = Blackout(UnixTimeWithMilliSeconds(100, 150), UnixTimeWithMilliSeconds(200, 250));
+    status.shortestBlackout = Blackout(UnixTimeWithMilliSeconds(300, 350), UnixTimeWithMilliSeconds(400, 450));
+    status.longestBlackout = Blackout(UnixTimeWithMilliSeconds(500, 550), UnixTimeWithMilliSeconds(600, 650));
+
+    systemStatus = SystemStatus(status);
+
+    TEST_ASSERT_TRUE(systemStatus.equals(SystemStatus(status)));
+}
+
+void test_equals_withDifferent() {
+    SystemStatus::Data status1;
+    status1.wifiStatus = WL_CONNECTED;
+    status1.isPersistentStorageFailed = true;
+    status1.isTimeSet = true;
+    status1.isAlarmActive = true;
+    status1.lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds(50, 100);
+    status1.lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds(150, 200);
+    status1.lastRebootTimeStamp = UnixTimeWithMilliSeconds(250, 300);
+    status1.lastResetTimeStamp = UnixTimeWithMilliSeconds(350, 400);
+    status1.lastAlarmClearedTimeStamp = UnixTimeWithMilliSeconds(450, 500);
+    status1.rebootCount = 5;
+    status1.blackoutCount = 3;
+    status1.lastBlackout = Blackout(UnixTimeWithMilliSeconds(100, 150), UnixTimeWithMilliSeconds(200, 250));
+    status1.shortestBlackout = Blackout(UnixTimeWithMilliSeconds(300, 350), UnixTimeWithMilliSeconds(400, 450));
+    status1.longestBlackout = Blackout(UnixTimeWithMilliSeconds(500, 550), UnixTimeWithMilliSeconds(600, 650));
+
+    SystemStatus::Data status2;
+    status2.wifiStatus = WL_CONNECTED;
+    status2.isPersistentStorageFailed = true;
+    status2.isTimeSet = true;
+    status2.isAlarmActive = false;
+    status2.lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds(50, 100);
+    status2.lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds(150, 200);
+    status2.lastRebootTimeStamp = UnixTimeWithMilliSeconds(250, 300);
+    status2.lastResetTimeStamp = UnixTimeWithMilliSeconds(350, 400);
+    status2.lastAlarmClearedTimeStamp = UnixTimeWithMilliSeconds(450, 500);
+    status2.rebootCount = 5;
+    status2.blackoutCount = 3;
+    status2.lastBlackout = Blackout(UnixTimeWithMilliSeconds(100, 150), UnixTimeWithMilliSeconds(200, 250));
+    status2.shortestBlackout = Blackout(UnixTimeWithMilliSeconds(300, 350), UnixTimeWithMilliSeconds(400, 450));
+    status2.longestBlackout = Blackout(UnixTimeWithMilliSeconds(500, 550), UnixTimeWithMilliSeconds(600, 650));
+
+    TEST_ASSERT_FALSE(systemStatus.equals(SystemStatus(status2)));
+}
+
+
 bool statusEquals(SystemStatus::Data status1, SystemStatus::Data status2) {
     return status1.wifiStatus == status2.wifiStatus
            && status1.isPersistentStorageFailed == status2.isPersistentStorageFailed
@@ -446,6 +505,9 @@ int runUnityTests(void) {
     RUN_TEST(test_timeStatus);
     RUN_TEST(test_toJsonDocument);
     RUN_TEST(test_toHumanReadableJsonDocument);
+
+    RUN_TEST(test_equals_withEqual);
+    RUN_TEST(test_equals_withDifferent);
 
     return UNITY_END();
 }

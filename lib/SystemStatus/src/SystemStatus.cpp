@@ -221,6 +221,10 @@ void SystemStatus::persistentStorageFailed(UnixTimeWithMilliSeconds timeStamp) {
     data.lastPersistentStorageFailedTimeStamp = timeStamp;
 }
 
+bool SystemStatus::equals(SystemStatus other) {
+    return toJsonDocument().as<String>().equals(other.toJsonDocument().as<String>());
+}
+
 SystemStatus systemStatus = SystemStatus();
 
 #pragma clang diagnostic pop

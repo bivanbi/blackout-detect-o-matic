@@ -119,6 +119,8 @@ public:
 
     JsonDocument toHumanReadableJsonDocument();
 
+    bool equals(SystemStatus other);
+
 private:
     Data data;
 
