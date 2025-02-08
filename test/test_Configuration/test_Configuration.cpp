@@ -15,6 +15,7 @@ void test_constructor_default() {
     TEST_ASSERT_EQUAL_STRING(NTP_SERVER, configuration.getNtpServer().c_str());
     TEST_ASSERT_EQUAL(NTP_OFFSET, configuration.getNtpOffset());
     TEST_ASSERT_EQUAL(NTP_UPDATE_INTERVAL, configuration.getNtpUpdateInterval());
+    TEST_ASSERT_EQUAL(TELNET_SERVER_PORT, configuration.getTelnetServerPort());
 }
 
 void test_constructor_withJsonDocument() {
@@ -26,6 +27,7 @@ void test_constructor_withJsonDocument() {
     doc[CONFIGURATION_FIELD_NTP_SERVER] = "test.europe.pool.ntp.org";
     doc[CONFIGURATION_FIELD_NTP_OFFSET] = 123;
     doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL] = 456;
+    doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT] = 789;
 
     configuration = Configuration(doc.as<JsonObject>());
 
@@ -36,6 +38,7 @@ void test_constructor_withJsonDocument() {
     TEST_ASSERT_EQUAL_STRING("test.europe.pool.ntp.org", configuration.getNtpServer().c_str());
     TEST_ASSERT_EQUAL(123, configuration.getNtpOffset());
     TEST_ASSERT_EQUAL(456, configuration.getNtpUpdateInterval());
+    TEST_ASSERT_EQUAL(789, configuration.getTelnetServerPort());
 }
 
 void test_toJsonDocument() {
@@ -48,6 +51,7 @@ void test_toJsonDocument() {
     TEST_ASSERT_EQUAL_STRING(NTP_SERVER, doc[CONFIGURATION_FIELD_NTP_SERVER].as<String>().c_str());
     TEST_ASSERT_EQUAL(NTP_OFFSET, doc[CONFIGURATION_FIELD_NTP_OFFSET]);
     TEST_ASSERT_EQUAL(NTP_UPDATE_INTERVAL, doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL]);
+    TEST_ASSERT_EQUAL(TELNET_SERVER_PORT, doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT]);
 }
 
 int runUnityTests() {

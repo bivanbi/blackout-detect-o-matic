@@ -8,6 +8,7 @@ Configuration::Configuration(JsonObject doc) {
     ntpServer = doc[CONFIGURATION_FIELD_NTP_SERVER].as<String>();
     ntpOffset = doc[CONFIGURATION_FIELD_NTP_OFFSET];
     ntpUpdateInterval = doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL];
+    telnetServerPort = doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT];
 }
 
 String Configuration::getLogDirectory() {
@@ -52,6 +53,7 @@ JsonDocument Configuration::toJsonDocument() {
     doc[CONFIGURATION_FIELD_NTP_SERVER] = ntpServer;
     doc[CONFIGURATION_FIELD_NTP_OFFSET] = ntpOffset;
     doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL] = ntpUpdateInterval;
+    doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT] = telnetServerPort;
 
     return doc;
 }
