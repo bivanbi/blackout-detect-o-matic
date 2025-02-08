@@ -7,9 +7,9 @@ void setup() {
     serialLogger.info("main::setup(): begin");
     persistentStorage.mount();
     initConfiguration();
+    SystemStatusLoader::load();
     initWiFi();
     initNTP();
-    initSystemStatus();
     systemStatus.rebootDetected(ntpClientAdapter.getUnixTime());
     initPins();
     PeriodicTaskScheduler::init();
@@ -55,10 +55,6 @@ void initNTP() {
     ntpClientAdapter.setUpdateInterval(configuration.getNtpUpdateInterval());
     ntpClientAdapter.setTimeOffset(configuration.getNtpOffset());
     PeriodicTaskScheduler::syncTime(true);
-}
-
-void initSystemStatus() {
-    serialLogger.error("initSystemStatus: TODO: load system status from SD card");
 }
 
 void initPins() {
