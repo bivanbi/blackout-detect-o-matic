@@ -12,15 +12,15 @@
 #endif
 
 #ifndef PERIODIC_TASK_INTERVAL
-#define PERIODIC_TASK_INTERVAL 1000 // milliseconds, e.g. 60000 = 60 seconds
+#define PERIODIC_TASK_INTERVAL 1000 // milliseconds, e.g. 1000 = 1 seconds
 #endif
 
 #ifndef HEARTBEAT_SERIAL_LOG_INTERVAL
-#define HEARTBEAT_SERIAL_LOG_INTERVAL 60 // seconds, e.g. 60000 = 60 seconds
+#define HEARTBEAT_SERIAL_LOG_INTERVAL 60 // seconds, e.g. 60 = 60 seconds
 #endif
 
 #ifndef HEARTBEAT_FILE_LOG_INTERVAL
-#define HEARTBEAT_FILE_LOG_INTERVAL 3600 // seconds, e.g. 3600000 = 1 hour
+#define HEARTBEAT_FILE_LOG_INTERVAL 3600 // seconds, e.g. 3600 = 1 hour
 #endif
 
 #ifndef LOG_DIRECTORY
