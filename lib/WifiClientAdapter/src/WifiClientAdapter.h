@@ -4,9 +4,9 @@
 #include <WString.h>
 #include <WiFi.h>
 
-class WifiClient {
+class WifiClientAdapter {
     public:
-        WifiClient();
+        WifiClientAdapter();
         void connect(const String& ssid, const String& secret);
         String getMacAddress();
         String getIpAddress();
@@ -15,6 +15,6 @@ class WifiClient {
         wl_status_t getStatus();
 };
 
-extern WifiClient wifiClient;
+extern WifiClientAdapter wifiClientAdapter;
 
 #endif //BLACKOUT_DETECT_O_MATIC_WIFI_CLIENT_H

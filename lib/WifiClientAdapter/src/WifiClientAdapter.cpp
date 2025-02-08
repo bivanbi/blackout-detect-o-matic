@@ -1,31 +1,31 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
 
-#include "WifiClient.h"
+#include "WifiClientAdapter.h"
 
-WifiClient::WifiClient() = default;
+WifiClientAdapter::WifiClientAdapter() = default;
 
-void WifiClient::connect(const String& ssid, const String& secret) {
+void WifiClientAdapter::connect(const String& ssid, const String& secret) {
     WiFi.begin(ssid, secret);
 }
 
-bool WifiClient::isConnected() {
+bool WifiClientAdapter::isConnected() {
     return WiFiClass::status() == WL_CONNECTED;
 }
 
-String WifiClient::getIpAddress() {
+String WifiClientAdapter::getIpAddress() {
     return WiFi.localIP().toString();
 }
 
-String WifiClient::getMacAddress() {
+String WifiClientAdapter::getMacAddress() {
     return WiFi.macAddress();
 }
 
-wl_status_t WifiClient::getStatus() {
+wl_status_t WifiClientAdapter::getStatus() {
     return WiFiClass::status();
 }
 
-String WifiClient::statusToString(wl_status_t status) {
+String WifiClientAdapter::statusToString(wl_status_t status) {
 //    WL_NO_SHIELD        = 255,   // for compatibility with WiFi Shield library
 //    WL_IDLE_STATUS      = 0,
 //    WL_NO_SSID_AVAIL    = 1,
@@ -65,6 +65,6 @@ String WifiClient::statusToString(wl_status_t status) {
     return statusString + " (" + String(status) + ")";
 }
 
-WifiClient wifiClient = WifiClient();
+WifiClientAdapter wifiClientAdapter = WifiClientAdapter();
 
 #pragma clang diagnostic pop

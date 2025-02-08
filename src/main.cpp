@@ -36,14 +36,14 @@ void initConfiguration() {
 }
 
 void initWiFi() {
-    wifiClient.connect(configuration.getWifiSSID(), configuration.getWifiSecret());
-    while (!wifiClient.isConnected()) {
+    wifiClientAdapter.connect(configuration.getWifiSSID(), configuration.getWifiSecret());
+    while (!wifiClientAdapter.isConnected()) {
         serialLogger.info("Init: Connecting to WiFi network " + String(WIFI_SSID) + ", mac address: " +
-                          String(wifiClient.getMacAddress()));
+                          String(wifiClientAdapter.getMacAddress()));
         delay(1000);
     }
     serialLogger.info("Init: Connected to WiFi network " + String(WIFI_SSID) + ", IP address: " +
-                      String(wifiClient.getIpAddress()));
+                      String(wifiClientAdapter.getIpAddress()));
 }
 
 void initNTP() {

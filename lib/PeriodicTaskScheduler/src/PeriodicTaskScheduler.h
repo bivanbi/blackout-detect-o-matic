@@ -6,7 +6,7 @@
 #include "Configuration.h"
 #include "SerialLogger.h"
 #include "SystemStatus.h"
-#include "WifiClient.h"
+#include "WifiClientAdapter.h"
 #include "RTCAdapter.h"
 #include "NTPClientAdapter.h"
 #include "PowerDetectorPin.h"

@@ -50,7 +50,7 @@ void PeriodicTaskScheduler::processEvents() {
 }
 
 void PeriodicTaskScheduler::updateSystemStatus() {
-    systemStatus.setWifiStatus(wifiClient.getStatus());
+    systemStatus.setWifiStatus(wifiClientAdapter.getStatus());
     systemStatus.setClockStatus(ntpClientAdapter.isTimeSet());
 }
 
@@ -75,7 +75,7 @@ bool PeriodicTaskScheduler::isFileHeartBeatDue() {
 
 String PeriodicTaskScheduler::getHeartBeatMessage() {
     return "uptime: " + String(millis() / 1000) + " seconds, WiFi status: " +
-           wifiClient.statusToString(wifiClient.getStatus()) + ", clock set: " + ntpClientAdapter.isTimeSet()
+           wifiClientAdapter.statusToString(wifiClientAdapter.getStatus()) + ", clock set: " + ntpClientAdapter.isTimeSet()
            + ", blackout count: " + systemStatus.getBlackoutCount() + ", reboot count: " + systemStatus.getRebootCount()
            + ", alarm active: " + systemStatus.isAlarmActive()
            + ", pending power event counts: " + powerChangeEventBuffer.powerDownEventCount + " down, "
