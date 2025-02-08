@@ -29,9 +29,9 @@ void test_constructor_default() {
     TEST_ASSERT_TRUE(nullTime.equals(systemStatus.getLastRebootTimeStamp()));
     TEST_ASSERT_TRUE(nullTime.equals(systemStatus.getLastAlarmClearedTimeStamp()));
     TEST_ASSERT_TRUE(nullTime.equals(systemStatus.getLastResetTimeStamp()));
-    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getLastBlackout()));
-    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getShortestBlackout()));
-    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getLongestBlackout()));
+    TEST_ASSERT_TRUE(initialBlackout.equals(systemStatus.getLastBlackout()));
+    TEST_ASSERT_TRUE(initialBlackout.equals(systemStatus.getShortestBlackout()));
+    TEST_ASSERT_TRUE(initialBlackout.equals(systemStatus.getLongestBlackout()));
 }
 
 void test_constructor_withStatusStruct() {
@@ -96,9 +96,9 @@ void test_constructor_withJsonDocument() {
     TEST_ASSERT_EQUAL(5, actualStatus.rebootCount);
     TEST_ASSERT_EQUAL(3, actualStatus.blackoutCount);
 
-    TEST_ASSERT_TRUE(blackoutEquals(expectedLastBlackout, actualStatus.lastBlackout));
-    TEST_ASSERT_TRUE(blackoutEquals(expectedShortestBlackout, actualStatus.shortestBlackout));
-    TEST_ASSERT_TRUE(blackoutEquals(expectedLongestBlackout, actualStatus.longestBlackout));
+    TEST_ASSERT_TRUE(expectedLastBlackout.equals(actualStatus.lastBlackout));
+    TEST_ASSERT_TRUE(expectedShortestBlackout.equals(actualStatus.shortestBlackout));
+    TEST_ASSERT_TRUE(expectedLongestBlackout.equals(actualStatus.longestBlackout));
 }
 
 void test_getStatus_initial() {
@@ -117,9 +117,9 @@ void test_getStatus_initial() {
     TEST_ASSERT_EQUAL(0, status.lastResetTimeStamp.getUnixTime());
     TEST_ASSERT_EQUAL(0, status.lastAlarmClearedTimeStamp.getUnixTime());
 
-    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, status.lastBlackout));
-    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, status.shortestBlackout));
-    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, status.longestBlackout));
+    TEST_ASSERT_TRUE(initialBlackout.equals(status.lastBlackout));
+    TEST_ASSERT_TRUE(initialBlackout.equals(status.shortestBlackout));
+    TEST_ASSERT_TRUE(initialBlackout.equals(status.longestBlackout));
 }
 
 void test_rebootDetected() {
@@ -176,8 +176,8 @@ void test_setPowerStatus_withPowerGoingOnline() {
     TEST_ASSERT_EQUAL(1, lastBlackout.getDuration().getSign());
     TEST_ASSERT_EQUAL(100, lastBlackout.getDuration().getSeconds());
     TEST_ASSERT_EQUAL(100, lastBlackout.getDuration().getMilliSeconds());
-    TEST_ASSERT_TRUE(blackoutEquals(lastBlackout, systemStatus.getLongestBlackout()));
-    TEST_ASSERT_TRUE(blackoutEquals(lastBlackout, systemStatus.getShortestBlackout()));
+    TEST_ASSERT_TRUE(lastBlackout.equals(systemStatus.getLongestBlackout()));
+    TEST_ASSERT_TRUE(lastBlackout.equals(systemStatus.getShortestBlackout()));
 }
 
 void test_setPowerStatus_withMultipleBlackouts() {
@@ -198,9 +198,9 @@ void test_setPowerStatus_withMultipleBlackouts() {
     TEST_ASSERT_TRUE(systemStatus.isAlarmActive()); // alarm should stay to inform user of the blackout
     TEST_ASSERT_EQUAL(3, systemStatus.getBlackoutCount());
 
-    TEST_ASSERT_TRUE(blackoutEquals(shortest, systemStatus.getShortestBlackout()));
-    TEST_ASSERT_TRUE(blackoutEquals(longest, systemStatus.getLongestBlackout()));
-    TEST_ASSERT_TRUE(blackoutEquals(middle, systemStatus.getLastBlackout()));
+    TEST_ASSERT_TRUE(shortest.equals(systemStatus.getShortestBlackout()));
+    TEST_ASSERT_TRUE(longest.equals(systemStatus.getLongestBlackout()));
+    TEST_ASSERT_TRUE(middle.equals(systemStatus.getLastBlackout()));
 }
 
 void test_setPowerStatus_withPowerGoingOffline_duringOngoingBlackout() {
@@ -257,9 +257,9 @@ void test_reset_withNoActiveBlackout() {
     TEST_ASSERT_EQUAL(800, systemStatus.getLastResetTimeStamp().getUnixTime());
 
     TEST_ASSERT_FALSE(systemStatus.isPersistentStorageFailed());
-    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getLastBlackout()));
-    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getShortestBlackout()));
-    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getLongestBlackout()));
+    TEST_ASSERT_TRUE(initialBlackout.equals(systemStatus.getLastBlackout()));
+    TEST_ASSERT_TRUE(initialBlackout.equals(systemStatus.getShortestBlackout()));
+    TEST_ASSERT_TRUE(initialBlackout.equals(systemStatus.getLongestBlackout()));
 }
 
 void test_reset_withActiveBlackout() {
@@ -282,8 +282,8 @@ void test_reset_withActiveBlackout() {
     TEST_ASSERT_EQUAL(1, systemStatus.getBlackoutCount());
     TEST_ASSERT_EQUAL(800, systemStatus.getLastResetTimeStamp().getUnixTime());
     TEST_ASSERT_EQUAL(550, systemStatus.getLastBlackout().getStart().getUnixTime());
-    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getShortestBlackout()));
-    TEST_ASSERT_TRUE(blackoutEquals(initialBlackout, systemStatus.getLongestBlackout()));
+    TEST_ASSERT_TRUE(initialBlackout.equals(systemStatus.getShortestBlackout()));
+    TEST_ASSERT_TRUE(initialBlackout.equals(systemStatus.getLongestBlackout()));
 }
 
 void test_lastSnapshotTimestamp() {
@@ -415,9 +415,9 @@ bool statusEquals(SystemStatus::Data status1, SystemStatus::Data status2) {
            && status1.lastAlarmClearedTimeStamp.equals(status2.lastAlarmClearedTimeStamp)
            && status1.rebootCount == status2.rebootCount
            && status1.blackoutCount == status2.blackoutCount
-           && blackoutEquals(status1.lastBlackout, status2.lastBlackout)
-           && blackoutEquals(status1.shortestBlackout, status2.shortestBlackout)
-           && blackoutEquals(status1.longestBlackout, status2.longestBlackout);
+           && status1.lastBlackout.equals(status2.lastBlackout)
+           && status1.shortestBlackout.equals(status2.shortestBlackout)
+           && status1.longestBlackout.equals(status2.longestBlackout);
 }
 
 bool blackoutEquals(Blackout blackout1, Blackout blackout2) {

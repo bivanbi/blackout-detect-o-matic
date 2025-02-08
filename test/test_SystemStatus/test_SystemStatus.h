@@ -9,6 +9,4 @@
 
 bool statusEquals(SystemStatus::Data status1, SystemStatus::Data status2);
 
-bool blackoutEquals(Blackout blackout1, Blackout blackout2);
-
 #endif //BLACKOUT_DETECT_O_MATIC_TEST_SYSTEM_STATUS_H
