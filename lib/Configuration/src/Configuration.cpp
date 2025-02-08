@@ -38,6 +38,10 @@ unsigned int Configuration::getNtpUpdateInterval() const {
     return ntpUpdateInterval;
 }
 
+unsigned int Configuration::getTelnetServerPort() const {
+    return telnetServerPort;
+}
+
 JsonDocument Configuration::toJsonDocument() {
     JsonDocument doc;
 

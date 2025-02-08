@@ -39,6 +39,10 @@
 #define NTP_UPDATE_INTERVAL 300000 // milliseconds, e.g. 60000 = 60 seconds
 #endif
 
+#ifndef TELNET_SERVER_PORT
+#define TELNET_SERVER_PORT 23
+#endif
+
 #define CONFIGURATION_FIELD_LOG_DIRECTORY "logDirectory"
 #define CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH "systemStatusFilePath"
 #define CONFIGURATION_FIELD_WIFI_SSID "wifiSSID"
@@ -46,6 +50,7 @@
 #define CONFIGURATION_FIELD_NTP_SERVER "ntpServer"
 #define CONFIGURATION_FIELD_NTP_OFFSET "ntpOffset"
 #define CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL "ntpUpdateInterval"
+#define CONFIGURATION_FIELD_TELNET_SERVER_PORT "telnetServerPort"
 
 class Configuration {
 public:
@@ -67,6 +72,8 @@ public:
 
     unsigned int getNtpUpdateInterval() const;
 
+    unsigned int getTelnetServerPort() const;
+
     JsonDocument toJsonDocument();
 
 private:
@@ -78,6 +85,7 @@ private:
     String ntpServer = NTP_SERVER;
     int ntpOffset = NTP_OFFSET;
     int ntpUpdateInterval = NTP_UPDATE_INTERVAL;
+    unsigned int telnetServerPort = TELNET_SERVER_PORT;
 };
 
 extern Configuration configuration;
