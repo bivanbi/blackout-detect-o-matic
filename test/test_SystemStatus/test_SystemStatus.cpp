@@ -420,10 +420,6 @@ bool statusEquals(SystemStatus::Data status1, SystemStatus::Data status2) {
            && status1.longestBlackout.equals(status2.longestBlackout);
 }
 
-bool blackoutEquals(Blackout blackout1, Blackout blackout2) {
-    return blackout1.getStart().equals(blackout2.getStart()) && blackout1.getEnd().equals(blackout2.getEnd());
-}
-
 int runUnityTests(void) {
     UNITY_BEGIN();
     RUN_TEST(test_constructor_default);
