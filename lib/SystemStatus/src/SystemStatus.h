@@ -11,7 +11,7 @@
 #define SYSTEM_STATUS_FIELD_IS_TIME_SET "isTimeSet"
 #define SYSTEM_STATUS_FIELD_IS_ALARM_ACTIVE "isAlarmActive"
 #define SYSTEM_STATUS_FIELD_LAST_PERSISTENT_STORAGE_FAILED_TIMESTAMP "lastPermanentStorageFailedTimestamp"
-#define SYSTEM_STATUS_FIELD_LAST_STATUS_SNAPSHOT_TIMESTAMP "lastStatusTimestamp"
+#define SYSTEM_STATUS_FIELD_LAST_STATUS_SAVE_TIMESTAMP "lastStatusTimestamp"
 #define SYSTEM_STATUS_FIELD_LAST_REBOOT_TIMESTAMP "lastRebootTimestamp"
 #define SYSTEM_STATUS_FIELD_LAST_RESET_TIMESTAMP "lastResetTimestamp"
 #define SYSTEM_STATUS_FIELD_LAST_ALARM_CLEARED_TIMESTAMP "lastAlarmClearedTimestamp"
@@ -31,7 +31,7 @@ public:
         bool isPersistentStorageFailed = false;
 
         UnixTimeWithMilliSeconds lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds();
-        UnixTimeWithMilliSeconds lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds();
+        UnixTimeWithMilliSeconds lastStatusSaveTimeStamp = UnixTimeWithMilliSeconds();
         UnixTimeWithMilliSeconds lastRebootTimeStamp = UnixTimeWithMilliSeconds();
         UnixTimeWithMilliSeconds lastResetTimeStamp = UnixTimeWithMilliSeconds();
         UnixTimeWithMilliSeconds lastAlarmClearedTimeStamp = UnixTimeWithMilliSeconds();
@@ -62,7 +62,7 @@ public:
 
     UnixTimeWithMilliSeconds getLastPersistentStorageFailedTimeStamp();
 
-    UnixTimeWithMilliSeconds getLastStatusSnapshotTimeStamp();
+    UnixTimeWithMilliSeconds getlastStatusSaveTimeStamp();
 
     UnixTimeWithMilliSeconds getLastRebootTimeStamp();
 
@@ -74,7 +74,7 @@ public:
 
     void setClockStatus(bool timeSet);
 
-    void setLastSnapshotTimeStamp(UnixTimeWithMilliSeconds timeStamp);
+    void statusSaved(UnixTimeWithMilliSeconds timeStamp);
 
     void setPowerStatus(UnixTimeWithMilliSeconds timeStamp, bool isPowerOnline);
 

@@ -25,7 +25,7 @@ void test_constructor_default() {
     TEST_ASSERT_EQUAL(0, systemStatus.getRebootCount());
     TEST_ASSERT_EQUAL(0, systemStatus.getBlackoutCount());
     TEST_ASSERT_TRUE(nullTime.equals(systemStatus.getLastPersistentStorageFailedTimeStamp()));
-    TEST_ASSERT_TRUE(nullTime.equals(systemStatus.getLastStatusSnapshotTimeStamp()));
+    TEST_ASSERT_TRUE(nullTime.equals(systemStatus.getlastStatusSaveTimeStamp()));
     TEST_ASSERT_TRUE(nullTime.equals(systemStatus.getLastRebootTimeStamp()));
     TEST_ASSERT_TRUE(nullTime.equals(systemStatus.getLastAlarmClearedTimeStamp()));
     TEST_ASSERT_TRUE(nullTime.equals(systemStatus.getLastResetTimeStamp()));
@@ -41,7 +41,7 @@ void test_constructor_withStatusStruct() {
     status.isTimeSet = true;
     status.isAlarmActive = true;
     status.lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds(50, 100);
-    status.lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds(150, 200);
+    status.lastStatusSaveTimeStamp = UnixTimeWithMilliSeconds(150, 200);
     status.lastRebootTimeStamp = UnixTimeWithMilliSeconds(250, 300);
     status.lastResetTimeStamp = UnixTimeWithMilliSeconds(350, 400);
     status.lastAlarmClearedTimeStamp = UnixTimeWithMilliSeconds(450, 500);
@@ -69,7 +69,7 @@ void test_constructor_withJsonDocument() {
     doc[SYSTEM_STATUS_FIELD_IS_ALARM_ACTIVE] = true;
     doc[SYSTEM_STATUS_FIELD_LAST_PERSISTENT_STORAGE_FAILED_TIMESTAMP] = UnixTimeWithMilliSeconds(50,
                                                                                                  100).toJsonDocument();
-    doc[SYSTEM_STATUS_FIELD_LAST_STATUS_SNAPSHOT_TIMESTAMP] = UnixTimeWithMilliSeconds(500, 100).toJsonDocument();
+    doc[SYSTEM_STATUS_FIELD_LAST_STATUS_SAVE_TIMESTAMP] = UnixTimeWithMilliSeconds(500, 100).toJsonDocument();
     doc[SYSTEM_STATUS_FIELD_LAST_REBOOT_TIMESTAMP] = UnixTimeWithMilliSeconds(600, 100).toJsonDocument();
     doc[SYSTEM_STATUS_FIELD_LAST_RESET_TIMESTAMP] = UnixTimeWithMilliSeconds(700, 100).toJsonDocument();
     doc[SYSTEM_STATUS_FIELD_LAST_ALARM_CLEARED_TIMESTAMP] = UnixTimeWithMilliSeconds(800, 100).toJsonDocument();
@@ -89,7 +89,7 @@ void test_constructor_withJsonDocument() {
     TEST_ASSERT_TRUE(actualStatus.isTimeSet);
     TEST_ASSERT_TRUE(actualStatus.isAlarmActive);
     TEST_ASSERT_EQUAL(50, actualStatus.lastPersistentStorageFailedTimeStamp.getUnixTime());
-    TEST_ASSERT_EQUAL(500, actualStatus.lastStatusSnapshotTimeStamp.getUnixTime());
+    TEST_ASSERT_EQUAL(500, actualStatus.lastStatusSaveTimeStamp.getUnixTime());
     TEST_ASSERT_EQUAL(600, actualStatus.lastRebootTimeStamp.getUnixTime());
     TEST_ASSERT_EQUAL(700, actualStatus.lastResetTimeStamp.getUnixTime());
     TEST_ASSERT_EQUAL(800, actualStatus.lastAlarmClearedTimeStamp.getUnixTime());
@@ -112,7 +112,7 @@ void test_getStatus_initial() {
     TEST_ASSERT_EQUAL(0, status.rebootCount);
     TEST_ASSERT_EQUAL(0, status.blackoutCount);
     TEST_ASSERT_EQUAL(0, status.lastPersistentStorageFailedTimeStamp.getUnixTime());
-    TEST_ASSERT_EQUAL(0, status.lastStatusSnapshotTimeStamp.getUnixTime());
+    TEST_ASSERT_EQUAL(0, status.lastStatusSaveTimeStamp.getUnixTime());
     TEST_ASSERT_EQUAL(0, status.lastRebootTimeStamp.getUnixTime());
     TEST_ASSERT_EQUAL(0, status.lastResetTimeStamp.getUnixTime());
     TEST_ASSERT_EQUAL(0, status.lastAlarmClearedTimeStamp.getUnixTime());
@@ -239,7 +239,7 @@ void test_reset_withNoActiveBlackout() {
     systemStatus.setPowerStatus(UnixTimeWithMilliSeconds(300, 300), SystemStatus::POWER_ONLINE);
     systemStatus.setPowerStatus(UnixTimeWithMilliSeconds(400, 400), SystemStatus::POWER_OFFLINE);
     systemStatus.setPowerStatus(UnixTimeWithMilliSeconds(500, 500), SystemStatus::POWER_ONLINE);
-    systemStatus.setLastSnapshotTimeStamp(UnixTimeWithMilliSeconds(600, 600));
+    systemStatus.statusSaved(UnixTimeWithMilliSeconds(600, 600));
     systemStatus.clearAlarm(UnixTimeWithMilliSeconds(700, 700));
 
     systemStatus.reset(UnixTimeWithMilliSeconds(800, 800));
@@ -252,7 +252,7 @@ void test_reset_withNoActiveBlackout() {
     TEST_ASSERT_EQUAL(0, systemStatus.getBlackoutCount());
     TEST_ASSERT_EQUAL(50, systemStatus.getLastPersistentStorageFailedTimeStamp().getUnixTime());
     TEST_ASSERT_EQUAL(100, systemStatus.getLastRebootTimeStamp().getUnixTime());
-    TEST_ASSERT_EQUAL(600, systemStatus.getLastStatusSnapshotTimeStamp().getUnixTime());
+    TEST_ASSERT_EQUAL(600, systemStatus.getlastStatusSaveTimeStamp().getUnixTime());
     TEST_ASSERT_EQUAL(700, systemStatus.getLastAlarmClearedTimeStamp().getUnixTime());
     TEST_ASSERT_EQUAL(800, systemStatus.getLastResetTimeStamp().getUnixTime());
 
@@ -272,7 +272,7 @@ void test_reset_withActiveBlackout() {
     systemStatus.setPowerStatus(UnixTimeWithMilliSeconds(400, 400), SystemStatus::POWER_OFFLINE);
     systemStatus.setPowerStatus(UnixTimeWithMilliSeconds(500, 500), SystemStatus::POWER_ONLINE);
     systemStatus.setPowerStatus(UnixTimeWithMilliSeconds(550, 550), SystemStatus::POWER_OFFLINE);
-    systemStatus.setLastSnapshotTimeStamp(UnixTimeWithMilliSeconds(600, 600));
+    systemStatus.statusSaved(UnixTimeWithMilliSeconds(600, 600));
 
     systemStatus.reset(UnixTimeWithMilliSeconds(800, 800));
 
@@ -286,11 +286,11 @@ void test_reset_withActiveBlackout() {
     TEST_ASSERT_TRUE(initialBlackout.equals(systemStatus.getLongestBlackout()));
 }
 
-void test_lastSnapshotTimestamp() {
-    TEST_ASSERT_EQUAL(0, systemStatus.getLastStatusSnapshotTimeStamp().getUnixTime());
-    systemStatus.setLastSnapshotTimeStamp(UnixTimeWithMilliSeconds(100, 100));
-    TEST_ASSERT_EQUAL(100, systemStatus.getLastStatusSnapshotTimeStamp().getUnixTime());
-    TEST_ASSERT_EQUAL(100, systemStatus.getStatus().lastStatusSnapshotTimeStamp.getUnixTime());
+void test_lastStatusSaveTimestamp() {
+    TEST_ASSERT_EQUAL(0, systemStatus.getlastStatusSaveTimeStamp().getUnixTime());
+    systemStatus.statusSaved(UnixTimeWithMilliSeconds(100, 100));
+    TEST_ASSERT_EQUAL(100, systemStatus.getlastStatusSaveTimeStamp().getUnixTime());
+    TEST_ASSERT_EQUAL(100, systemStatus.getStatus().lastStatusSaveTimeStamp.getUnixTime());
 }
 
 void test_wifiStatus() {
@@ -320,7 +320,7 @@ void test_toJsonDocument() {
     status.isTimeSet = true;
     status.isAlarmActive = true;
     status.lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds(50, 100);
-    status.lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds(500, 200);
+    status.lastStatusSaveTimeStamp = UnixTimeWithMilliSeconds(500, 200);
     status.lastRebootTimeStamp = UnixTimeWithMilliSeconds(600, 300);
     status.lastResetTimeStamp = UnixTimeWithMilliSeconds(700, 400);
     status.lastAlarmClearedTimeStamp = UnixTimeWithMilliSeconds(800, 500);
@@ -339,7 +339,7 @@ void test_toJsonDocument() {
     TEST_ASSERT_EQUAL(true, doc[SYSTEM_STATUS_FIELD_IS_TIME_SET]);
     TEST_ASSERT_EQUAL(true, doc[SYSTEM_STATUS_FIELD_IS_ALARM_ACTIVE]);
     TEST_ASSERT_EQUAL(50, doc[SYSTEM_STATUS_FIELD_LAST_PERSISTENT_STORAGE_FAILED_TIMESTAMP][UNIX_TIME_FIELD_SECONDS]);
-    TEST_ASSERT_EQUAL(500, doc[SYSTEM_STATUS_FIELD_LAST_STATUS_SNAPSHOT_TIMESTAMP][UNIX_TIME_FIELD_SECONDS]);
+    TEST_ASSERT_EQUAL(500, doc[SYSTEM_STATUS_FIELD_LAST_STATUS_SAVE_TIMESTAMP][UNIX_TIME_FIELD_SECONDS]);
     TEST_ASSERT_EQUAL(600, doc[SYSTEM_STATUS_FIELD_LAST_REBOOT_TIMESTAMP][UNIX_TIME_FIELD_SECONDS]);
     TEST_ASSERT_EQUAL(700, doc[SYSTEM_STATUS_FIELD_LAST_RESET_TIMESTAMP][UNIX_TIME_FIELD_SECONDS]);
     TEST_ASSERT_EQUAL(800, doc[SYSTEM_STATUS_FIELD_LAST_ALARM_CLEARED_TIMESTAMP][UNIX_TIME_FIELD_SECONDS]);
@@ -365,7 +365,7 @@ void test_toHumanReadableJsonDocument() {
     status.isTimeSet = true;
     status.isAlarmActive = true;
     status.lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds(50, 100);
-    status.lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds(500, 200);
+    status.lastStatusSaveTimeStamp = UnixTimeWithMilliSeconds(500, 200);
     status.lastRebootTimeStamp = UnixTimeWithMilliSeconds(600, 300);
     status.lastResetTimeStamp = UnixTimeWithMilliSeconds(700, 400);
     status.lastAlarmClearedTimeStamp = UnixTimeWithMilliSeconds(800, 500);
@@ -383,7 +383,7 @@ void test_toHumanReadableJsonDocument() {
     TEST_ASSERT_EQUAL(true, doc[SYSTEM_STATUS_FIELD_IS_ALARM_ACTIVE]);
     TEST_ASSERT_EQUAL(true, doc[SYSTEM_STATUS_FIELD_IS_PERSISTENT_STORAGE_FAILED]);
     TEST_ASSERT_EQUAL_STRING("1970-01-01 00:00:50.100", doc[SYSTEM_STATUS_FIELD_LAST_PERSISTENT_STORAGE_FAILED_TIMESTAMP]);
-    TEST_ASSERT_EQUAL_STRING("1970-01-01 00:08:20.200", doc[SYSTEM_STATUS_FIELD_LAST_STATUS_SNAPSHOT_TIMESTAMP]);
+    TEST_ASSERT_EQUAL_STRING("1970-01-01 00:08:20.200", doc[SYSTEM_STATUS_FIELD_LAST_STATUS_SAVE_TIMESTAMP]);
     TEST_ASSERT_EQUAL_STRING("1970-01-01 00:10:00.300", doc[SYSTEM_STATUS_FIELD_LAST_REBOOT_TIMESTAMP]);
     TEST_ASSERT_EQUAL_STRING("1970-01-01 00:11:40.400", doc[SYSTEM_STATUS_FIELD_LAST_RESET_TIMESTAMP]);
     TEST_ASSERT_EQUAL_STRING("1970-01-01 00:13:20.500", doc[SYSTEM_STATUS_FIELD_LAST_ALARM_CLEARED_TIMESTAMP]);
@@ -410,7 +410,7 @@ void test_equals_withEqual() {
     status.isTimeSet = true;
     status.isAlarmActive = true;
     status.lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds(50, 100);
-    status.lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds(150, 200);
+    status.lastStatusSaveTimeStamp = UnixTimeWithMilliSeconds(150, 200);
     status.lastRebootTimeStamp = UnixTimeWithMilliSeconds(250, 300);
     status.lastResetTimeStamp = UnixTimeWithMilliSeconds(350, 400);
     status.lastAlarmClearedTimeStamp = UnixTimeWithMilliSeconds(450, 500);
@@ -432,7 +432,7 @@ void test_equals_withDifferent() {
     status1.isTimeSet = true;
     status1.isAlarmActive = true;
     status1.lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds(50, 100);
-    status1.lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds(150, 200);
+    status1.lastStatusSaveTimeStamp = UnixTimeWithMilliSeconds(150, 200);
     status1.lastRebootTimeStamp = UnixTimeWithMilliSeconds(250, 300);
     status1.lastResetTimeStamp = UnixTimeWithMilliSeconds(350, 400);
     status1.lastAlarmClearedTimeStamp = UnixTimeWithMilliSeconds(450, 500);
@@ -448,7 +448,7 @@ void test_equals_withDifferent() {
     status2.isTimeSet = true;
     status2.isAlarmActive = false;
     status2.lastPersistentStorageFailedTimeStamp = UnixTimeWithMilliSeconds(50, 100);
-    status2.lastStatusSnapshotTimeStamp = UnixTimeWithMilliSeconds(150, 200);
+    status2.lastStatusSaveTimeStamp = UnixTimeWithMilliSeconds(150, 200);
     status2.lastRebootTimeStamp = UnixTimeWithMilliSeconds(250, 300);
     status2.lastResetTimeStamp = UnixTimeWithMilliSeconds(350, 400);
     status2.lastAlarmClearedTimeStamp = UnixTimeWithMilliSeconds(450, 500);
@@ -468,7 +468,7 @@ bool statusEquals(SystemStatus::Data status1, SystemStatus::Data status2) {
            && status1.isTimeSet == status2.isTimeSet
            && status1.isAlarmActive == status2.isAlarmActive
            && status1.lastPersistentStorageFailedTimeStamp.equals(status2.lastPersistentStorageFailedTimeStamp)
-           && status1.lastStatusSnapshotTimeStamp.equals(status2.lastStatusSnapshotTimeStamp)
+           && status1.lastStatusSaveTimeStamp.equals(status2.lastStatusSaveTimeStamp)
            && status1.lastRebootTimeStamp.equals(status2.lastRebootTimeStamp)
            && status1.lastResetTimeStamp.equals(status2.lastResetTimeStamp)
            && status1.lastAlarmClearedTimeStamp.equals(status2.lastAlarmClearedTimeStamp)
@@ -500,7 +500,7 @@ int runUnityTests(void) {
     RUN_TEST(test_clearAlarm);
     RUN_TEST(test_reset_withNoActiveBlackout);
     RUN_TEST(test_reset_withActiveBlackout);
-    RUN_TEST(test_lastSnapshotTimestamp);
+    RUN_TEST(test_lastStatusSaveTimestamp);
     RUN_TEST(test_wifiStatus);
     RUN_TEST(test_timeStatus);
     RUN_TEST(test_toJsonDocument);
