@@ -23,14 +23,12 @@ void loop() {
 }
 
 void initConfiguration() {
-    serialLogger.info("initConfiguration: TODO: load configuration from SD card into temporary object");
     if (OVERWRITE_CONFIGURATION) {
-        serialLogger.info("initConfiguration: TODO: Update configuration on SD card");
-        // TODO: compare configuration with sdcard content (if available)
-        // TODO: overwrite configuration if needed
+        serialLogger.info("initConfiguration: Force overwrite configuration on SD card");
+        ConfigurationLoader::save();
     } else {
-        // TODO: apply configuration from sdcard if available
-        serialLogger.info("initConfiguration: TODO: apply configuration from SD card");
+        serialLogger.info("initConfiguration: load configuration from SD card");
+        ConfigurationLoader::load();
     }
 
     serialLogger.info("Configuration: " + configuration.toJsonDocument().as<String>());

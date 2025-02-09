@@ -7,10 +7,12 @@
 #include "RTCAdapter.h"
 #include "SerialLogger.h"
 #include "SystemStatusLoader.h"
+#include "ConfigurationLoader.h"
 
 #define CLI_COMMAND_CONFIG "config"
 #define CLI_COMMAND_CONFIG_GET "get"
 #define CLI_COMMAND_CONFIG_SET "set"
+#define CLI_COMMAND_CONFIG_SAVE "save"
 
 #define CLI_RESPONSE_UNKNOWN_COMMAND "unknown command"
 
@@ -49,6 +51,8 @@ public:
         String getConfig(String key);
 
         String setConfig(String keyAndValue);
+
+        String saveConfig();
 
         String getHelp();
     };
