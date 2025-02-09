@@ -66,6 +66,7 @@ void test_uptime() {
 void test_help() {
     String expected = "ping - echo request\n"
                       "clock - get the current time\n"
+                      "config - configuration commands, issue 'config help' for more info"
                       "uptime - get the uptime\n"
                       "status - get the status of the system\n"
                       "clearAlarm - clear the alarm\n"
@@ -87,6 +88,34 @@ void test_saveSystemStatus() {
     TEST_ASSERT_EQUAL_STRING(persistentStorage.readFile(systemStatusFilePath).c_str(), systemStatus.toJsonDocument().as<String>().c_str());
 }
 
+void test_splitCommandAndArguments_withEmptyString() {
+    CommandLineInterface::CommandAndArguments actual = commandLineInterface.splitCommandAndArguments("");
+
+    TEST_ASSERT_EQUAL_STRING("", actual.command.c_str());
+    TEST_ASSERT_EQUAL_STRING("", actual.arguments.c_str());
+}
+
+void test_splitCommandAndArguments_withNoArguments() {
+    CommandLineInterface::CommandAndArguments actual = commandLineInterface.splitCommandAndArguments("config");
+
+    TEST_ASSERT_EQUAL_STRING("config", actual.command.c_str());
+    TEST_ASSERT_EQUAL_STRING("", actual.arguments.c_str());
+}
+
+void test_splitCommandAndArguments_withMultipleArguments() {
+    CommandLineInterface::CommandAndArguments actual = commandLineInterface.splitCommandAndArguments("config set this=that");
+
+    TEST_ASSERT_EQUAL_STRING("config", actual.command.c_str());
+    TEST_ASSERT_EQUAL_STRING("set this=that", actual.arguments.c_str());
+}
+
+void test_config_get() {
+    String actual = commandLineInterface.executeCommand("config get");
+    serialLogger.debug("test_config_get");
+    serialLogger.debug(actual);
+    TEST_ASSERT_GREATER_THAN(0, actual.indexOf(CONFIGURATION_FIELD_WIFI_SSID));
+}
+
 int runUnitTests() {
     UNITY_BEGIN();
 
@@ -99,6 +128,11 @@ int runUnitTests() {
     RUN_TEST(test_uptime);
     RUN_TEST(test_help);
     RUN_TEST(test_saveSystemStatus);
+
+    RUN_TEST(test_splitCommandAndArguments_withEmptyString);
+    RUN_TEST(test_splitCommandAndArguments_withNoArguments);
+    RUN_TEST(test_splitCommandAndArguments_withMultipleArguments);
+    RUN_TEST(test_config_get);
 
     return UNITY_END();
 }
