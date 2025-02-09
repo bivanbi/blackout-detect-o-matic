@@ -50,12 +50,74 @@ String CommandLineInterface::getStatus() {
 String CommandLineInterface::getHelp() {
     return "ping - echo request\n"
            "clock - get the current time\n"
-           CLI_COMMAND_CONFIG " - configuration commands, issue 'config help' for more info"
+           CLI_COMMAND_CONFIG " - configuration commands, issue 'config help' for more info\n"
            "uptime - get the uptime\n"
            "status - get the status of the system\n"
            "clearAlarm - clear the alarm\n"
            "resetStatus - reset reboot / blackout counters and clear alarm\n"
            "saveStatus - save status to persistent storage (SD card)\n";
+}
+
+String CommandLineInterface::ConfigCLI::executeCommand(String commandLine) {
+    CommandAndArguments configCommand = commandLineInterface.splitCommandAndArguments(commandLine);
+    serialLogger.debug("CommandLineInterface::Config::executeCommand:'" + configCommand.command + "', args: '" +
+                       configCommand.arguments + "'");
+
+    if (configCommand.command.equals("") || configCommand.command.equals(CLI_COMMAND_CONFIG_GET)) {
+        return getConfig(configCommand.arguments);
+    } else if (configCommand.command.equals(CLI_COMMAND_CONFIG_SET)) {
+        return setConfig(configCommand.arguments);
+    } else if (configCommand.command.equals("") || configCommand.command.equals("help")) {
+    } else if (configCommand.command.equals("help") || configCommand.command.equals("-h") || configCommand.command.equals("--help")) {
+        return getHelp();
+    }
+    return CLI_RESPONSE_UNKNOWN_COMMAND;
+}
+
+String CommandLineInterface::ConfigCLI::getConfig(String key) {
+    if (key.isEmpty()) {
+        return getConfig();
+    }
+
+    Configuration::GetResult result = configuration.get(key);
+    if (result.code == Configuration::ResultCode::OK) {
+        return result.value;
+    }
+
+    serialLogger.error(
+            "CommandLineInterface::ConfigCLI::getConfig: key: '" + key + "', error message: " + result.value);
+    return "ERROR: unknown key";
+}
+
+String CommandLineInterface::ConfigCLI::getConfig() {
+    String result;
+    serializeJsonPretty(configuration.toJsonDocument(), result);
+    return result;
+}
+
+String CommandLineInterface::ConfigCLI::setConfig(String keyAndValue) {
+    KeyValue keyValuePair = commandLineInterface.splitKeyValuePair(keyAndValue);
+    if (keyValuePair.key.isEmpty()) {
+        return "ERROR: expected key=value pair";
+    }
+
+    Configuration::SetResult result = configuration.set(keyValuePair.key, keyValuePair.value);
+    if (result.code == Configuration::ResultCode::OK) {
+        return "Configuration updated: " + keyAndValue;
+    }
+
+    serialLogger.error("CommandLineInterface::ConfigCLI::setConfig: "
+                       "key: '" + keyValuePair.key + "', value: '" + keyValuePair.value +
+                       "', error message: " + result.message);
+    return "ERROR: " + result.message;
+}
+
+String CommandLineInterface::ConfigCLI::getHelp() {
+    return "config get - get the current configuration\n"
+           "config get <key> - get the value of a specific key\n"
+           "config set <key>=<value> - set the value of a specific key\n"
+           "config save - save the configuration to persistent storage (SD card)\n\n"
+           "Note: reboot to apply the saved configuration\n";
 }
 
 CommandLineInterface::CommandAndArguments CommandLineInterface::splitCommandAndArguments(String commandLine) {
@@ -69,28 +131,15 @@ CommandLineInterface::CommandAndArguments CommandLineInterface::splitCommandAndA
     return {command, arguments};
 }
 
-CommandLineInterface commandLineInterface;
-
-String CommandLineInterface::ConfigCLI::executeCommand(String commandLine) {
-    CommandAndArguments configCommand = commandLineInterface.splitCommandAndArguments(commandLine);
-    serialLogger.debug("CommandLineInterface::Config::executeCommand:'" + configCommand.command + "', args: '" + configCommand.arguments + "'");
-
-    if (configCommand.command.equals(CLI_COMMAND_CONFIG_GET)) {
-        return getConfig();
-    } else if (configCommand.command.equals("") || configCommand.command.equals("help")) {
-        return getHelp();
+CommandLineInterface::KeyValue CommandLineInterface::splitKeyValuePair(String keyAndValue) {
+    int equalsIndex = keyAndValue.indexOf('=');
+    if (equalsIndex < 0) {
+        return {"", ""};
     }
-    return CLI_RESPONSE_UNKNOWN_COMMAND;
+
+    return {keyAndValue.substring(0, equalsIndex), keyAndValue.substring(equalsIndex + 1)};
 }
 
-String CommandLineInterface::ConfigCLI::getConfig() {
-    String result;
-    serializeJsonPretty(configuration.toJsonDocument(), result);
-    return result;
-}
-
-String CommandLineInterface::ConfigCLI::getHelp() {
-    return "config get - get the current configuration\n";
-}
+CommandLineInterface commandLineInterface;
 
 #pragma clang diagnostic pop

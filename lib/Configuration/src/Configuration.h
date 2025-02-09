@@ -27,7 +27,7 @@
 #define LOG_DIRECTORY "/log"
 #endif
 
-#ifndef SYSTEM_STATUS_FILE_PATH
+#ifndef SYSTwEM_STATUS_FILE_PATH
 #define SYSTEM_STATUS_FILE_PATH "/status.json"
 #endif
 
@@ -75,48 +75,92 @@
 #define ALARM_LED_PIN 4
 #endif
 
-#define CONFIGURATION_FIELD_LOG_DIRECTORY "logDirectory"
-#define CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH "systemStatusFilePath"
-#define CONFIGURATION_FIELD_WIFI_SSID "wifiSSID"
-#define CONFIGURATION_FIELD_WIFI_SECRET "wifiSecret"
-#define CONFIGURATION_FIELD_NTP_SERVER "ntpServer"
-#define CONFIGURATION_FIELD_NTP_OFFSET "ntpOffset"
-#define CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL "ntpUpdateInterval"
-#define CONFIGURATION_FIELD_TELNET_SERVER_PORT "telnetServerPort"
-#define CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL "heartbeatSerialLogInterval"
 #define CONFIGURATION_FIELD_HEARTBEAT_FILE_LOG_INTERVAL "heartbeatFileLogInterval"
+#define CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL "heartbeatSerialLogInterval"
+#define CONFIGURATION_FIELD_LOG_DIRECTORY "logDirectory"
+#define CONFIGURATION_FIELD_NTP_OFFSET "ntpOffset"
+#define CONFIGURATION_FIELD_NTP_SERVER "ntpServer"
+#define CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL "ntpUpdateInterval"
+#define CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH "systemStatusFilePath"
+#define CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL "systemStatusSaveInterval"
+#define CONFIGURATION_FIELD_TELNET_SERVER_PORT "telnetServerPort"
+#define CONFIGURATION_FIELD_WIFI_SECRET "wifiSecret"
+#define CONFIGURATION_FIELD_WIFI_SSID "wifiSSID"
 
 class Configuration {
 public:
+    enum ResultCode {
+        OK,
+        INVALID_KEY
+    };
+
+    struct SetResult {
+        ResultCode code;
+        String message;
+    };
+
+    struct GetResult {
+        ResultCode code;
+        String value;
+    };
+
     Configuration() = default;
 
     explicit Configuration(JsonObject doc);
 
-    String getLogDirectory();
+    // Getters
 
-    String getSystemStatusFilePath();
+    GetResult get(const String& key);
 
-    void setSystemStatusFilePath(String path);
-
-    String getWifiSSID() const;
-
-    String getWifiSecret() const;
-
-    String getNtpServer() const;
-
-    int getNtpOffset() const;
-
-    unsigned int getNtpUpdateInterval() const;
-
-    unsigned int getTelnetServerPort() const;
-
-    unsigned long getHeartbeatSerialLogInterval() const;
+    String getConfigurationFilePath() const;
 
     unsigned long getHeartbeatFileLogInterval() const;
 
+    unsigned long getHeartbeatSerialLogInterval() const;
+
+    String getLogDirectory();
+
+    int getNtpOffset() const;
+
+    String getNtpServer() const;
+
+    unsigned int getNtpUpdateInterval() const;
+
+    String getSystemStatusFilePath();
+
     unsigned long getSystemStatusSaveInterval() const;
 
+    unsigned int getTelnetServerPort() const;
+
+    String getWifiSecret() const;
+
+    String getWifiSSID() const;
+
+    // Setters
+
+    SetResult set(const String& key, const String& value);
+
+    void setHeartbeatFileLogInterval(unsigned long interval);
+
+    void setHeartbeatSerialLogInterval(unsigned long interval);
+
+    void setLogDirectory(String directory);
+
+    void setNtpOffset(int offset);
+
+    void setNtpServer(String server);
+
+    void setNtpUpdateInterval(int interval);
+
+    void setSystemStatusFilePath(String path);
+
     void setSystemStatusSaveInterval(unsigned long interval);
+
+    void setTelnetServerPort(unsigned int port);
+
+    void setWifiSecret(String secret);
+
+    void setWifiSSID(String ssid);
 
     JsonDocument toJsonDocument();
 

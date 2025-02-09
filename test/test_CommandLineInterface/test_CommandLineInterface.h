@@ -1,6 +1,8 @@
 #ifndef BLACKOUT_DETECT_O_MATIC_TEST_COMMAND_LINE_INTERFACE_H
 #define BLACKOUT_DETECT_O_MATIC_TEST_COMMAND_LINE_INTERFACE_H
 
+#define TEST_DIRECTORY "/test"
+
 #include <Arduino.h>
 #include <unity.h>
 

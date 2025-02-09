@@ -10,10 +10,34 @@
 
 #define CLI_COMMAND_CONFIG "config"
 #define CLI_COMMAND_CONFIG_GET "get"
+#define CLI_COMMAND_CONFIG_SET "set"
 
 #define CLI_RESPONSE_UNKNOWN_COMMAND "unknown command"
 
 class CommandLineInterface {
+public:
+    struct CommandAndArguments {
+        String command;
+        String arguments;
+    };
+
+    struct KeyValue {
+        String key;
+        String value;
+    };
+
+    CommandLineInterface() = default;
+
+    CommandAndArguments splitCommandAndArguments(String command);
+
+    KeyValue splitKeyValuePair(String keyAndValue);
+
+    String executeCommand(String command);
+
+    String getStatus();
+
+    String getHelp();
+
     class ConfigCLI {
     public:
         ConfigCLI() = default;
@@ -22,24 +46,13 @@ class CommandLineInterface {
 
         String getConfig();
 
+        String getConfig(String key);
+
+        String setConfig(String keyAndValue);
+
         String getHelp();
     };
 
-public:
-    struct CommandAndArguments {
-        String command;
-        String arguments;
-    };
-
-    CommandLineInterface() = default;
-
-    CommandAndArguments splitCommandAndArguments(String command);
-
-    String executeCommand(String command);
-
-    String getStatus();
-
-    String getHelp();
 
 private:
     ConfigCLI config;

@@ -3,13 +3,21 @@
 
 #include "test_CommandLineInterface.h"
 
-String systemStatusFilePath = "/testCommandLineInterfaceSystemStatus.json";
+String systemStatusFilePath = TEST_DIRECTORY "/test-status.json";
 
 void setUp(void) {
     configuration.setSystemStatusFilePath(systemStatusFilePath);
 
     if (!persistentStorage.isMounted()) {
         persistentStorage.mount();
+    }
+
+    if (!persistentStorage.exists(TEST_DIRECTORY)) {
+        persistentStorage.createDirectory(TEST_DIRECTORY);
+    }
+
+    if (persistentStorage.exists(systemStatusFilePath)) {
+        persistentStorage.removeFile(systemStatusFilePath);
     }
 }
 
@@ -66,7 +74,7 @@ void test_uptime() {
 void test_help() {
     String expected = "ping - echo request\n"
                       "clock - get the current time\n"
-                      "config - configuration commands, issue 'config help' for more info"
+                      "config - configuration commands, issue 'config help' for more info\n"
                       "uptime - get the uptime\n"
                       "status - get the status of the system\n"
                       "clearAlarm - clear the alarm\n"
@@ -77,10 +85,6 @@ void test_help() {
 }
 
 void test_saveSystemStatus() {
-    if (persistentStorage.exists(systemStatusFilePath)) {
-        persistentStorage.removeFile(systemStatusFilePath);
-    }
-
     String response = commandLineInterface.executeCommand("saveStatus");
 
     TEST_ASSERT_EQUAL_STRING("Status saved", response.c_str());
@@ -111,9 +115,33 @@ void test_splitCommandAndArguments_withMultipleArguments() {
 
 void test_config_get() {
     String actual = commandLineInterface.executeCommand("config get");
-    serialLogger.debug("test_config_get");
-    serialLogger.debug(actual);
+
     TEST_ASSERT_GREATER_THAN(0, actual.indexOf(CONFIGURATION_FIELD_WIFI_SSID));
+}
+
+void test_config_get_singleField() {
+    configuration.setWifiSSID("TestSSID");
+
+    String actual = commandLineInterface.executeCommand("config get wifiSSID");
+
+    TEST_ASSERT_GREATER_THAN(-1, actual.indexOf("TestSSID"));
+    TEST_ASSERT_EQUAL_STRING("TestSSID", configuration.getWifiSSID().c_str());
+}
+
+void test_config_set() {
+    String actual = commandLineInterface.executeCommand("config set wifiSSID=TestSSID");
+
+    TEST_ASSERT_GREATER_THAN(-1, actual.indexOf("updated"));
+    TEST_ASSERT_EQUAL_STRING("TestSSID", configuration.getWifiSSID().c_str());
+}
+
+void test_config_save() {
+    configuration.setWifiSSID("TestSSID");
+
+    String actual = commandLineInterface.executeCommand("config save");
+
+    TEST_ASSERT_GREATER_THAN(-1, actual.indexOf("saved"));
+    TEST_ASSERT_EQUAL_STRING(persistentStorage.readFile(CONFIGURATION_FILE_PATH).c_str(), configuration.toJsonDocument().as<String>().c_str());
 }
 
 int runUnitTests() {
@@ -133,6 +161,8 @@ int runUnitTests() {
     RUN_TEST(test_splitCommandAndArguments_withNoArguments);
     RUN_TEST(test_splitCommandAndArguments_withMultipleArguments);
     RUN_TEST(test_config_get);
+    RUN_TEST(test_config_get_singleField);
+    RUN_TEST(test_config_set);
 
     return UNITY_END();
 }
