@@ -65,10 +65,11 @@ void test_uptime() {
     unsigned long expectedMinimumUptimeSeconds = millis() / 1000;
     unsigned long expectedMinimumUptimeMillis = millis() % 1000;
 
-    String actualDuration = commandLineInterface.executeCommand("uptime");
-    String expectedDuration = Duration(1, expectedMinimumUptimeSeconds, expectedMinimumUptimeMillis).getFormattedDuration();
+    String expectedUptime = rtcAdapter.getTime().getFormattedTime() + " up "
+                            + Duration(1, expectedMinimumUptimeSeconds, expectedMinimumUptimeMillis).getFormattedDuration();
+    String actualUptime = commandLineInterface.executeCommand("uptime");
 
-    TEST_ASSERT_EQUAL_STRING(expectedDuration.c_str(), actualDuration.c_str());
+    TEST_ASSERT_EQUAL_STRING(expectedUptime.c_str(), actualUptime.c_str());
 }
 
 void test_help() {
