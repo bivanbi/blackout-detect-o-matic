@@ -1,5 +1,6 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
+
 #include "SerialCommandInterface.h"
 
 void SerialCommandInterface::setup() {
@@ -20,8 +21,7 @@ void SerialCommandInterface::readSerial() {
                 inputBuffer.remove(inputBuffer.length() - 1);
                 Serial.print("\b \b");
             }
-        } else
-        if (input == '\n') {
+        } else if (input == '\n') {
             commandReceived = true;
             serialLogger.debug("SerialCommandInterface::readSerial: Received command: '" + inputBuffer + "'");
         } else {
