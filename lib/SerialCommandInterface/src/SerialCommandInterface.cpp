@@ -14,6 +14,12 @@ void SerialCommandInterface::loop() {
 void SerialCommandInterface::readSerial() {
     if (Serial.available() > 0) {
         char input = Serial.read();
+        if (input == '\b') {
+            if (inputBuffer.length() > 0) {
+                inputBuffer.remove(inputBuffer.length() - 1);
+                Serial.print("\b \b");
+            }
+        } else
         if (input == '\n') {
             commandReceived = true;
             serialLogger.debug("SerialCommandInterface::readSerial: Received command: '" + inputBuffer + "'");
