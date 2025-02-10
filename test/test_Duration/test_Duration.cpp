@@ -64,8 +64,8 @@ void test_greaterThan_withLesser_withSecondDifference(void) {
 }
 
 void test_getFormattedDuration(void) {
-    Duration duration = Duration(1, 14948, 25);
-    TEST_ASSERT_EQUAL_STRING("04:09:08.025", duration.getFormattedDuration().c_str());
+    Duration duration = Duration(1, 187748, 25);
+    TEST_ASSERT_EQUAL_STRING("2 days 04:09:08.025", duration.getFormattedDuration().c_str());
 }
 
 int runUnityTests(void) {

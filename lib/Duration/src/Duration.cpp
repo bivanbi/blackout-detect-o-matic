@@ -42,12 +42,13 @@ bool Duration::lessThan(Duration other) {
 }
 
 String Duration::getFormattedDuration() {
-    unsigned int resultHours = seconds / 3600;
+    unsigned int resultDays = seconds / 86400;
+    unsigned int resultHours = (seconds % 86400) / 3600;
     unsigned int resultMinutes = (seconds % 3600) / 60;
     unsigned int resultSeconds = seconds % 60;
 
     char result[80];
-    sprintf(result, "%02d:%02d:%02d.%03d", resultHours, resultMinutes, resultSeconds, milliSeconds);
+    sprintf(result, "%d days %02d:%02d:%02d.%03d", resultDays, resultHours, resultMinutes, resultSeconds, milliSeconds);
     return {result};
 }
 
