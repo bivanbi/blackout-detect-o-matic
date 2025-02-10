@@ -74,7 +74,9 @@ String CommandLineInterface::ConfigCLI::executeCommand(String commandLine) {
         return setConfig(configCommand.arguments);
     } else if (configCommand.command.equals(CLI_COMMAND_CONFIG_SAVE)) {
         return saveConfig();
-    } else if (configCommand.command.equals("help") || configCommand.command.equals("-h") || configCommand.command.equals("--help")) {
+    } else if (configCommand.command.equals("help")
+               || configCommand.command.equals("-h")
+               || configCommand.command.equals("--help")) {
         return getHelp();
     }
     return CLI_RESPONSE_UNKNOWN_COMMAND;
