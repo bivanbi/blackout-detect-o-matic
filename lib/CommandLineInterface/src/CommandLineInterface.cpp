@@ -14,7 +14,7 @@ String CommandLineInterface::executeCommand(String commandLine) {
         return "Clock source: " + rtcAdapter.clockSourceToString(rtcAdapter.getClockSource()) + ", time: " +
                rtcAdapter.getTime().getFormattedTime();
     } else if (cmd.command.equals("uptime")) {
-        return Duration(1, millis() / 1000, millis() % 1000).getFormattedDuration();
+        return getUptime();
     } else if (cmd.command.equals("status")) {
         return getStatus();
     } else if (cmd.command.equals("clearAlarm")) {
@@ -45,6 +45,11 @@ String CommandLineInterface::getStatus() {
     String result;
     serializeJsonPretty(systemStatus.toHumanReadableJsonDocument(), result);
     return result;
+}
+
+String CommandLineInterface::getUptime() {
+    return rtcAdapter.getTime().getFormattedTime() + " up "
+           + Duration(1, millis() / 1000, millis() % 1000).getFormattedDuration();
 }
 
 String CommandLineInterface::getHelp() {

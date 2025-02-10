@@ -38,6 +38,8 @@ public:
 
     String getStatus();
 
+    String getUptime();
+
     String getHelp();
 
     class ConfigCLI {
