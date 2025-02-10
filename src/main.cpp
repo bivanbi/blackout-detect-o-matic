@@ -8,6 +8,7 @@ void setup() {
     persistentStorage.mount();
     initConfiguration();
     SystemStatusLoader::load();
+    serialCLI.setup();
     initWiFi();
     initNTP();
     systemStatus.rebootDetected(ntpClientAdapter.getUnixTime());
@@ -19,19 +20,14 @@ void setup() {
 
 void loop() {
     TelnetServer::loop();
+    serialCLI.loop();
     PeriodicTaskScheduler::loop();
 }
 
 void initConfiguration() {
-    if (OVERWRITE_CONFIGURATION) {
-        serialLogger.info("initConfiguration: Force overwrite configuration on SD card");
-        ConfigurationLoader::save();
-    } else {
-        serialLogger.info("initConfiguration: load configuration from SD card");
-        ConfigurationLoader::load();
-    }
-
-    serialLogger.info("Configuration: " + configuration.toJsonDocument().as<String>());
+    serialLogger.info("initConfiguration: load configuration from SD card");
+    ConfigurationLoader::load();
+    serialLogger.info("initConfiguration: loaded configuration: " + configuration.toJsonDocument().as<String>());
 }
 
 void initWiFi() {

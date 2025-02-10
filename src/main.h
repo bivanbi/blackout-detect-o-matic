@@ -21,6 +21,7 @@
 #include "PeriodicTaskScheduler.h"
 #include "SystemStatusLoader.h"
 #include "ConfigurationLoader.h"
+#include "SerialCommandInterface.h"
 
 #define LOG_FILEPATH_FORMAT LOG_DIRECTORY + "/log_%Y-%m-%d.log";
 #define SYSTEM_STATUS_FILEPATH "/system_status.json"

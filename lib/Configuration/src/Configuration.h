@@ -7,10 +7,6 @@
 #define CONFIGURATION_FILE_PATH "/config.json"
 #endif
 
-#ifndef OVERWRITE_CONFIGURATION
-#define OVERWRITE_CONFIGURATION false
-#endif
-
 #ifndef PERIODIC_TASK_INTERVAL
 #define PERIODIC_TASK_INTERVAL 1000 // milliseconds, e.g. 1000 = 1 seconds
 #endif
