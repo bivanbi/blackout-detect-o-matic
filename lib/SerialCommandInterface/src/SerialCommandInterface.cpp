@@ -4,6 +4,7 @@
 
 void SerialCommandInterface::setup() {
     Serial.begin(115200);
+    serialLogger.info("Serial Command Interface: ready to receive commands");
 }
 
 void SerialCommandInterface::loop() {
