@@ -8,6 +8,7 @@
 #include "SerialLogger.h"
 #include "SystemStatusLoader.h"
 #include "ConfigurationLoader.h"
+#include "PeriodicTaskScheduler.h"
 
 #define CLI_COMMAND_CONFIG "config"
 #define CLI_COMMAND_CONFIG_GET "get"
@@ -15,6 +16,9 @@
 #define CLI_COMMAND_CONFIG_SAVE "save"
 
 #define CLI_RESPONSE_UNKNOWN_COMMAND "unknown command"
+
+#define CLI_COMMAND_REBOOT "reboot"
+#define CLI_DEFAULT_REBOOT_DELAY 3 // seconds
 
 class CommandLineInterface {
 public:
@@ -59,9 +63,14 @@ public:
         String getHelp();
     };
 
-
 private:
     ConfigCLI config;
+
+    /**
+     * Schedule reboot
+     * @param delay in seconds
+     */
+    String scheduleReboot(CommandAndArguments cmd);
 };
 
 extern CommandLineInterface commandLineInterface;

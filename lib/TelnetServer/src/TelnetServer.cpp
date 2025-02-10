@@ -51,9 +51,6 @@ void TelnetServer::onInputReceived(String input) {
     } else if (input.equals("help")) {
         telnet.println(TelnetServer::getHelp());
         telnet.print(prompt);
-    } else if (input.equals("reboot")) {
-        SystemStatusLoader::save();
-        reboot();
     } else {
         telnet.println(commandLineInterface.executeCommand(input));
         telnet.print(prompt);
@@ -62,19 +59,12 @@ void TelnetServer::onInputReceived(String input) {
 
 String TelnetServer::getHelp() {
     return "quit - disconnect\n"
-           + commandLineInterface.getHelp()
-           + "reboot - reboot the device\n";
+           + commandLineInterface.getHelp();
 }
 
 String TelnetServer::getWelcomeMessage() {
     return {"Welcome to Blackout Detect-o-matic\n"
             "Type 'help' for a list of commands\n"};
-}
-
-void TelnetServer::reboot() {
-    telnet.println("Rebooting, bye!");
-    telnet.disconnectClient(true);
-    esp_restart();
 }
 
 #pragma clang diagnostic pop

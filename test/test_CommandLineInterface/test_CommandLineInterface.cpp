@@ -72,7 +72,8 @@ void test_uptime() {
 }
 
 void test_help() {
-    String expected = "ping - echo request\n"
+    String expected = "reboot <delay> - reboot the system, optional delay in seconds, default: " + String(CLI_DEFAULT_REBOOT_DELAY) + " s\n"
+                      "ping - echo request\n"
                       "clock - get the current time\n"
                       "config - configuration commands, issue 'config help' for more info\n"
                       "uptime - get the uptime\n"

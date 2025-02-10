@@ -15,6 +15,7 @@ void IRAM_ATTR PeriodicTaskScheduler::onTimerInterrupt() {
 void PeriodicTaskScheduler::loop() {
     if (periodicTasksAreDue) {
         tick();
+        reboot();
         syncTime();
         processEvents();
         updateSystemStatus();
@@ -29,6 +30,16 @@ void PeriodicTaskScheduler::tick() {
     tickCounter.timeSync += PERIODIC_TASK_INTERVAL;
     tickCounter.serialHeartBeat += PERIODIC_TASK_INTERVAL;
     tickCounter.fileHeartBeat += PERIODIC_TASK_INTERVAL;
+
+    if (rebootRequested >= 0) {
+        tickCounter.reboot += PERIODIC_TASK_INTERVAL;
+    }
+}
+
+void PeriodicTaskScheduler::reboot() {
+    if (rebootRequested >= 0 && tickCounter.reboot >= rebootRequested * 1000) {
+        RebootTask::reboot();
+    }
 }
 
 void PeriodicTaskScheduler::syncTime(bool force) {
@@ -89,6 +100,11 @@ bool PeriodicTaskScheduler::isFileHeartBeatDue() {
     return tickCounter.fileHeartBeat >= configuration.getHeartbeatFileLogInterval() * 1000;
 }
 
+void PeriodicTaskScheduler::scheduleReboot(long delay) {
+    rebootRequested = delay;
+    serialLogger.info("PeriodicTaskScheduler: Reboot scheduled in " + String(delay) + " seconds");
+}
+
 String PeriodicTaskScheduler::getHeartBeatMessage() {
     return "uptime: " + String(millis() / 1000) + " seconds, WiFi status: " +
            wifiClientAdapter.statusToString(wifiClientAdapter.getStatus()) + ", clock set: " + ntpClientAdapter.isTimeSet()
@@ -105,3 +121,4 @@ String PeriodicTaskScheduler::getHeartBeatMessage() {
 hw_timer_t *PeriodicTaskScheduler::periodicTaskTimer = nullptr;
 bool PeriodicTaskScheduler::periodicTasksAreDue = false;
 PeriodicTaskScheduler::TickCounter PeriodicTaskScheduler::tickCounter;
+long PeriodicTaskScheduler::rebootRequested = -1; // Reboot delayed by given seconds. Set to 0 to reboot immediately.

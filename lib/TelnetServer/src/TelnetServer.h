@@ -29,8 +29,6 @@ private:
     static String getWelcomeMessage();
 
     static String getHelp();
-
-    static void reboot();
 };
 
 #endif //BLACKOUT_DETECT_O_MATIC_TELNET_SERVER_H

@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 
+#include "RebootTask.h"
 #include "Configuration.h"
 #include "SerialLogger.h"
 #include "SystemStatus.h"
@@ -25,12 +26,19 @@ class PeriodicTaskScheduler {
         unsigned long serialHeartBeat = 0;
         unsigned long fileHeartBeat = 0;
         unsigned long saveSystemStatus = 0;
+        unsigned long reboot = 0;
     };
 
 public:
     PeriodicTaskScheduler() = default;
 
     static void init();
+
+    /**
+     * Reboot with optional delay.
+     * @param delay in seconds. Set to 0 to reboot immediately.
+     */
+    static void scheduleReboot(long delay = 0);
 
     /**
      * Timer interrupt handler - indicate, that periodic tasks are due.
@@ -47,6 +55,7 @@ public:
 private:
     static void tick();
 
+    static void reboot();
 
     static bool isSyncTimeDue();
 
@@ -69,6 +78,7 @@ private:
     static hw_timer_t *periodicTaskTimer;
     static bool periodicTasksAreDue;
     static TickCounter tickCounter;
+    static long rebootRequested;
 };
 
 #endif //BLACKOUT_DETECT_O_MATIC_PERIODIC_TASK_SCHEDULER_H

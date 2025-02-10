@@ -8,7 +8,9 @@ String CommandLineInterface::executeCommand(String commandLine) {
     commandLine.trim();
     CommandAndArguments cmd = splitCommandAndArguments(commandLine);
 
-    if (cmd.command.equals("ping")) {
+    if (cmd.command.equals(CLI_COMMAND_REBOOT)) {
+        return scheduleReboot(cmd);
+    } else if (cmd.command.equals("ping")) {
         return "pong";
     } else if (cmd.command.equals("clock")) {
         return "Clock source: " + rtcAdapter.clockSourceToString(rtcAdapter.getClockSource()) + ", time: " +
@@ -52,8 +54,18 @@ String CommandLineInterface::getUptime() {
            + Duration(1, millis() / 1000, millis() % 1000).getFormattedDuration();
 }
 
+String CommandLineInterface::scheduleReboot(CommandLineInterface::CommandAndArguments cmd) {
+        if (cmd.arguments.isEmpty()) {
+            cmd.arguments = String(CLI_DEFAULT_REBOOT_DELAY);
+        }
+
+        PeriodicTaskScheduler::scheduleReboot(cmd.arguments.toInt());
+        return "Rebooting in " + String(CLI_DEFAULT_REBOOT_DELAY) + " s";
+}
+
 String CommandLineInterface::getHelp() {
-    return "ping - echo request\n"
+    return "reboot <delay> - reboot the system with optional delay in seconds, default: " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds\n"
+           "ping - echo request\n"
            "clock - get the current time\n"
            CLI_COMMAND_CONFIG " - configuration commands, issue 'config help' for more info\n"
            "uptime - get the uptime\n"
