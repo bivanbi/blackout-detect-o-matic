@@ -10,7 +10,22 @@
 
 class SerialLogger {
 public:
+    enum LogLevel {
+        NONE = 0,
+        ERROR = 1,
+        INFO = 2,
+        DEBUG = 3
+    };
+
     SerialLogger();
+
+    void setLogLevel(String level);
+
+    void setLogLevel(LogLevel level);
+
+    LogLevel stringToLogLevel(String level);
+
+    String logLevelToString(LogLevel level);
 
     void debug(String message);
 
@@ -22,6 +37,8 @@ private:
     String getLogHeader(String level);
 
     void log(String level, String message);
+
+    LogLevel logLevel = LogLevel::INFO;
 };
 
 extern SerialLogger serialLogger;
