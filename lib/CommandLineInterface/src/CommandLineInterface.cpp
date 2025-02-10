@@ -60,7 +60,7 @@ String CommandLineInterface::scheduleReboot(CommandLineInterface::CommandAndArgu
         }
 
         PeriodicTaskScheduler::scheduleReboot(cmd.arguments.toInt());
-        return "Rebooting in " + String(CLI_DEFAULT_REBOOT_DELAY) + " s";
+        return "Rebooting in " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds";
 }
 
 String CommandLineInterface::getHelp() {
