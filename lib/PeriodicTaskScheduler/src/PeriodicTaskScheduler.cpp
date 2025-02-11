@@ -66,11 +66,7 @@ void PeriodicTaskScheduler::updateSystemStatus() {
 
 void PeriodicTaskScheduler::saveSystemStatus() {
     if (isSystemStatusSaveDue()) {
-        if (SystemStatusLoader::save()) {
-            serialLogger.info("System status saved");
-        } else {
-            serialLogger.error("Failed to save system status");
-        }
+        SystemStatusLoader::save();
         tickCounter.saveSystemStatus = 0;
     }
 }
