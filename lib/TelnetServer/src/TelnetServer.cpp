@@ -14,7 +14,7 @@ void TelnetServer::begin(unsigned int port) {
     telnet.onInputReceived(onInputReceived);
 
     Serial.print("- Telnet: ");
-    if (telnet.begin(port, false)) {
+    if (telnet.begin(port, true)) {
         serialLogger.info("TelnetServer: listening on " + String(WiFi.localIP()) + ":" + port);
     } else {
         serialLogger.error("TelnetServer: failed to start");

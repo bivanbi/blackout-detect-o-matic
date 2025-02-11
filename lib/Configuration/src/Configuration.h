@@ -32,11 +32,11 @@
 #endif
 
 #ifndef WIFI_SSID
-#define WIFI_SSID "DummyWifiSSID"
+#define WIFI_SSID ""
 #endif
 
 #ifndef WIFI_SECRET
-#define WIFI_SECRET "DummyWifiSecret"
+#define WIFI_SECRET ""
 #endif
 
 #ifndef NTP_SERVER

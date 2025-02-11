@@ -39,6 +39,11 @@ void initPersistentStorage() {
 }
 
 void initWiFi() {
+    if (configuration.getWifiSSID().isEmpty()) {
+        serialLogger.error("initWiFi: No WiFi SSID configured, skipping WiFi initialization");
+        return;
+    }
+
     wifiClientAdapter.connect(configuration.getWifiSSID(), configuration.getWifiSecret());
     while (!wifiClientAdapter.isConnected()) {
         serialLogger.info("Init: Connecting to WiFi network " + String(WIFI_SSID) + ", mac address: " +
@@ -50,6 +55,11 @@ void initWiFi() {
 }
 
 void initNTP() {
+    if (configuration.getWifiSSID().isEmpty()) {
+        serialLogger.error("initWiFi: No WiFi SSID configured, skipping NTP initialization");
+        return;
+    }
+
     serialLogger.info("initNTPClient: Setting NTP server: " + configuration.getNtpServer() + ", update interval: " +
                       configuration.getNtpUpdateInterval() + " seconds, offset: " + configuration.getNtpOffset() +
                       " seconds");
@@ -67,5 +77,9 @@ void initPins() {
 }
 
 void initTelnetServer() {
+    if (configuration.getWifiSSID().isEmpty()) {
+        serialLogger.error("initWiFi: No WiFi SSID configured, skipping Telnet Server initialization");
+        return;
+    }
     TelnetServer::begin(configuration.getTelnetServerPort());
 }
