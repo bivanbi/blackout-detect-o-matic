@@ -66,6 +66,13 @@ void test_clockSourceToString() {
     TEST_ASSERT_EQUAL_STRING("File Date (2)", rtcAdapter.clockSourceToString(RTCAdapter::ClockSource::FILE_DATE).c_str());
 }
 
+void test_pause() {
+    UnixTimeWithMilliSeconds pausedAt = rtcAdapter.pause();
+    delay(100);
+
+    TEST_ASSERT_TRUE(pausedAt.equals(rtcAdapter.getTime()));
+}
+
 int runUnityTests(void) {
     UNITY_BEGIN();
 
@@ -77,6 +84,8 @@ int runUnityTests(void) {
     RUN_TEST(test_isTimeSet_withNTP);
     RUN_TEST(test_isTimeSet_withFileDate);
     RUN_TEST(test_clockSourceToString);
+
+    RUN_TEST(test_pause);
 
     return UNITY_END();
 }

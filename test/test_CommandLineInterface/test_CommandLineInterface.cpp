@@ -33,9 +33,10 @@ void test_executeCommand_ping() {
 }
 
 void test_executeCommand_clock() {
-    rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, UnixTimeWithMilliSeconds(123, 000));
+    rtcAdapter.pause();
+    rtcAdapter.setTime(RTCAdapter::NTP, UnixTimeWithMilliSeconds(123, 458));
     String expected = "Clock source: " + rtcAdapter.clockSourceToString(RTCAdapter::NTP) + ", time: " +
-                      UnixTimeWithMilliSeconds(123, 456).getFormattedTime();
+                      UnixTimeWithMilliSeconds(123, 458).getFormattedTime();
 
     TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("clock").c_str());
 }
@@ -62,14 +63,12 @@ void test_executeCommand_resetStatus() {
 }
 
 void test_uptime() {
-    unsigned long expectedMinimumUptimeSeconds = millis() / 1000;
-    unsigned long expectedMinimumUptimeMillis = millis() % 1000;
+    rtcAdapter.pause();
+    rtcAdapter.setTime(RTCAdapter::NTP, UnixTimeWithMilliSeconds(123456, 456));
+    UptimeAdapter::pause();
+    UptimeAdapter::set(123456);
 
-    String expectedUptime = rtcAdapter.getTime().getFormattedTime() + " up "
-                            + Duration(1, expectedMinimumUptimeSeconds, expectedMinimumUptimeMillis).getFormattedDuration();
-    String actualUptime = commandLineInterface.executeCommand("uptime");
-
-    TEST_ASSERT_EQUAL_STRING(expectedUptime.c_str(), actualUptime.c_str());
+    TEST_ASSERT_EQUAL_STRING("1970-01-02 10:17:36 up 0 days 00:02:03.456", commandLineInterface.executeCommand("uptime").c_str());
 }
 
 void test_help() {

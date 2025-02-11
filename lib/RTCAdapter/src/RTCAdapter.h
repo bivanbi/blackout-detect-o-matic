@@ -32,6 +32,21 @@ public:
         return id;
     }
 
+    /**
+     * Pause the RTC clock for testing purposes.
+     * Use it together with set() to for exact
+     * time value for testing. Subsequent calls to pause
+     * will return the same paused time.
+     *
+     * @return time when the clock was paused
+     */
+    UnixTimeWithMilliSeconds pause();
+
+    /**
+     * Jump back to real uptime cancelling pause() and set() completely.
+     */
+    void returnToRealRtcTime();
+
 protected:
     static int ID;
 
@@ -40,6 +55,9 @@ private:
     int offset;
     ESP32Time rtc;
     ClockSource clockSource;
+
+    bool isPaused = false;
+    UnixTimeWithMilliSeconds pausedAt;
 };
 
 extern RTCAdapter rtcAdapter;

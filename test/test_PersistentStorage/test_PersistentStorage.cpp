@@ -82,6 +82,7 @@ void test_removeFile() {
 }
 
 void test_getLastModificationDate() {
+    rtcAdapter.pause();
     String path = TEST_DIRECTORY + String("/file-date-test.txt");
     rtcAdapter.setTime(RTCAdapter::ClockSource::FILE_DATE, UnixTimeWithMilliSeconds(1738130642, 0));
     persistentStorage.writeFile(path, "content of Test File to get last modification date");

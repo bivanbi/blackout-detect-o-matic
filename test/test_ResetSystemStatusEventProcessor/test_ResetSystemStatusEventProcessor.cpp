@@ -25,6 +25,7 @@ void test_processEvents_withNoEvents() {
 }
 
 void test_processEvents_withEvents() {
+    rtcAdapter.pause();
     rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, UnixTimeWithMilliSeconds(1234, 1));
     resetSystemStatusEventBuffer.resetEventCount = 1;
 

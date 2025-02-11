@@ -13,9 +13,16 @@ void RTCAdapter::setTime(RTCAdapter::ClockSource source, UnixTimeWithMilliSecond
     int microSeconds = (int) time.getMilliSeconds() * 1000;
     rtc.setTime(time.getUnixTime(), microSeconds); // ms is a lie. it is us
     clockSource = source;
+    if (isPaused) {
+        pausedAt = time;
+    }
 }
 
 UnixTimeWithMilliSeconds RTCAdapter::getTime() {
+    if (isPaused) {
+        return pausedAt;
+    }
+
     return {rtc.getEpoch(), rtc.getMillis()};
 }
 
@@ -55,6 +62,20 @@ String RTCAdapter::clockSourceToString(RTCAdapter::ClockSource source) {
     }
 
     return sourceString + " (" + String(source) + ")";
+}
+
+UnixTimeWithMilliSeconds RTCAdapter::pause() {
+    if (isPaused) {
+        return pausedAt;
+    }
+
+    pausedAt = getTime();
+    isPaused = true;
+    return pausedAt;
+}
+
+void RTCAdapter::returnToRealRtcTime() {
+    isPaused = false;
 }
 
 RTCAdapter rtcAdapter = RTCAdapter();
