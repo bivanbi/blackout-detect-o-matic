@@ -8,25 +8,25 @@ String CommandLineInterface::executeCommand(String commandLine) {
     commandLine.trim();
     CommandAndArguments cmd = splitCommandAndArguments(commandLine);
 
-    if (cmd.command.equals(CLI_COMMAND_REBOOT)) {
-        return scheduleReboot(cmd);
-    } else if (cmd.command.equals("ping")) {
-        return "pong";
-    } else if (cmd.command.equals("clock")) {
-        return "Clock source: " + rtcAdapter.clockSourceToString(rtcAdapter.getClockSource()) + ", time: " +
-               rtcAdapter.getTime().getFormattedTime();
-    } else if (cmd.command.equals("uptime")) {
-        return getUptime();
-    } else if (cmd.command.equals(CLI_COMMAND_STATUS)) {
-        return status.executeCommand(cmd.arguments);
-    } else if (cmd.command.equals("clearAlarm")) {
-        serialLogger.info("CommandLineInterface: clearAlarm");
-        systemStatus.clearAlarm(rtcAdapter.getTime());
-        return "Alarm cleared";
+    if (cmd.command.equals(CLI_COMMAND_ALARM)) {
+        return alarm.executeCommand(cmd.arguments);
     } else if (cmd.command.equals(CLI_COMMAND_CONFIG)) {
         return config.executeCommand(cmd.arguments);
-    } else if (cmd.command.equals("help")) {
+    } else if (cmd.command.equals(CLI_COMMAND_DATE)) {
+        return "Clock source: " + rtcAdapter.clockSourceToString(rtcAdapter.getClockSource()) + ", time: " +
+               rtcAdapter.getTime().getFormattedTime();
+    } else if (cmd.command.equals(CLI_COMMAND_HELP)) {
         return getHelp();
+    } else if (cmd.command.equals(CLI_COMMAND_MEMINFO)) {
+        return MemoryInfo::getFormattedMemoryInfo();
+    } else if (cmd.command.equals(CLI_COMMAND_PING)) {
+        return "pong";
+    } else if (cmd.command.equals(CLI_COMMAND_REBOOT)) {
+        return scheduleReboot(cmd);
+    } else if (cmd.command.equals(CLI_COMMAND_STATUS)) {
+        return status.executeCommand(cmd.arguments);
+    } else if (cmd.command.equals(CLI_COMMAND_UPTIME)) {
+        return getUptime();
     } else if (cmd.command.isEmpty()) {
         return "";
     } else {
@@ -53,9 +53,34 @@ String CommandLineInterface::getHelp() {
            "ping - echo request\n"
            "clock - get the current time\n"
            CLI_COMMAND_CONFIG " - configuration commands, issue 'config help' for more info\n"
+           CLI_COMMAND_MEMINFO " - get memory usage info\n"
            "uptime - get the uptime\n"
            CLI_COMMAND_STATUS " - status commands, issue 'status help' for more info\n"
            "clearAlarm - clear the alarm\n";
+}
+
+String CommandLineInterface::AlarmCLI::executeCommand(String commandLine) {
+    CommandAndArguments alarmCommand = commandLineInterface.splitCommandAndArguments(commandLine);
+    serialLogger.debug("CommandLineInterface::Alarm::executeCommand:'" + alarmCommand.command + "', args: '" +
+                       alarmCommand.arguments + "'");
+
+    if (alarmCommand.command.equals(CLI_COMMAND_ALARM_CLEAR)) {
+        return clearAlarm();
+    } else if (alarmCommand.command.equals(CLI_COMMAND_HELP)) {
+        return getHelp();
+    } else if (alarmCommand.command.isEmpty()) {
+        return "";
+    }
+    return CLI_RESPONSE_UNKNOWN_COMMAND;
+}
+
+String CommandLineInterface::AlarmCLI::clearAlarm() {
+    systemStatus.clearAlarm(rtcAdapter.getTime());
+    return "Alarm cleared";
+}
+
+String CommandLineInterface::AlarmCLI::getHelp() {
+    return "alarm clear - clear the alarm\n";
 }
 
 String CommandLineInterface::ConfigCLI::executeCommand(String commandLine) {

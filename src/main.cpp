@@ -61,11 +61,3 @@ void initPins() {
 void initTelnetServer() {
     TelnetServer::begin(configuration.getTelnetServerPort());
 }
-
-String getRamInfoString() {
-    // TODO make it a JSON object
-    return "Total heap: " + String(ESP.getHeapSize())
-           + ", tree heap: " + String(ESP.getFreeHeap())
-           + ", total PSRAM: " + String(ESP.getPsramSize())
-           + ", free PSRAM: " + String(ESP.getFreePsram());
-}

@@ -10,22 +10,33 @@
 #include "ConfigurationLoader.h"
 #include "PeriodicTaskScheduler.h"
 #include "UptimeAdapter.h"
+#include "MemoryInfo.h"
 
-#define CLI_COMMAND_HELP "help"
+#define CLI_COMMAND_ALARM "alarm"
+#define CLI_COMMAND_ALARM_CLEAR "clear"
+
 #define CLI_COMMAND_CONFIG "config"
 #define CLI_COMMAND_CONFIG_GET "get"
 #define CLI_COMMAND_CONFIG_SET "set"
 #define CLI_COMMAND_CONFIG_SAVE "save"
+
+#define CLI_COMMAND_DATE "date"
+
+#define CLI_COMMAND_HELP "help"
+#define CLI_COMMAND_MEMINFO "meminfo"
+#define CLI_COMMAND_PING "ping"
+
+#define CLI_COMMAND_REBOOT "reboot"
+#define CLI_DEFAULT_REBOOT_DELAY 3 // seconds
 
 #define CLI_COMMAND_STATUS "status"
 #define CLI_COMMAND_STATUS_GET "get"
 #define CLI_COMMAND_STATUS_RESET "reset"
 #define CLI_COMMAND_STATUS_SAVE "save"
 
-#define CLI_RESPONSE_UNKNOWN_COMMAND "unknown command"
+#define CLI_COMMAND_UPTIME "uptime"
 
-#define CLI_COMMAND_REBOOT "reboot"
-#define CLI_DEFAULT_REBOOT_DELAY 3 // seconds
+#define CLI_RESPONSE_UNKNOWN_COMMAND "unknown command"
 
 class CommandLineInterface {
 public:
@@ -47,11 +58,20 @@ public:
 
     String executeCommand(String command);
 
-    String getStatus();
-
     String getUptime();
 
     String getHelp();
+
+    class AlarmCLI {
+    public:
+        AlarmCLI() = default;
+
+        String executeCommand(String command);
+
+        String clearAlarm();
+
+        String getHelp();
+    };
 
     class ConfigCLI {
     public:
@@ -86,6 +106,7 @@ public:
     };
 
 private:
+    AlarmCLI alarm;
     ConfigCLI config;
     StatusCLI status;
 

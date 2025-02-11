@@ -49,24 +49,44 @@ void test_executeCommand_withUnknownCommand() {
     TEST_ASSERT_EQUAL_STRING("unknown command", commandLineInterface.executeCommand("unknown").c_str());
 }
 
-void test_executeCommand_ping() {
-    TEST_ASSERT_EQUAL_STRING("pong", commandLineInterface.executeCommand("ping").c_str());
+void test_alarm_clear() {
+    systemStatus.rebootDetected(UnixTimeWithMilliSeconds(123, 456));
+
+    TEST_ASSERT_EQUAL_STRING("Alarm cleared", commandLineInterface.executeCommand("alarm clear").c_str());
+    TEST_ASSERT_FALSE(systemStatus.isAlarmActive());
 }
 
-void test_executeCommand_clock() {
+void test_date() {
     rtcAdapter.pause();
     rtcAdapter.setTime(RTCAdapter::NTP, UnixTimeWithMilliSeconds(123, 458));
     String expected = "Clock source: " + rtcAdapter.clockSourceToString(RTCAdapter::NTP) + ", time: " +
                       UnixTimeWithMilliSeconds(123, 458).getFormattedTime();
 
-    TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("clock").c_str());
+    TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("date").c_str());
 }
 
-void test_executeCommand_clearAlarm() {
-    systemStatus.rebootDetected(UnixTimeWithMilliSeconds(123, 456));
+void test_help() {
+    String expected = "reboot <delay> - reboot the system with optional delay in seconds, default: " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds\n"
+                      "ping - echo request\n"
+                      "clock - get the current time\n"
+                      "config - configuration commands, issue 'config help' for more info\n"
+                      "meminfo - get memory usage info\n"
+                      "uptime - get the uptime\n"
+                      "status - status commands, issue 'status help' for more info\n"
+                      "clearAlarm - clear the alarm\n";
 
-    TEST_ASSERT_EQUAL_STRING("Alarm cleared", commandLineInterface.executeCommand("clearAlarm").c_str());
-    TEST_ASSERT_FALSE(systemStatus.isAlarmActive());
+    TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("help").c_str());
+}
+
+void test_meminfo() {
+    TEST_ASSERT_GREATER_OR_EQUAL(0, commandLineInterface.executeCommand("meminfo").indexOf("Total heap:"));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, commandLineInterface.executeCommand("meminfo").indexOf("Free heap:"));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, commandLineInterface.executeCommand("meminfo").indexOf("Total PSRAM:"));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, commandLineInterface.executeCommand("meminfo").indexOf("Free PSRAM:"));
+}
+
+void test_ping() {
+    TEST_ASSERT_EQUAL_STRING("pong", commandLineInterface.executeCommand("ping").c_str());
 }
 
 void test_uptime() {
@@ -76,18 +96,6 @@ void test_uptime() {
     UptimeAdapter::set(123456);
 
     TEST_ASSERT_EQUAL_STRING("1970-01-02 10:17:36 up 0 days 00:02:03.456", commandLineInterface.executeCommand("uptime").c_str());
-}
-
-void test_help() {
-    String expected = "reboot <delay> - reboot the system with optional delay in seconds, default: " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds\n"
-                      "ping - echo request\n"
-                      "clock - get the current time\n"
-                      "config - configuration commands, issue 'config help' for more info\n"
-                      "uptime - get the uptime\n"
-                      "status - status commands, issue 'status help' for more info\n"
-                      "clearAlarm - clear the alarm\n";
-
-    TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("help").c_str());
 }
 
 void test_status_get() {
@@ -151,19 +159,18 @@ int runUnitTests() {
     RUN_TEST(test_splitCommandAndArguments_withMultipleArguments);
 
     RUN_TEST(test_executeCommand_withUnknownCommand);
-    RUN_TEST(test_executeCommand_ping);
-    RUN_TEST(test_executeCommand_clock);
-    RUN_TEST(test_executeCommand_clearAlarm);
-    RUN_TEST(test_uptime);
-    RUN_TEST(test_help);
-
-    RUN_TEST(test_status_get);
-    RUN_TEST(test_status_reset);
-    RUN_TEST(test_status_save);
-
+    RUN_TEST(test_alarm_clear);
     RUN_TEST(test_config_get);
     RUN_TEST(test_config_get_singleField);
     RUN_TEST(test_config_set);
+    RUN_TEST(test_date);
+    RUN_TEST(test_help);
+    RUN_TEST(test_meminfo);
+    RUN_TEST(test_ping);
+    RUN_TEST(test_status_get);
+    RUN_TEST(test_status_reset);
+    RUN_TEST(test_status_save);
+    RUN_TEST(test_uptime);
 
     return UNITY_END();
 }

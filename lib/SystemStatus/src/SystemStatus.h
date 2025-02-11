@@ -134,4 +134,5 @@ private:
 };
 
 extern SystemStatus systemStatus;
+
 #endif //BLACKOUT_DETECT_O_MATIC_SYSTEM_STATUS_H
