@@ -35,7 +35,7 @@ void test_isMounted() {
     TEST_ASSERT_TRUE(persistentStorage.isMounted());
 }
 
-void test_mkdir() {
+void test_createDirectory() {
     String path = TEST_DIRECTORY + String("/mkdir-test");
     TEST_ASSERT_TRUE(persistentStorage.createDirectory(path));
     TEST_ASSERT_TRUE(persistentStorage.exists(path));
@@ -140,7 +140,7 @@ int runUnityTests(void) {
     RUN_TEST(test_constructor_default);
     RUN_TEST(test_mount);
     RUN_TEST(test_isMounted);
-    RUN_TEST(test_mkdir);
+    RUN_TEST(test_createDirectory);
     RUN_TEST(test_removeDirectory);
 
     RUN_TEST(test_writeFile);
