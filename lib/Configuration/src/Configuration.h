@@ -108,8 +108,6 @@ public:
 
     GetResult get(const String& key);
 
-    String getConfigurationFilePath() const;
-
     unsigned long getHeartbeatFileLogInterval() const;
 
     unsigned long getHeartbeatSerialLogInterval() const;

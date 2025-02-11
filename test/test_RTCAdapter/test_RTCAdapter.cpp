@@ -39,15 +39,6 @@ void test_getMillis() {
     TEST_ASSERT_GREATER_THAN(456, millis2);
 }
 
-void test_getMicros() {
-    unsigned long micros1 = rtcAdapter.getMicros();
-    delay(2);
-    unsigned long micros2 = rtcAdapter.getMicros();
-    TEST_ASSERT_GREATER_THAN(micros1, micros2);
-    TEST_ASSERT_GREATER_THAN(1000, micros2 - micros1);
-    TEST_ASSERT_LESS_THAN(3000, micros2 - micros1);
-}
-
 void test_isTimeSet_withNTP() {
     TEST_ASSERT_FALSE(rtcAdapter.isTimeSet());
     rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, UnixTimeWithMilliSeconds(1672531200));
@@ -80,7 +71,6 @@ int runUnityTests(void) {
     RUN_TEST(test_setTime);
     RUN_TEST(test_getTime);
     RUN_TEST(test_getMillis);
-    RUN_TEST(test_getMicros);
     RUN_TEST(test_isTimeSet_withNTP);
     RUN_TEST(test_isTimeSet_withFileDate);
     RUN_TEST(test_clockSourceToString);

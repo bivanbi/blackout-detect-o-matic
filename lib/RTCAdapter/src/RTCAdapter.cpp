@@ -3,7 +3,6 @@
 #include "RTCAdapter.h"
 
 RTCAdapter::RTCAdapter(int offset) {
-    id = ID++;
     this->offset = offset;
     clockSource = ClockSource::NONE;
     rtc = ESP32Time(offset);
@@ -33,12 +32,6 @@ int RTCAdapter::getOffset() const {
 RTCAdapter::ClockSource RTCAdapter::getClockSource() {
     return clockSource;
 }
-
-unsigned long RTCAdapter::getMicros() {
-    return rtc.getMicros();
-}
-
-int RTCAdapter::ID = 0;
 
 bool RTCAdapter::isTimeSet() {
     return clockSource == ClockSource::NTP || clockSource == ClockSource::FILE_DATE;

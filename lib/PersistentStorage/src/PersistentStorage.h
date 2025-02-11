@@ -10,8 +10,6 @@
 #define SD_MMC_CLK 14
 #define SD_MMC_D0  2
 
-#define SD_MMC_MOUNT_POINT /sdcard
-
 class PersistentStorage {
 public:
     PersistentStorage() = default;

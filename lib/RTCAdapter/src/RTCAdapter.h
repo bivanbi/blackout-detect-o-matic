@@ -20,17 +20,11 @@ public:
 
     UnixTimeWithMilliSeconds getTime();
 
-    unsigned long getMicros();
-
     int getOffset() const;
 
     ClockSource getClockSource();
 
     String clockSourceToString(ClockSource source);
-
-    int getID() const {
-        return id;
-    }
 
     /**
      * Pause the RTC clock for testing purposes.
@@ -51,7 +45,6 @@ protected:
     static int ID;
 
 private:
-    int id;
     int offset;
     ESP32Time rtc;
     ClockSource clockSource;
