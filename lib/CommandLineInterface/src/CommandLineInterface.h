@@ -9,6 +9,7 @@
 #include "SystemStatusLoader.h"
 #include "ConfigurationLoader.h"
 #include "PeriodicTaskScheduler.h"
+#include "UptimeAdapter.h"
 
 #define CLI_COMMAND_CONFIG "config"
 #define CLI_COMMAND_CONFIG_GET "get"

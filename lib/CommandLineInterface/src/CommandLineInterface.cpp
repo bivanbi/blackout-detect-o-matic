@@ -51,7 +51,7 @@ String CommandLineInterface::getStatus() {
 
 String CommandLineInterface::getUptime() {
     return rtcAdapter.getTime().getFormattedTime() + " up "
-           + Duration(1, millis() / 1000, millis() % 1000).getFormattedDuration();
+           + UptimeAdapter::getFormattedUptime();
 }
 
 String CommandLineInterface::scheduleReboot(CommandLineInterface::CommandAndArguments cmd) {

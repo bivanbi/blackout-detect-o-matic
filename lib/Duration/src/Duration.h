@@ -20,6 +20,10 @@ public:
 
     String getFormattedDuration();
 
+    static String getFormattedDuration(unsigned long milliSeconds);
+
+    static String getFormattedDuration(unsigned long seconds, unsigned int milliSeconds);
+
 private:
     int sign;
     unsigned long seconds;

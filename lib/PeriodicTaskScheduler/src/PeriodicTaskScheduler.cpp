@@ -106,7 +106,7 @@ void PeriodicTaskScheduler::scheduleReboot(long delay) {
 }
 
 String PeriodicTaskScheduler::getHeartBeatMessage() {
-    return "uptime: " + String(millis() / 1000) + " seconds, WiFi status: " +
+    return "uptime: " + UptimeAdapter::getFormattedUptime() + ", WiFi status: " +
            wifiClientAdapter.statusToString(wifiClientAdapter.getStatus()) + ", clock set: " + ntpClientAdapter.isTimeSet()
            + ", blackout count: " + systemStatus.getBlackoutCount() + ", reboot count: " + systemStatus.getRebootCount()
            + ", alarm active: " + systemStatus.isAlarmActive()
