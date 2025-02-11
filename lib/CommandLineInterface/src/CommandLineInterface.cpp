@@ -36,8 +36,10 @@ String CommandLineInterface::executeCommand(String commandLine) {
         }
     } else if (cmd.command.equals(CLI_COMMAND_CONFIG)) {
         return config.executeCommand(cmd.arguments);
-    } else if (cmd.command.isEmpty() || cmd.command.equals("help") || cmd.command.equals("?")) {
+    } else if (cmd.command.equals("help") || cmd.command.equals("?")) {
         return getHelp();
+    } else if (cmd.command.isEmpty()) {
+        return "";
     } else {
         return "unknown command";
     }
