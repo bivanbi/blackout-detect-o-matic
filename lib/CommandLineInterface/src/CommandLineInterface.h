@@ -11,10 +11,16 @@
 #include "PeriodicTaskScheduler.h"
 #include "UptimeAdapter.h"
 
+#define CLI_COMMAND_HELP "help"
 #define CLI_COMMAND_CONFIG "config"
 #define CLI_COMMAND_CONFIG_GET "get"
 #define CLI_COMMAND_CONFIG_SET "set"
 #define CLI_COMMAND_CONFIG_SAVE "save"
+
+#define CLI_COMMAND_STATUS "status"
+#define CLI_COMMAND_STATUS_GET "get"
+#define CLI_COMMAND_STATUS_RESET "reset"
+#define CLI_COMMAND_STATUS_SAVE "save"
 
 #define CLI_RESPONSE_UNKNOWN_COMMAND "unknown command"
 
@@ -64,8 +70,24 @@ public:
         String getHelp();
     };
 
+    class StatusCLI {
+    public:
+        StatusCLI() = default;
+
+        String executeCommand(String command);
+
+        String getStatus();
+
+        String resetStatus();
+
+        String saveStatus();
+
+        String getHelp();
+    };
+
 private:
     ConfigCLI config;
+    StatusCLI status;
 
     /**
      * Schedule reboot

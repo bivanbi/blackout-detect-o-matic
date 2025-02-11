@@ -24,75 +24,6 @@ void setUp(void) {
 void tearDown(void) {
 }
 
-void test_executeCommand_withUnknownCommand() {
-    TEST_ASSERT_EQUAL_STRING("unknown command", commandLineInterface.executeCommand("unknown").c_str());
-}
-
-void test_executeCommand_ping() {
-    TEST_ASSERT_EQUAL_STRING("pong", commandLineInterface.executeCommand("ping").c_str());
-}
-
-void test_executeCommand_clock() {
-    rtcAdapter.pause();
-    rtcAdapter.setTime(RTCAdapter::NTP, UnixTimeWithMilliSeconds(123, 458));
-    String expected = "Clock source: " + rtcAdapter.clockSourceToString(RTCAdapter::NTP) + ", time: " +
-                      UnixTimeWithMilliSeconds(123, 458).getFormattedTime();
-
-    TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("clock").c_str());
-}
-
-void test_executeCommand_status() {
-    String expected;
-    serializeJsonPretty(systemStatus.toHumanReadableJsonDocument(), expected);
-
-    TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("status").c_str());
-}
-
-void test_executeCommand_clearAlarm() {
-    systemStatus.rebootDetected(UnixTimeWithMilliSeconds(123, 456));
-
-    TEST_ASSERT_EQUAL_STRING("Alarm cleared", commandLineInterface.executeCommand("clearAlarm").c_str());
-    TEST_ASSERT_FALSE(systemStatus.isAlarmActive());
-}
-
-void test_executeCommand_resetStatus() {
-    systemStatus.rebootDetected(UnixTimeWithMilliSeconds(123, 456));
-
-    TEST_ASSERT_EQUAL_STRING("Status reset", commandLineInterface.executeCommand("resetStatus").c_str());
-    TEST_ASSERT_EQUAL(0, systemStatus.getRebootCount());
-}
-
-void test_uptime() {
-    rtcAdapter.pause();
-    rtcAdapter.setTime(RTCAdapter::NTP, UnixTimeWithMilliSeconds(123456, 456));
-    UptimeAdapter::pause();
-    UptimeAdapter::set(123456);
-
-    TEST_ASSERT_EQUAL_STRING("1970-01-02 10:17:36 up 0 days 00:02:03.456", commandLineInterface.executeCommand("uptime").c_str());
-}
-
-void test_help() {
-    String expected = "reboot <delay> - reboot the system with optional delay in seconds, default: " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds\n"
-                      "ping - echo request\n"
-                      "clock - get the current time\n"
-                      "config - configuration commands, issue 'config help' for more info\n"
-                      "uptime - get the uptime\n"
-                      "status - get the status of the system\n"
-                      "clearAlarm - clear the alarm\n"
-                      "resetStatus - reset reboot / blackout counters and clear alarm\n"
-                      "saveStatus - save status to persistent storage (SD card)\n";
-
-    TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("help").c_str());
-}
-
-void test_saveSystemStatus() {
-    String response = commandLineInterface.executeCommand("saveStatus");
-
-    TEST_ASSERT_EQUAL_STRING("Status saved", response.c_str());
-    TEST_ASSERT_TRUE(persistentStorage.exists(systemStatusFilePath));
-    TEST_ASSERT_EQUAL_STRING(persistentStorage.readFile(systemStatusFilePath).c_str(), systemStatus.toJsonDocument().as<String>().c_str());
-}
-
 void test_splitCommandAndArguments_withEmptyString() {
     CommandLineInterface::CommandAndArguments actual = commandLineInterface.splitCommandAndArguments("");
 
@@ -112,6 +43,73 @@ void test_splitCommandAndArguments_withMultipleArguments() {
 
     TEST_ASSERT_EQUAL_STRING("config", actual.command.c_str());
     TEST_ASSERT_EQUAL_STRING("set this=that", actual.arguments.c_str());
+}
+
+void test_executeCommand_withUnknownCommand() {
+    TEST_ASSERT_EQUAL_STRING("unknown command", commandLineInterface.executeCommand("unknown").c_str());
+}
+
+void test_executeCommand_ping() {
+    TEST_ASSERT_EQUAL_STRING("pong", commandLineInterface.executeCommand("ping").c_str());
+}
+
+void test_executeCommand_clock() {
+    rtcAdapter.pause();
+    rtcAdapter.setTime(RTCAdapter::NTP, UnixTimeWithMilliSeconds(123, 458));
+    String expected = "Clock source: " + rtcAdapter.clockSourceToString(RTCAdapter::NTP) + ", time: " +
+                      UnixTimeWithMilliSeconds(123, 458).getFormattedTime();
+
+    TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("clock").c_str());
+}
+
+void test_executeCommand_clearAlarm() {
+    systemStatus.rebootDetected(UnixTimeWithMilliSeconds(123, 456));
+
+    TEST_ASSERT_EQUAL_STRING("Alarm cleared", commandLineInterface.executeCommand("clearAlarm").c_str());
+    TEST_ASSERT_FALSE(systemStatus.isAlarmActive());
+}
+
+void test_uptime() {
+    rtcAdapter.pause();
+    rtcAdapter.setTime(RTCAdapter::NTP, UnixTimeWithMilliSeconds(123456, 456));
+    UptimeAdapter::pause();
+    UptimeAdapter::set(123456);
+
+    TEST_ASSERT_EQUAL_STRING("1970-01-02 10:17:36 up 0 days 00:02:03.456", commandLineInterface.executeCommand("uptime").c_str());
+}
+
+void test_help() {
+    String expected = "reboot <delay> - reboot the system with optional delay in seconds, default: " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds\n"
+                      "ping - echo request\n"
+                      "clock - get the current time\n"
+                      "config - configuration commands, issue 'config help' for more info\n"
+                      "uptime - get the uptime\n"
+                      "status - status commands, issue 'status help' for more info\n"
+                      "clearAlarm - clear the alarm\n";
+
+    TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("help").c_str());
+}
+
+void test_status_get() {
+    String expected;
+    serializeJsonPretty(systemStatus.toHumanReadableJsonDocument(), expected);
+
+    TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("status get").c_str());
+}
+
+void test_status_reset() {
+    systemStatus.rebootDetected(UnixTimeWithMilliSeconds(123, 456));
+
+    TEST_ASSERT_EQUAL_STRING("Status reset", commandLineInterface.executeCommand("status reset").c_str());
+    TEST_ASSERT_EQUAL(0, systemStatus.getRebootCount());
+}
+
+void test_status_save() {
+    String response = commandLineInterface.executeCommand("status save");
+
+    TEST_ASSERT_EQUAL_STRING("Status saved", response.c_str());
+    TEST_ASSERT_TRUE(persistentStorage.exists(systemStatusFilePath));
+    TEST_ASSERT_EQUAL_STRING(persistentStorage.readFile(systemStatusFilePath).c_str(), systemStatus.toJsonDocument().as<String>().c_str());
 }
 
 void test_config_get() {
@@ -148,19 +146,21 @@ void test_config_save() {
 int runUnitTests() {
     UNITY_BEGIN();
 
-    RUN_TEST(test_executeCommand_withUnknownCommand);
-    RUN_TEST(test_executeCommand_ping);
-    RUN_TEST(test_executeCommand_clock);
-    RUN_TEST(test_executeCommand_status);
-    RUN_TEST(test_executeCommand_clearAlarm);
-    RUN_TEST(test_executeCommand_resetStatus);
-    RUN_TEST(test_uptime);
-    RUN_TEST(test_help);
-    RUN_TEST(test_saveSystemStatus);
-
     RUN_TEST(test_splitCommandAndArguments_withEmptyString);
     RUN_TEST(test_splitCommandAndArguments_withNoArguments);
     RUN_TEST(test_splitCommandAndArguments_withMultipleArguments);
+
+    RUN_TEST(test_executeCommand_withUnknownCommand);
+    RUN_TEST(test_executeCommand_ping);
+    RUN_TEST(test_executeCommand_clock);
+    RUN_TEST(test_executeCommand_clearAlarm);
+    RUN_TEST(test_uptime);
+    RUN_TEST(test_help);
+
+    RUN_TEST(test_status_get);
+    RUN_TEST(test_status_reset);
+    RUN_TEST(test_status_save);
+
     RUN_TEST(test_config_get);
     RUN_TEST(test_config_get_singleField);
     RUN_TEST(test_config_set);

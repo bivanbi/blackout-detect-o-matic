@@ -17,23 +17,12 @@ String CommandLineInterface::executeCommand(String commandLine) {
                rtcAdapter.getTime().getFormattedTime();
     } else if (cmd.command.equals("uptime")) {
         return getUptime();
-    } else if (cmd.command.equals("status")) {
-        return getStatus();
+    } else if (cmd.command.equals(CLI_COMMAND_STATUS)) {
+        return status.executeCommand(cmd.arguments);
     } else if (cmd.command.equals("clearAlarm")) {
         serialLogger.info("CommandLineInterface: clearAlarm");
         systemStatus.clearAlarm(rtcAdapter.getTime());
         return "Alarm cleared";
-    } else if (cmd.command.equals("resetStatus")) {
-        serialLogger.info("CommandLineInterface: resetStatus");
-        systemStatus.reset(rtcAdapter.getTime());
-        return "Status reset";
-    } else if (cmd.command.equals("saveStatus")) {
-        serialLogger.info("CommandLineInterface: saveStatus");
-        if (SystemStatusLoader::save()) {
-            return "Status saved";
-        } else {
-            return "Failed to save status";
-        }
     } else if (cmd.command.equals(CLI_COMMAND_CONFIG)) {
         return config.executeCommand(cmd.arguments);
     } else if (cmd.command.equals("help")) {
@@ -43,12 +32,6 @@ String CommandLineInterface::executeCommand(String commandLine) {
     } else {
         return "unknown command";
     }
-}
-
-String CommandLineInterface::getStatus() {
-    String result;
-    serializeJsonPretty(systemStatus.toHumanReadableJsonDocument(), result);
-    return result;
 }
 
 String CommandLineInterface::getUptime() {
@@ -71,10 +54,8 @@ String CommandLineInterface::getHelp() {
            "clock - get the current time\n"
            CLI_COMMAND_CONFIG " - configuration commands, issue 'config help' for more info\n"
            "uptime - get the uptime\n"
-           "status - get the status of the system\n"
-           "clearAlarm - clear the alarm\n"
-           "resetStatus - reset reboot / blackout counters and clear alarm\n"
-           "saveStatus - save status to persistent storage (SD card)\n";
+           CLI_COMMAND_STATUS " - status commands, issue 'status help' for more info\n"
+           "clearAlarm - clear the alarm\n";
 }
 
 String CommandLineInterface::ConfigCLI::executeCommand(String commandLine) {
@@ -148,6 +129,50 @@ String CommandLineInterface::ConfigCLI::getHelp() {
            "config set <key>=<value> - set the value of a specific key\n"
            "config save - save the configuration to persistent storage (SD card)\n\n"
            "Note: reboot to apply the saved configuration\n";
+}
+
+String CommandLineInterface::StatusCLI::executeCommand(String commandLine) {
+    CommandAndArguments statusCommand = commandLineInterface.splitCommandAndArguments(commandLine);
+    serialLogger.debug("CommandLineInterface::Status::executeCommand:'" + statusCommand.command + "', args: '" +
+                       statusCommand.arguments + "'");
+
+    if (statusCommand.command.equals(CLI_COMMAND_STATUS_GET)) {
+        return getStatus();
+    } else if (statusCommand.command.equals(CLI_COMMAND_STATUS_RESET)) {
+        return resetStatus();
+    } else if (statusCommand.command.equals(CLI_COMMAND_STATUS_SAVE)) {
+        return saveStatus();
+    } else if (statusCommand.command.equals(CLI_COMMAND_HELP)) {
+        return getHelp();
+    } else if (statusCommand.command.isEmpty()) {
+        return "";
+    }
+    return CLI_RESPONSE_UNKNOWN_COMMAND;
+}
+
+String CommandLineInterface::StatusCLI::getStatus() {
+    String result;
+    serializeJsonPretty(systemStatus.toHumanReadableJsonDocument(), result);
+    return result;
+}
+
+String CommandLineInterface::StatusCLI::resetStatus() {
+    systemStatus.reset(rtcAdapter.getTime());
+    return "Status reset";
+}
+
+String CommandLineInterface::StatusCLI::saveStatus() {
+    if (SystemStatusLoader::save()) {
+        return "Status saved";
+    }
+
+    return "Failed to save status";
+}
+
+String CommandLineInterface::StatusCLI::getHelp() {
+    return "status get - get the current status\n"
+           "status reset - reset the status counters\n"
+           "status save - save the status to persistent storage (SD card)\n";
 }
 
 CommandLineInterface::CommandAndArguments CommandLineInterface::splitCommandAndArguments(String commandLine) {
