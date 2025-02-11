@@ -44,9 +44,7 @@ void PeriodicTaskScheduler::reboot() {
 
 void PeriodicTaskScheduler::syncTime(bool force) {
     if (isSyncTimeDue() || force) {
-        ntpClientAdapter.update();
-        rtcAdapter.setTime(RTCAdapter::ClockSource::NTP, ntpClientAdapter.getUnixTime());
-        serialLogger.debug("Time updated: " + ntpClientAdapter.getUnixTime().getFormattedTime());
+        SyncTimeTask::syncTime();
         tickCounter.timeSync = 0;
     }
 }

@@ -17,6 +17,7 @@
 #include "AlarmLED.h"
 #include "SystemStatusLoader.h"
 #include "UptimeAdapter.h"
+#include "SyncTimeTask.h"
 
 class PeriodicTaskScheduler {
     /**
