@@ -7,6 +7,7 @@ void setup() {
     serialLogger.info("main::setup(): begin");
     persistentStorage.mount();
     initConfiguration();
+    initPersistentStorage();
     SystemStatusLoader::load();
     serialCLI.setup();
     initWiFi();
@@ -28,6 +29,13 @@ void initConfiguration() {
     serialLogger.info("initConfiguration: load configuration from SD card");
     ConfigurationLoader::load();
     serialLogger.info("initConfiguration: loaded configuration: " + configuration.toJsonDocument().as<String>());
+}
+
+void initPersistentStorage() {
+    String logDirectory = configuration.getLogDirectory();
+    if (!persistentStorage.exists(logDirectory)) {
+        persistentStorage.createDirectory(logDirectory);
+    }
 }
 
 void initWiFi() {

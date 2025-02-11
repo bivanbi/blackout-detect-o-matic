@@ -23,6 +23,8 @@ String CommandLineInterface::executeCommand(String commandLine) {
         return "pong";
     } else if (cmd.command.equals(CLI_COMMAND_REBOOT)) {
         return scheduleReboot(cmd);
+    } else if (cmd.command.equals(CLI_COMMAND_SDCARD)) {
+        return sdcard.executeCommand(cmd.arguments);
     } else if (cmd.command.equals(CLI_COMMAND_STATUS)) {
         return status.executeCommand(cmd.arguments);
     } else if (cmd.command.equals(CLI_COMMAND_UPTIME)) {
@@ -54,8 +56,9 @@ String CommandLineInterface::getHelp() {
            "clock - get the current time\n"
            CLI_COMMAND_CONFIG " - configuration commands, issue 'config help' for more info\n"
            CLI_COMMAND_MEMINFO " - get memory usage info\n"
-           "uptime - get the uptime\n"
+           CLI_COMMAND_SDCARD " - SD Card commands, issue 'sdcard help' for more info\n"
            CLI_COMMAND_STATUS " - status commands, issue 'status help' for more info\n"
+           "uptime - get the uptime\n"
            "clearAlarm - clear the alarm\n";
 }
 
@@ -154,6 +157,80 @@ String CommandLineInterface::ConfigCLI::getHelp() {
            "config set <key>=<value> - set the value of a specific key\n"
            "config save - save the configuration to persistent storage (SD card)\n\n"
            "Note: reboot to apply the saved configuration\n";
+}
+
+String CommandLineInterface::SDCardCLI::executeCommand(String commandLine) {
+    CommandAndArguments sdCardCommand = commandLineInterface.splitCommandAndArguments(commandLine);
+    serialLogger.debug("CommandLineInterface::SDCard::executeCommand:'" + sdCardCommand.command + "', args: '" +
+                       sdCardCommand.arguments + "'");
+
+    if (sdCardCommand.command.equals(CLI_COMMAND_SDCARD_CAT)) {
+        return catFile(sdCardCommand.arguments);
+    } else if (sdCardCommand.command.equals(CLI_COMMAND_SDCARD_LIST)) {
+        return listFiles(sdCardCommand.arguments);
+    } else if (sdCardCommand.command.equals(CLI_COMMAND_SDCARD_REMOVE)) {
+        return remove(sdCardCommand.arguments);
+    } else if (sdCardCommand.command.equals(CLI_COMMAND_SDCARD_USAGE)) {
+        return usage();
+    } else if (sdCardCommand.command.equals(CLI_COMMAND_HELP)) {
+        return help();
+    } else if (sdCardCommand.command.isEmpty()) {
+        return "";
+    }
+    return CLI_RESPONSE_UNKNOWN_COMMAND;
+}
+
+String CommandLineInterface::SDCardCLI::catFile(String fileName) {
+    if (fileName.isEmpty()) {
+        return "ERROR: missing file name";
+    }
+
+    if (!persistentStorage.exists(fileName)) {
+        return "ERROR: file not found";
+    }
+
+    if (persistentStorage.isDirectory(fileName)) {
+        return "ERROR: not a file";
+    }
+
+    return persistentStorage.readFile(fileName);
+}
+
+String CommandLineInterface::SDCardCLI::listFiles(String directory) {
+    return persistentStorage.listDirectory(directory);
+}
+
+String CommandLineInterface::SDCardCLI::remove(String fileName) {
+    if (fileName.isEmpty()) {
+        return "ERROR: missing file name";
+    }
+
+    if (!persistentStorage.exists(fileName)) {
+        return "ERROR: file not found";
+    }
+
+    if (persistentStorage.isDirectory(fileName)) {
+        return "ERROR: not a file";
+    }
+
+    if (persistentStorage.removeFile(fileName)) {
+        return "File removed";
+    }
+
+    return "Failed to remove file";
+}
+
+String CommandLineInterface::SDCardCLI::usage() {
+    return "Total space: " + String(persistentStorage.getTotalSpace()) + " bytes\n"
+           "Used space: " + String(persistentStorage.getUsedSpace()) + " bytes\n"
+           "Free space: " + String(persistentStorage.getFreeSpace()) + " bytes\n";
+}
+
+String CommandLineInterface::SDCardCLI::help() {
+    return "sdcard cat <filename> - read the content of a file\n"
+           "sdcard list [directory] - list the files in the directory, default directory: /\n"
+           "sdcard remove <filename> - remove file from SD card\n";
+           "sdcard usage - get the SD card usage info\n";
 }
 
 String CommandLineInterface::StatusCLI::executeCommand(String commandLine) {

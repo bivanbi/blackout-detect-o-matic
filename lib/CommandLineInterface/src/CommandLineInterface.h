@@ -29,6 +29,12 @@
 #define CLI_COMMAND_REBOOT "reboot"
 #define CLI_DEFAULT_REBOOT_DELAY 3 // seconds
 
+#define CLI_COMMAND_SDCARD "sdcard"
+#define CLI_COMMAND_SDCARD_CAT "cat"
+#define CLI_COMMAND_SDCARD_LIST "list"
+#define CLI_COMMAND_SDCARD_REMOVE "remove"
+#define CLI_COMMAND_SDCARD_USAGE "usage"
+
 #define CLI_COMMAND_STATUS "status"
 #define CLI_COMMAND_STATUS_GET "get"
 #define CLI_COMMAND_STATUS_RESET "reset"
@@ -90,6 +96,23 @@ public:
         String getHelp();
     };
 
+    class SDCardCLI {
+    public:
+        SDCardCLI() = default;
+
+        String executeCommand(String command);
+
+        String catFile(String filename);
+
+        String listFiles(String directory = "/");
+
+        String remove(String filename);
+
+        String usage();
+
+        String help();
+    };
+
     class StatusCLI {
     public:
         StatusCLI() = default;
@@ -108,6 +131,7 @@ public:
 private:
     AlarmCLI alarm;
     ConfigCLI config;
+    SDCardCLI sdcard;
     StatusCLI status;
 
     /**

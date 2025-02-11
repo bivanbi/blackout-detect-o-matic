@@ -18,25 +18,33 @@ public:
 
     bool isMounted();
 
-    bool exists(const String& path);
+    bool exists(const String &path);
 
-    bool createDirectory(const String& path);
+    bool createDirectory(const String &path);
 
-    bool removeDirectory(const String& path);
+    bool removeDirectory(const String &path);
 
-    bool recursiveRemovePath(const String& path, int maxDepth = 99);
+    bool isDirectory(const String &path);
+
+    String listDirectory(const String &dirname, int maxDepth = 99);
+
+    String formatDirFileLine(File file);
+
+    bool recursiveRemovePath(const String &path, int maxDepth = 99);
 
     void unMount();
 
-    bool writeFile(const String& path, const String& content);
+    bool writeFile(const String &path, const String &content);
 
-    bool appendFile(const String& path, const String& content);
+    bool appendFile(const String &path, const String &content);
 
-    String readFile(const String& path);
+    String readFile(const String &path);
 
-    bool removeFile(const String& path);
+    bool removeFile(const String &path);
 
-    UnixTimeWithMilliSeconds getLastModificationDate(const String& path);
+    UnixTimeWithMilliSeconds getLastModificationDate(const String &path);
+
+    UnixTimeWithMilliSeconds getLastModificationDate(File file);
 
     /**
      * Get total space on the storage media.

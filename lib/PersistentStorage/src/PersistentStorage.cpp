@@ -27,8 +27,52 @@ bool PersistentStorage::removeDirectory(const String& path) {
     return SD_MMC.rmdir(path);
 }
 
+bool PersistentStorage::isDirectory(const String& path) {
+    return SD_MMC.open(path).isDirectory();
+}
+
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "misc-no-recursion"
+String PersistentStorage::listDirectory(const String& dirname, int maxDepth) {
+    File root = SD_MMC.open(dirname);
+    if (!root) {
+        return {"Failed to open directory " + dirname + "\n"};
+    }
+
+    if (!root.isDirectory()) {
+        return "";
+    }
+
+    String result = "";
+
+    File file = root.openNextFile();
+    while (file) {
+        //String pathPrepend = dirname.equals("/") ? "" : dirname;
+        UnixTimeWithMilliSeconds lastModified = getLastModificationDate(file.path());
+        String size = "  SIZE: " + String(file.size());
+        result += formatDirFileLine(file) + "\n";
+
+        if (file.isDirectory()) {
+            if (maxDepth > 0) {
+                result += listDirectory(file.path(), maxDepth - 1);
+            }
+        }
+        file = root.openNextFile();
+    }
+
+    return result;
+}
+
+String PersistentStorage::formatDirFileLine(fs::File file) {
+    const char *type = file.isDirectory() ? "d" : "f";
+
+    char buffer[256];
+
+    snprintf(buffer, sizeof(buffer), "%s %10u %s %s",
+             type, file.size(), getLastModificationDate(file).getFormattedTime().c_str(), file.path());
+    return {buffer};
+}
+
 bool PersistentStorage::recursiveRemovePath(const String& path, int maxDepth) {
     if (maxDepth <= 0) { // prevent endless loops
         return false;
@@ -95,12 +139,17 @@ bool PersistentStorage::removeFile(const String& path) {
 
 UnixTimeWithMilliSeconds PersistentStorage::getLastModificationDate(const String& path) {
     File file = SD_MMC.open(path);
+    UnixTimeWithMilliSeconds result = getLastModificationDate(file);
+    file.close();
+    return result;
+}
+
+UnixTimeWithMilliSeconds PersistentStorage::getLastModificationDate(File file) {
     if (!file) {
         return {};
     }
 
     time_t lastModificationTime = file.getLastWrite();
-    file.close();
     return UnixTimeWithMilliSeconds(lastModificationTime);
 }
 

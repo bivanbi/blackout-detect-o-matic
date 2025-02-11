@@ -28,6 +28,8 @@
 
 void initConfiguration();
 
+void initPersistentStorage();
+
 void initWiFi();
 
 void initNTP();

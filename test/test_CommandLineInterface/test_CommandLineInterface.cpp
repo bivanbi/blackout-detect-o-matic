@@ -71,8 +71,9 @@ void test_help() {
                       "clock - get the current time\n"
                       "config - configuration commands, issue 'config help' for more info\n"
                       "meminfo - get memory usage info\n"
-                      "uptime - get the uptime\n"
+                      "sdcard - SD Card commands, issue 'sdcard help' for more info\n"
                       "status - status commands, issue 'status help' for more info\n"
+                      "uptime - get the uptime\n"
                       "clearAlarm - clear the alarm\n";
 
     TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("help").c_str());
@@ -96,6 +97,33 @@ void test_uptime() {
     UptimeAdapter::set(123456);
 
     TEST_ASSERT_EQUAL_STRING("1970-01-02 10:17:36 up 0 days 00:02:03.456", commandLineInterface.executeCommand("uptime").c_str());
+}
+
+void test_sdcard_usage() {
+    TEST_ASSERT_GREATER_OR_EQUAL(0, commandLineInterface.executeCommand("sdcard usage").indexOf("Total space:"));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, commandLineInterface.executeCommand("sdcard usage").indexOf("Used space:"));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, commandLineInterface.executeCommand("sdcard usage").indexOf("Free space:"));
+}
+
+void test_sdcard_list() {
+    TEST_ASSERT_GREATER_OR_EQUAL(0, commandLineInterface.executeCommand("sdcard list").indexOf("d "));
+}
+
+void test_sdcard_cat() {
+    String path = TEST_DIRECTORY "/test-file.txt";
+    String content = "Test file content";
+    persistentStorage.writeFile(path, content);
+
+    TEST_ASSERT_EQUAL_STRING(content.c_str(), commandLineInterface.executeCommand("sdcard cat " + path).c_str());
+}
+
+void test_sdcard_remove() {
+    String path = TEST_DIRECTORY "/test-file.txt";
+    persistentStorage.writeFile(path, "Test file content");
+
+    TEST_ASSERT_TRUE(persistentStorage.exists(path));
+    TEST_ASSERT_EQUAL_STRING("File removed", commandLineInterface.executeCommand("sdcard remove " + path).c_str());
+    TEST_ASSERT_FALSE(persistentStorage.exists(path));
 }
 
 void test_status_get() {
@@ -167,6 +195,10 @@ int runUnitTests() {
     RUN_TEST(test_help);
     RUN_TEST(test_meminfo);
     RUN_TEST(test_ping);
+    RUN_TEST(test_sdcard_usage);
+    RUN_TEST(test_sdcard_list);
+    RUN_TEST(test_sdcard_cat);
+    RUN_TEST(test_sdcard_remove);
     RUN_TEST(test_status_get);
     RUN_TEST(test_status_reset);
     RUN_TEST(test_status_save);

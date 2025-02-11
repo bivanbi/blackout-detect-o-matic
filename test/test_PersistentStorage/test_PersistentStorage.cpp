@@ -48,6 +48,35 @@ void test_removeDirectory() {
     TEST_ASSERT_FALSE(persistentStorage.exists(path));
 }
 
+void test_isDirectory_withDirectory() {
+    String path = TEST_DIRECTORY + String("/isdir-test");
+    persistentStorage.createDirectory(path);
+    TEST_ASSERT_TRUE(persistentStorage.isDirectory(path));
+}
+
+void test_isDirectory_withFile() {
+    String path = TEST_DIRECTORY + String("/isdir-test");
+    persistentStorage.writeFile(path, "content of Test File to check if it is a directory");
+    TEST_ASSERT_FALSE(persistentStorage.isDirectory(path));
+}
+
+void test_listDirectory() {
+    persistentStorage.writeFile(String(TEST_DIRECTORY) + "/list-directory-test-file.txt", "content of Test File to get last modification date");
+
+    String result = persistentStorage.listDirectory("/");
+
+    TEST_ASSERT_GREATER_OR_EQUAL(0, result.indexOf("d "));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, result.indexOf("f "));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, result.indexOf(String(TEST_DIRECTORY) + "/list-directory-test-file.txt"));
+}
+
+void test_listDirectory_withNonExistentDirectory() {
+    String path = "/non-existent-directory";
+    String result = persistentStorage.listDirectory(path);
+
+    TEST_ASSERT_GREATER_OR_EQUAL(0, result.indexOf("Failed to open directory"));
+}
+
 void test_writeFile() {
     String path = TEST_DIRECTORY + String("/write-file-test.txt");
     String expectedContent = "Testing File Write";
@@ -102,37 +131,6 @@ void test_getFreeSpace() {
     TEST_ASSERT_EQUAL(expectedFreeSpace, persistentStorage.getFreeSpace());
 }
 
-void listDir(String dirname, uint8_t levels) {
-    Serial.println("Listing directory: " + dirname);
-
-    File root = SD_MMC.open(dirname);
-    if (!root) {
-        Serial.println("Failed to open directory");
-        return;
-    }
-    if (!root.isDirectory()) {
-        Serial.println("Not a directory");
-        return;
-    }
-
-    File file = root.openNextFile();
-    while (file) {
-        if (file.isDirectory()) {
-            Serial.print("  DIR : ");
-            Serial.println(file.name());
-            if (levels) {
-                listDir(file.path(), levels - 1);
-            }
-        } else {
-            Serial.print("  FILE: ");
-            Serial.print(file.name());
-            Serial.print("  SIZE: ");
-            Serial.println(file.size());
-        }
-        file = root.openNextFile();
-    }
-}
-
 int runUnityTests(void) {
     UNITY_BEGIN();
 
@@ -142,6 +140,10 @@ int runUnityTests(void) {
     RUN_TEST(test_isMounted);
     RUN_TEST(test_createDirectory);
     RUN_TEST(test_removeDirectory);
+    RUN_TEST(test_isDirectory_withDirectory);
+    RUN_TEST(test_isDirectory_withFile);
+    RUN_TEST(test_listDirectory);
+    RUN_TEST(test_listDirectory_withNonExistentDirectory);
 
     RUN_TEST(test_writeFile);
     RUN_TEST(test_appendFile);
