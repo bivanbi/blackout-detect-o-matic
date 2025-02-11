@@ -4,6 +4,7 @@
 #include <unity.h>
 #include <Arduino.h>
 
+#include "Configuration.h"
 #include "SystemStatus.h"
 #include "ClearAlarmEventProcessor.h"
 
