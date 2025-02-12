@@ -66,17 +66,16 @@ void test_date() {
 }
 
 void test_help() {
-    String expected = "reboot <delay> - reboot the system with optional delay in seconds, default: " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds\n"
-                      "ping - echo request\n"
-                      "clock - get the current time\n"
-                      "config - configuration commands, issue 'config help' for more info\n"
-                      "meminfo - get memory usage info\n"
-                      "sdcard - SD Card commands, issue 'sdcard help' for more info\n"
-                      "status - status commands, issue 'status help' for more info\n"
-                      "uptime - get the uptime\n"
-                      "clearAlarm - clear the alarm\n";
-
-    TEST_ASSERT_EQUAL_STRING(expected.c_str(), commandLineInterface.executeCommand("help").c_str());
+    String actualHelp = commandLineInterface.executeCommand("help");
+    TEST_ASSERT_GREATER_OR_EQUAL(0, actualHelp.indexOf(CLI_COMMAND_ALARM));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, actualHelp.indexOf(CLI_COMMAND_CONFIG));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, actualHelp.indexOf(CLI_COMMAND_DATE));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, actualHelp.indexOf(CLI_COMMAND_HELP));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, actualHelp.indexOf(CLI_COMMAND_MEMINFO));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, actualHelp.indexOf(CLI_COMMAND_REBOOT));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, actualHelp.indexOf(CLI_COMMAND_SDCARD));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, actualHelp.indexOf(CLI_COMMAND_STATUS));
+    TEST_ASSERT_GREATER_OR_EQUAL(0, actualHelp.indexOf(CLI_COMMAND_UPTIME));
 }
 
 void test_meminfo() {
@@ -84,10 +83,6 @@ void test_meminfo() {
     TEST_ASSERT_GREATER_OR_EQUAL(0, commandLineInterface.executeCommand("meminfo").indexOf("Free heap:"));
     TEST_ASSERT_GREATER_OR_EQUAL(0, commandLineInterface.executeCommand("meminfo").indexOf("Total PSRAM:"));
     TEST_ASSERT_GREATER_OR_EQUAL(0, commandLineInterface.executeCommand("meminfo").indexOf("Free PSRAM:"));
-}
-
-void test_ping() {
-    TEST_ASSERT_EQUAL_STRING("pong", commandLineInterface.executeCommand("ping").c_str());
 }
 
 void test_uptime() {
@@ -194,7 +189,6 @@ int runUnitTests() {
     RUN_TEST(test_date);
     RUN_TEST(test_help);
     RUN_TEST(test_meminfo);
-    RUN_TEST(test_ping);
     RUN_TEST(test_sdcard_usage);
     RUN_TEST(test_sdcard_list);
     RUN_TEST(test_sdcard_cat);

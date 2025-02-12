@@ -13,14 +13,11 @@ String CommandLineInterface::executeCommand(String commandLine) {
     } else if (cmd.command.equals(CLI_COMMAND_CONFIG)) {
         return config.executeCommand(cmd.arguments);
     } else if (cmd.command.equals(CLI_COMMAND_DATE)) {
-        return "Clock source: " + rtcAdapter.clockSourceToString(rtcAdapter.getClockSource()) + ", time: " +
-               rtcAdapter.getTime().getFormattedTime();
+        return date();
     } else if (cmd.command.equals(CLI_COMMAND_HELP)) {
-        return getHelp();
+        return help();
     } else if (cmd.command.equals(CLI_COMMAND_MEMINFO)) {
         return MemoryInfo::getFormattedMemoryInfo();
-    } else if (cmd.command.equals(CLI_COMMAND_PING)) {
-        return "pong";
     } else if (cmd.command.equals(CLI_COMMAND_REBOOT)) {
         return scheduleReboot(cmd);
     } else if (cmd.command.equals(CLI_COMMAND_SDCARD)) {
@@ -28,17 +25,28 @@ String CommandLineInterface::executeCommand(String commandLine) {
     } else if (cmd.command.equals(CLI_COMMAND_STATUS)) {
         return status.executeCommand(cmd.arguments);
     } else if (cmd.command.equals(CLI_COMMAND_UPTIME)) {
-        return getUptime();
+        return uptime();
     } else if (cmd.command.isEmpty()) {
         return "";
     } else {
-        return "unknown command";
+        return CLI_RESPONSE_UNKNOWN_COMMAND;
     }
 }
 
-String CommandLineInterface::getUptime() {
-    return rtcAdapter.getTime().getFormattedTime() + " up "
-           + UptimeAdapter::getFormattedUptime();
+String CommandLineInterface::date() {
+    return "Clock source: " + rtcAdapter.clockSourceToString(rtcAdapter.getClockSource())
+           + ", time: " + rtcAdapter.getTime().getFormattedTime();
+}
+
+String CommandLineInterface::help() {
+    return CLI_COMMAND_ALARM " - alarm commands, issue 'alarm help' for more info\n"
+           CLI_COMMAND_CONFIG " - configuration commands, issue 'config help' for more info\n"
+           CLI_COMMAND_DATE " - get the current system date and time\n"
+           CLI_COMMAND_MEMINFO " - get memory usage info\n"
+           CLI_COMMAND_REBOOT " [delay] - reboot the system with optional delay in seconds, default: " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds\n"
+           CLI_COMMAND_SDCARD " - SD Card commands, issue 'sdcard help' for more info\n"
+           CLI_COMMAND_STATUS " - status commands, issue 'status help' for more info\n"
+           CLI_COMMAND_UPTIME " - get the uptime\n";
 }
 
 String CommandLineInterface::scheduleReboot(CommandLineInterface::CommandAndArguments cmd) {
@@ -50,16 +58,9 @@ String CommandLineInterface::scheduleReboot(CommandLineInterface::CommandAndArgu
         return "Rebooting in " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds";
 }
 
-String CommandLineInterface::getHelp() {
-    return "reboot <delay> - reboot the system with optional delay in seconds, default: " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds\n"
-           "ping - echo request\n"
-           "clock - get the current time\n"
-           CLI_COMMAND_CONFIG " - configuration commands, issue 'config help' for more info\n"
-           CLI_COMMAND_MEMINFO " - get memory usage info\n"
-           CLI_COMMAND_SDCARD " - SD Card commands, issue 'sdcard help' for more info\n"
-           CLI_COMMAND_STATUS " - status commands, issue 'status help' for more info\n"
-           "uptime - get the uptime\n"
-           "clearAlarm - clear the alarm\n";
+String CommandLineInterface::uptime() {
+    return rtcAdapter.getTime().getFormattedTime() + " up "
+           + UptimeAdapter::getFormattedUptime();
 }
 
 String CommandLineInterface::AlarmCLI::executeCommand(String commandLine) {
@@ -68,21 +69,21 @@ String CommandLineInterface::AlarmCLI::executeCommand(String commandLine) {
                        alarmCommand.arguments + "'");
 
     if (alarmCommand.command.equals(CLI_COMMAND_ALARM_CLEAR)) {
-        return clearAlarm();
+        return clear();
     } else if (alarmCommand.command.equals(CLI_COMMAND_HELP)) {
-        return getHelp();
+        return help();
     } else if (alarmCommand.command.isEmpty()) {
         return "";
     }
     return CLI_RESPONSE_UNKNOWN_COMMAND;
 }
 
-String CommandLineInterface::AlarmCLI::clearAlarm() {
+String CommandLineInterface::AlarmCLI::clear() {
     systemStatus.clearAlarm(rtcAdapter.getTime());
     return "Alarm cleared";
 }
 
-String CommandLineInterface::AlarmCLI::getHelp() {
+String CommandLineInterface::AlarmCLI::help() {
     return "alarm clear - clear the alarm\n";
 }
 
@@ -92,22 +93,22 @@ String CommandLineInterface::ConfigCLI::executeCommand(String commandLine) {
                        configCommand.arguments + "'");
 
     if (configCommand.command.equals(CLI_COMMAND_CONFIG_GET)) {
-        return getConfig(configCommand.arguments);
+        return get(configCommand.arguments);
     } else if (configCommand.command.equals(CLI_COMMAND_CONFIG_SET)) {
-        return setConfig(configCommand.arguments);
+        return set(configCommand.arguments);
     } else if (configCommand.command.equals(CLI_COMMAND_CONFIG_SAVE)) {
-        return saveConfig();
-    } else if (configCommand.command.equals("help")) {
-        return getHelp();
+        return save();
+    } else if (configCommand.command.equals(CLI_COMMAND_HELP)) {
+        return help();
     } else if (configCommand.command.isEmpty()) {
         return "";
     }
     return CLI_RESPONSE_UNKNOWN_COMMAND;
 }
 
-String CommandLineInterface::ConfigCLI::getConfig(String key) {
+String CommandLineInterface::ConfigCLI::get(String key) {
     if (key.isEmpty()) {
-        return getConfig();
+        return get();
     }
 
     Configuration::GetResult result = configuration.get(key);
@@ -115,18 +116,17 @@ String CommandLineInterface::ConfigCLI::getConfig(String key) {
         return result.value;
     }
 
-    serialLogger.error(
-            "CommandLineInterface::ConfigCLI::getConfig: key: '" + key + "', error message: " + result.value);
-    return "ERROR: unknown key";
+    serialLogger.error("CommandLineInterface::ConfigCLI::get: key: '" + key + "', error message: " + result.value);
+    return result.value;
 }
 
-String CommandLineInterface::ConfigCLI::getConfig() {
+String CommandLineInterface::ConfigCLI::get() {
     String result;
     serializeJsonPretty(configuration.toJsonDocument(), result);
     return result;
 }
 
-String CommandLineInterface::ConfigCLI::setConfig(String keyAndValue) {
+String CommandLineInterface::ConfigCLI::set(String keyAndValue) {
     KeyValue keyValuePair = commandLineInterface.splitKeyValuePair(keyAndValue);
     if (keyValuePair.key.isEmpty()) {
         return "ERROR: expected key=value pair";
@@ -137,13 +137,13 @@ String CommandLineInterface::ConfigCLI::setConfig(String keyAndValue) {
         return "Configuration updated: " + keyAndValue;
     }
 
-    serialLogger.error("CommandLineInterface::ConfigCLI::setConfig: "
+    serialLogger.error("CommandLineInterface::ConfigCLI::set: "
                        "key: '" + keyValuePair.key + "', value: '" + keyValuePair.value +
                        "', error message: " + result.message);
     return "ERROR: " + result.message;
 }
 
-String CommandLineInterface::ConfigCLI::saveConfig() {
+String CommandLineInterface::ConfigCLI::save() {
     if (ConfigurationLoader::save()) {
         return "Configuration saved";
     }
@@ -151,12 +151,12 @@ String CommandLineInterface::ConfigCLI::saveConfig() {
     return "Failed to save configuration";
 }
 
-String CommandLineInterface::ConfigCLI::getHelp() {
-    return "config get - get the current configuration\n"
-           "config get <key> - get the value of a specific key\n"
-           "config set <key>=<value> - set the value of a specific key\n"
-           "config save - save the configuration to persistent storage (SD card)\n\n"
-           "Note: reboot to apply the saved configuration\n";
+String CommandLineInterface::ConfigCLI::help() {
+    return CLI_COMMAND_CONFIG " " CLI_COMMAND_CONFIG_GET " - get the current configuration\n"
+           CLI_COMMAND_CONFIG " " CLI_COMMAND_CONFIG_GET " <key> - get the value of a specific key\n"
+           CLI_COMMAND_CONFIG " " CLI_COMMAND_CONFIG_SET " <key>=<value> - set the value of a specific key\n"
+           CLI_COMMAND_CONFIG " " CLI_COMMAND_CONFIG_SAVE " - save the configuration to persistent storage (SD card)\n\n"
+           "Note: Save and reboot to apply the updated configuration\n";
 }
 
 String CommandLineInterface::SDCardCLI::executeCommand(String commandLine) {
@@ -165,9 +165,9 @@ String CommandLineInterface::SDCardCLI::executeCommand(String commandLine) {
                        sdCardCommand.arguments + "'");
 
     if (sdCardCommand.command.equals(CLI_COMMAND_SDCARD_CAT)) {
-        return catFile(sdCardCommand.arguments);
+        return cat(sdCardCommand.arguments);
     } else if (sdCardCommand.command.equals(CLI_COMMAND_SDCARD_LIST)) {
-        return listFiles(sdCardCommand.arguments);
+        return list(sdCardCommand.arguments);
     } else if (sdCardCommand.command.equals(CLI_COMMAND_SDCARD_REMOVE)) {
         return remove(sdCardCommand.arguments);
     } else if (sdCardCommand.command.equals(CLI_COMMAND_SDCARD_USAGE)) {
@@ -180,23 +180,23 @@ String CommandLineInterface::SDCardCLI::executeCommand(String commandLine) {
     return CLI_RESPONSE_UNKNOWN_COMMAND;
 }
 
-String CommandLineInterface::SDCardCLI::catFile(String fileName) {
-    if (fileName.isEmpty()) {
+String CommandLineInterface::SDCardCLI::cat(String filename) {
+    if (filename.isEmpty()) {
         return "ERROR: missing file name";
     }
 
-    if (!persistentStorage.exists(fileName)) {
+    if (!persistentStorage.exists(filename)) {
         return "ERROR: file not found";
     }
 
-    if (persistentStorage.isDirectory(fileName)) {
+    if (persistentStorage.isDirectory(filename)) {
         return "ERROR: not a file";
     }
 
-    return persistentStorage.readFile(fileName);
+    return persistentStorage.readFile(filename);
 }
 
-String CommandLineInterface::SDCardCLI::listFiles(String directory) {
+String CommandLineInterface::SDCardCLI::list(String directory) {
     return persistentStorage.listDirectory(directory);
 }
 
@@ -227,10 +227,10 @@ String CommandLineInterface::SDCardCLI::usage() {
 }
 
 String CommandLineInterface::SDCardCLI::help() {
-    return "sdcard cat <filename> - read the content of a file\n"
-           "sdcard list [directory] - list the files in the directory, default directory: /\n"
-           "sdcard remove <filename> - remove file from SD card\n";
-           "sdcard usage - get the SD card usage info\n";
+    return CLI_COMMAND_SDCARD " " CLI_COMMAND_SDCARD_CAT " <filename> - read the content of a file\n"
+           CLI_COMMAND_SDCARD " " CLI_COMMAND_SDCARD_LIST " [directory] - list the files in the directory, default directory: /\n"
+           CLI_COMMAND_SDCARD " " CLI_COMMAND_SDCARD_REMOVE " <filename> - remove file from SD card\n"
+           CLI_COMMAND_SDCARD " " CLI_COMMAND_SDCARD_USAGE " - get the SD card usage info\n";
 }
 
 String CommandLineInterface::StatusCLI::executeCommand(String commandLine) {
@@ -239,31 +239,31 @@ String CommandLineInterface::StatusCLI::executeCommand(String commandLine) {
                        statusCommand.arguments + "'");
 
     if (statusCommand.command.equals(CLI_COMMAND_STATUS_GET)) {
-        return getStatus();
+        return get();
     } else if (statusCommand.command.equals(CLI_COMMAND_STATUS_RESET)) {
-        return resetStatus();
+        return reset();
     } else if (statusCommand.command.equals(CLI_COMMAND_STATUS_SAVE)) {
-        return saveStatus();
+        return save();
     } else if (statusCommand.command.equals(CLI_COMMAND_HELP)) {
-        return getHelp();
+        return help();
     } else if (statusCommand.command.isEmpty()) {
         return "";
     }
     return CLI_RESPONSE_UNKNOWN_COMMAND;
 }
 
-String CommandLineInterface::StatusCLI::getStatus() {
+String CommandLineInterface::StatusCLI::get() {
     String result;
     serializeJsonPretty(systemStatus.toHumanReadableJsonDocument(), result);
     return result;
 }
 
-String CommandLineInterface::StatusCLI::resetStatus() {
+String CommandLineInterface::StatusCLI::reset() {
     systemStatus.reset(rtcAdapter.getTime());
     return "Status reset";
 }
 
-String CommandLineInterface::StatusCLI::saveStatus() {
+String CommandLineInterface::StatusCLI::save() {
     if (SystemStatusLoader::save()) {
         return "Status saved";
     }
@@ -271,10 +271,10 @@ String CommandLineInterface::StatusCLI::saveStatus() {
     return "Failed to save status";
 }
 
-String CommandLineInterface::StatusCLI::getHelp() {
-    return "status get - get the current status\n"
-           "status reset - reset the status counters\n"
-           "status save - save the status to persistent storage (SD card)\n";
+String CommandLineInterface::StatusCLI::help() {
+    return CLI_COMMAND_STATUS " " CLI_COMMAND_STATUS_GET " - get the current status\n"
+           CLI_COMMAND_STATUS " " CLI_COMMAND_STATUS_RESET " - reset the status counters\n"
+           CLI_COMMAND_STATUS " " CLI_COMMAND_STATUS_SAVE " - save the status to persistent storage (SD card)\n";
 }
 
 CommandLineInterface::CommandAndArguments CommandLineInterface::splitCommandAndArguments(String commandLine) {

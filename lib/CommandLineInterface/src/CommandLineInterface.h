@@ -24,7 +24,6 @@
 
 #define CLI_COMMAND_HELP "help"
 #define CLI_COMMAND_MEMINFO "meminfo"
-#define CLI_COMMAND_PING "ping"
 
 #define CLI_COMMAND_REBOOT "reboot"
 #define CLI_DEFAULT_REBOOT_DELAY 3 // seconds
@@ -64,9 +63,11 @@ public:
 
     String executeCommand(String command);
 
-    String getUptime();
+    String date();
 
-    String getHelp();
+    String help();
+
+    String uptime();
 
     class AlarmCLI {
     public:
@@ -74,9 +75,9 @@ public:
 
         String executeCommand(String command);
 
-        String clearAlarm();
+        String clear();
 
-        String getHelp();
+        String help();
     };
 
     class ConfigCLI {
@@ -85,15 +86,15 @@ public:
 
         String executeCommand(String command);
 
-        String getConfig();
+        String get();
 
-        String getConfig(String key);
+        String get(String key);
 
-        String setConfig(String keyAndValue);
+        String set(String keyAndValue);
 
-        String saveConfig();
+        String save();
 
-        String getHelp();
+        String help();
     };
 
     class SDCardCLI {
@@ -102,9 +103,9 @@ public:
 
         String executeCommand(String command);
 
-        String catFile(String filename);
+        String cat(String filename);
 
-        String listFiles(String directory = "/");
+        String list(String directory = "/");
 
         String remove(String filename);
 
@@ -119,13 +120,13 @@ public:
 
         String executeCommand(String command);
 
-        String getStatus();
+        String get();
 
-        String resetStatus();
+        String reset();
 
-        String saveStatus();
+        String save();
 
-        String getHelp();
+        String help();
     };
 
 private:

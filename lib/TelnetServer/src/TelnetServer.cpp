@@ -59,7 +59,7 @@ void TelnetServer::onInputReceived(String input) {
 
 String TelnetServer::getHelp() {
     return "quit - disconnect\n"
-           + commandLineInterface.getHelp();
+           + commandLineInterface.help();
 }
 
 String TelnetServer::getWelcomeMessage() {
