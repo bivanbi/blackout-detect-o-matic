@@ -105,7 +105,7 @@ public:
 
         String cat(String filename);
 
-        String list(String directory = "/");
+        String list(String directory);
 
         String remove(String filename);
 

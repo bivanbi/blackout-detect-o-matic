@@ -197,6 +197,10 @@ String CommandLineInterface::SDCardCLI::cat(String filename) {
 }
 
 String CommandLineInterface::SDCardCLI::list(String directory) {
+    if (directory.isEmpty()) {
+        directory = "/";
+    }
+
     return persistentStorage.listDirectory(directory);
 }
 
