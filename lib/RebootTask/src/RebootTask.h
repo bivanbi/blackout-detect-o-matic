@@ -15,6 +15,8 @@ private:
 
     static void saveSystemStatus();
 
+    static void unmount();
+
     static void finalDelayBeforeReboot();
 };
 

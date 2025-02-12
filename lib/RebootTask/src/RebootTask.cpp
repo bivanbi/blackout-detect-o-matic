@@ -10,6 +10,7 @@ void RebootTask::reboot() {
 void RebootTask::executePreRebootTasks() {
     serialLogger.info("RebootTask: executePreRebootTasks: executing pre-reboot tasks");
     saveSystemStatus();
+    unmount();
     finalDelayBeforeReboot();
 }
 
@@ -21,6 +22,11 @@ void RebootTask::saveSystemStatus() {
     } else {
         serialLogger.error("RebootTask: executePreRebootTasks: failed to save system status");
     }
+}
+
+void RebootTask::unmount() {
+    serialLogger.info("RebootTask: unmount: unmounting filesystem");
+    persistentStorage.unMount();
 }
 
 void RebootTask::finalDelayBeforeReboot() {
