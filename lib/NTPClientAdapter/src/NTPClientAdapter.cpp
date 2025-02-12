@@ -32,7 +32,7 @@ void NTPClientAdapter::setServerName(const String &serverName) {
 }
 
 void NTPClientAdapter::setUpdateInterval(unsigned long updateIntervalSeconds) {
-    ntpClient.setUpdateInterval(updateIntervalSeconds);
+    ntpClient.setUpdateInterval(updateIntervalSeconds * 1000); // NTPClient expects milliseconds
 }
 
 void NTPClientAdapter::setTimeOffset(int timeOffsetSeconds) {

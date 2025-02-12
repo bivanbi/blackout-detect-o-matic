@@ -48,7 +48,7 @@
 #endif
 
 #ifndef NTP_UPDATE_INTERVAL
-#define NTP_UPDATE_INTERVAL 300000 // milliseconds, e.g. 60000 = 60 seconds
+#define NTP_UPDATE_INTERVAL 300 // seconds
 #endif
 
 #ifndef TELNET_SERVER_PORT
