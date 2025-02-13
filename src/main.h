@@ -36,24 +36,6 @@ void initNTP();
 
 void initPins();
 
-void initTimer();
-
 void initTelnetServer();
-
-void executePeriodicTasks();
-
-void updateSystemStatus();
-
-void processEvents();
-
-void syncTime();
-
-void onPeriodicTaskTimerInterrupt();
-
-String logRamInfoString();
-
-String getHeartBeatMessage();
-
-Configuration loadConfiguration();
 
 #endif //BLACKOUT_DETECT_O_MATIC_MAIN_H
