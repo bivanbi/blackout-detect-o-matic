@@ -23,7 +23,7 @@
 #define LOG_DIRECTORY "/log"
 #endif
 
-#ifndef SYSTwEM_STATUS_FILE_PATH
+#ifndef SYSTEM_STATUS_FILE_PATH
 #define SYSTEM_STATUS_FILE_PATH "/status.json"
 #endif
 
