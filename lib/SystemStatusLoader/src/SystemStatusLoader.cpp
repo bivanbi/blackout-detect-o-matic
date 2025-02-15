@@ -28,6 +28,7 @@ bool SystemStatusLoader::save() {
         return false;
     }
 
+    systemStatus.statusSaved(rtcAdapter.getTime());
     Logger::info("SystemStatusLoader::save: saved status to file '" + path + "'");
     return true;
 }
