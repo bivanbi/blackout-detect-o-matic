@@ -5,7 +5,7 @@
 
 #include "RTCAdapter.h"
 #include "SystemStatus.h"
-#include "SerialLogger.h"
+#include "Logger.h"
 
 struct PowerChangeEventBuffer {
     unsigned int powerDownEventCount = 0;

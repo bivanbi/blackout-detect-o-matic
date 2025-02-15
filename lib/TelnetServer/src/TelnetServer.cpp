@@ -15,9 +15,9 @@ void TelnetServer::begin(unsigned int port) {
 
     Serial.print("- Telnet: ");
     if (telnet.begin(port, true)) {
-        serialLogger.info("TelnetServer: listening on " + String(WiFi.localIP()) + ":" + port);
+        Logger::info("TelnetServer: listening on " + String(WiFi.localIP()) + ":" + port);
     } else {
-        serialLogger.error("TelnetServer: failed to start");
+        Logger::error("TelnetServer: failed to start");
     }
 }
 
@@ -26,25 +26,25 @@ void TelnetServer::loop() {
 }
 
 void TelnetServer::onConnect(String ip) {
-    serialLogger.info("TelnetServer: onConnect: client ip: " + ip);
+    Logger::info("TelnetServer: onConnect: client ip: " + ip);
     telnet.println(TelnetServer::getWelcomeMessage());
     telnet.print(prompt);
 }
 
 void TelnetServer::onConnectionAttempt(String ip) {
-    serialLogger.info("TelnetServer: onConnectionAttempt: client ip: " + ip);
+    Logger::info("TelnetServer: onConnectionAttempt: client ip: " + ip);
 }
 
 void TelnetServer::onReconnect(String ip) {
-    serialLogger.info("TelnetServer: onReconnect: client ip: " + ip);
+    Logger::info("TelnetServer: onReconnect: client ip: " + ip);
 }
 
 void TelnetServer::onDisconnect(String ip) {
-    serialLogger.info("TelnetServer: onDisconnect: client ip: " + ip);
+    Logger::info("TelnetServer: onDisconnect: client ip: " + ip);
 }
 
 void TelnetServer::onInputReceived(String input) {
-    serialLogger.debug("TelnetServer: onInputReceived: " + input);
+    Logger::debug("TelnetServer: onInputReceived: " + input);
 
     if (input.equals("exit") || input.equals("quit")) {
         telnet.disconnectClient();

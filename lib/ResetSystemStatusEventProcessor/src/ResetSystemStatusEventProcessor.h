@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "SystemStatus.h"
 #include "RTCAdapter.h"
-#include "SerialLogger.h"
+#include "Logger.h"
 
 struct ResetSystemStatusEventBuffer {
     unsigned int resetEventCount = 0;

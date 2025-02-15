@@ -1,35 +1,35 @@
 #include "RebootTask.h"
 
 void RebootTask::reboot() {
-    serialLogger.info("RebootTask: reboot requested");
+    Logger::info("RebootTask: reboot requested");
     executePreRebootTasks();
-    serialLogger.info("RebootTask: rebooting...");
+    Logger::info("RebootTask: rebooting...");
     esp_restart();
 }
 
 void RebootTask::executePreRebootTasks() {
-    serialLogger.info("RebootTask: executePreRebootTasks: executing pre-reboot tasks");
+    Logger::info("RebootTask: executePreRebootTasks: executing pre-reboot tasks");
     saveSystemStatus();
     unmount();
     finalDelayBeforeReboot();
 }
 
 void RebootTask::saveSystemStatus() {
-    serialLogger.info("RebootTask: executePreRebootTasks: saving system status");
+    Logger::info("RebootTask: executePreRebootTasks: saving system status");
     bool result = SystemStatusLoader::save();
     if (result) {
-        serialLogger.info("RebootTask: executePreRebootTasks: system status saved");
+        Logger::info("RebootTask: executePreRebootTasks: system status saved");
     } else {
-        serialLogger.error("RebootTask: executePreRebootTasks: failed to save system status");
+        Logger::error("RebootTask: executePreRebootTasks: failed to save system status");
     }
 }
 
 void RebootTask::unmount() {
-    serialLogger.info("RebootTask: unmount: unmounting filesystem");
+    Logger::info("RebootTask: unmount: unmounting filesystem");
     persistentStorage.unMount();
 }
 
 void RebootTask::finalDelayBeforeReboot() {
-    serialLogger.info("RebootTask: finalDelayBeforeReboot: final delay before reboot");
+    Logger::info("RebootTask: finalDelayBeforeReboot: final delay before reboot");
     delay(1000);
 }

@@ -5,7 +5,7 @@
 
 void SerialCommandInterface::setup() {
     Serial.begin(115200);
-    serialLogger.info("Serial Command Interface: ready to receive commands");
+    Logger::info("Serial Command Interface: ready to receive commands", {Logger::Channel::SERIAL_PORT});
 }
 
 void SerialCommandInterface::loop() {
@@ -23,7 +23,7 @@ void SerialCommandInterface::readSerial() {
             }
         } else if (input == '\n') {
             commandReceived = true;
-            serialLogger.debug("SerialCommandInterface::readSerial: Received command: '" + inputBuffer + "'");
+            Logger::debug("SerialCommandInterface::readSerial: Received command: '" + inputBuffer + "'", {Logger::Channel::SERIAL_PORT});
         } else {
             inputBuffer += input;
             Serial.print(input);
@@ -33,7 +33,7 @@ void SerialCommandInterface::readSerial() {
 
 void SerialCommandInterface::executeCommand() {
     if (commandReceived) {
-        serialLogger.debug("SerialCommandInterface::executeCommand: '" + inputBuffer + "'");
+        Logger::debug("SerialCommandInterface::executeCommand: '" + inputBuffer + "'");
         Serial.println();
         Serial.println(commandLineInterface.executeCommand(inputBuffer));
         Serial.print("> ");

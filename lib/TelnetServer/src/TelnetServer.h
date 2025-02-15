@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <ESPTelnet.h>
 #include "CommandLineInterface.h"
-#include "SerialLogger.h"
+#include "Logger.h"
 #include "SystemStatusLoader.h"
 
 class TelnetServer {

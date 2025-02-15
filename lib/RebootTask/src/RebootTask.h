@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#include "SerialLogger.h"
+#include "Logger.h"
 #include "SystemStatusLoader.h"
 
 class RebootTask {

@@ -23,6 +23,10 @@
 #define LOG_DIRECTORY "/log"
 #endif
 
+#ifndef LOG_FILE_NAME
+#define LOG_FILE_NAME "blackout-detect-o-matic.log"
+#endif
+
 #ifndef SYSTEM_STATUS_FILE_PATH
 #define SYSTEM_STATUS_FILE_PATH "/status.json"
 #endif
@@ -73,6 +77,7 @@
 
 #define CONFIGURATION_FIELD_HEARTBEAT_FILE_LOG_INTERVAL "heartbeatFileLogInterval"
 #define CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL "heartbeatSerialLogInterval"
+#define CONFIGURATION_FIELD_LOG_FILE_NAME "logFileName"
 #define CONFIGURATION_FIELD_LOG_DIRECTORY "logDirectory"
 #define CONFIGURATION_FIELD_NTP_OFFSET "ntpOffset"
 #define CONFIGURATION_FIELD_NTP_SERVER "ntpServer"
@@ -106,11 +111,13 @@ public:
 
     // Getters
 
-    GetResult get(const String& key);
+    GetResult get(const String &key);
 
     unsigned long getHeartbeatFileLogInterval() const;
 
     unsigned long getHeartbeatSerialLogInterval() const;
+
+    String getLogFileName();
 
     String getLogDirectory();
 
@@ -132,11 +139,13 @@ public:
 
     // Setters
 
-    SetResult set(const String& key, const String& value);
+    SetResult set(const String &key, const String &value);
 
     void setHeartbeatFileLogInterval(unsigned long interval);
 
     void setHeartbeatSerialLogInterval(unsigned long interval);
+
+    void setLogFileName(String fileName);
 
     void setLogDirectory(String directory);
 
@@ -159,16 +168,18 @@ public:
     JsonDocument toJsonDocument();
 
 private:
-    String logDirectory = LOG_DIRECTORY;
-    String systemStatusFilePath = SYSTEM_STATUS_FILE_PATH;
-
-    String wifiSSID = WIFI_SSID;
-    String wifiSecret = WIFI_SECRET;
+    /**
+     * Interval in seconds for logging the heartbeat to a file
+     */
+    unsigned long heartbeatFileLogInterval = HEARTBEAT_FILE_LOG_INTERVAL;
 
     /**
-     * Hostname or IP address of the NTP server
+     * Interval in seconds for logging the heartbeat to the serial console
      */
-    String ntpServer = NTP_SERVER;
+    unsigned long heartbeatSerialLogInterval = HEARTBEAT_SERIAL_LOG_INTERVAL;
+
+    String logFileName = LOG_FILE_NAME;
+    String logDirectory = LOG_DIRECTORY;
 
     /**
      * Offset from UTC in seconds
@@ -176,25 +187,26 @@ private:
     int ntpOffset = NTP_OFFSET;
 
     /**
+     * Hostname or IP address of the NTP server
+     */
+    String ntpServer = NTP_SERVER;
+
+    /**
      * NTP update interval in seconds
      */
     int ntpUpdateInterval = NTP_UPDATE_INTERVAL;
     unsigned int telnetServerPort = TELNET_SERVER_PORT;
 
-    /**
-     * Interval in seconds for logging the heartbeat to the serial console
-     */
-    unsigned long heartbeatSerialLogInterval = HEARTBEAT_SERIAL_LOG_INTERVAL;
 
-    /**
-     * Interval in seconds for logging the heartbeat to a file
-     */
-    unsigned long heartbeatFileLogInterval = HEARTBEAT_FILE_LOG_INTERVAL;
+    String systemStatusFilePath = SYSTEM_STATUS_FILE_PATH;
 
     /**
      * Interval in seconds for saving the system status to a file
      */
     unsigned long systemStatusSaveInterval = SYSTEM_STATUS_SAVE_INTERVAL;
+
+    String wifiSecret = WIFI_SECRET;
+    String wifiSSID = WIFI_SSID;
 };
 
 extern Configuration configuration;

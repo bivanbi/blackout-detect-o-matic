@@ -2,7 +2,7 @@
 #define BLACKOUT_DETECT_O_MATIC_SERIAL_COMMAND_INTERFACE_H
 
 #include <Arduino.h>
-#include "SerialLogger.h"
+#include "Logger.h"
 #include "CommandLineInterface.h"
 
 class SerialCommandInterface {

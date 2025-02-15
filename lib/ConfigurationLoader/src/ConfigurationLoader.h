@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 #include "Configuration.h"
-#include "SerialLogger.h"
+#include "Logger.h"
 #include "PersistentStorage.h"
 
 class ConfigurationLoader {

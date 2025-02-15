@@ -5,7 +5,7 @@
 
 #include "RebootTask.h"
 #include "Configuration.h"
-#include "SerialLogger.h"
+#include "Logger.h"
 #include "SystemStatus.h"
 #include "WifiClientAdapter.h"
 #include "RTCAdapter.h"

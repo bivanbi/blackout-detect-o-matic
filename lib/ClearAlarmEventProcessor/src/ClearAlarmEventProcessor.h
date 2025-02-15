@@ -4,8 +4,8 @@
 #include <Arduino.h>
 
 #include "RTCAdapter.h"
+#include "Logger.h"
 #include "SystemStatus.h"
-#include "SerialLogger.h"
 
 struct ClearAlarmEventBuffer {
     unsigned long clearAlarmEventCount = 0;

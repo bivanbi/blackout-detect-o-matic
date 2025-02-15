@@ -77,11 +77,12 @@ bool PeriodicTaskScheduler::isSystemStatusSaveDue() {
 
 void PeriodicTaskScheduler::heartBeat() {
     if (isSerialHeartBeatDue()) {
-        serialLogger.info(getHeartBeatMessage());
+        Logger::info(getHeartBeatMessage(), {Logger::Channel::SERIAL_PORT});
         tickCounter.serialHeartBeat = 0;
     }
 
     if (isFileHeartBeatDue()) {
+        Logger::info(getHeartBeatMessage(), {Logger::Channel::PERSISTENT_STORAGE});
         tickCounter.fileHeartBeat = 0;
     }
 }
@@ -96,7 +97,7 @@ bool PeriodicTaskScheduler::isFileHeartBeatDue() {
 
 void PeriodicTaskScheduler::scheduleReboot(long delay) {
     rebootRequested = delay;
-    serialLogger.info("PeriodicTaskScheduler: Reboot scheduled in " + String(delay) + " seconds");
+    Logger::info("PeriodicTaskScheduler: Reboot scheduled in " + String(delay) + " seconds");
 }
 
 String PeriodicTaskScheduler::getHeartBeatMessage() {

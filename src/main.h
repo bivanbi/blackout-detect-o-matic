@@ -5,7 +5,7 @@
 #include <random>
 
 #include "Configuration.h"
-#include "SerialLogger.h"
+#include "Logger.h"
 #include "WifiClientAdapter.h"
 #include "NTPClientAdapter.h"
 #include "RTCAdapter.h"

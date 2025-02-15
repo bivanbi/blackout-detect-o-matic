@@ -1,8 +1,11 @@
 #ifndef BLACKOUT_DETECT_O_MATIC_SERIAL_LOGGER_H
 #define BLACKOUT_DETECT_O_MATIC_SERIAL_LOGGER_H
 
+#include <Arduino.h>
 #include <sys/_stdint.h>
 
+#include "LogSeverity.h"
+#include "LogHelper.h"
 #include "UnixTimeWithMilliSeconds.h"
 #include "RTCAdapter.h"
 
@@ -10,37 +13,14 @@
 
 class SerialLogger {
 public:
-    enum LogLevel {
-        NONE = 0,
-        ERROR = 1,
-        INFO = 2,
-        DEBUG = 3
-    };
+    static void begin();
 
-    SerialLogger();
+    static void setLogLevel(LogSeverity::Severity level);
 
-    void setLogLevel(String level);
-
-    void setLogLevel(LogLevel level);
-
-    LogLevel stringToLogLevel(String level);
-
-    String logLevelToString(LogLevel level);
-
-    void debug(String message);
-
-    void info(String message);
-
-    void error(String message);
+    static void log(LogSeverity::Severity severity, String message);
 
 private:
-    String getLogHeader(String level);
-
-    void log(String level, String message);
-
-    LogLevel logLevel = LogLevel::INFO;
+    static LogSeverity::Severity logLevel;
 };
-
-extern SerialLogger serialLogger;
 
 #endif // BLACKOUT_DETECT_O_MATIC_SERIAL_LOGGER_H

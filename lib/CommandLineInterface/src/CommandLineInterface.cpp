@@ -65,7 +65,7 @@ String CommandLineInterface::uptime() {
 
 String CommandLineInterface::AlarmCLI::executeCommand(String commandLine) {
     CommandAndArguments alarmCommand = commandLineInterface.splitCommandAndArguments(commandLine);
-    serialLogger.debug("CommandLineInterface::Alarm::executeCommand:'" + alarmCommand.command + "', args: '" +
+    Logger::debug("CommandLineInterface::Alarm::executeCommand:'" + alarmCommand.command + "', args: '" +
                        alarmCommand.arguments + "'");
 
     if (alarmCommand.command.equals(CLI_COMMAND_ALARM_CLEAR)) {
@@ -89,7 +89,7 @@ String CommandLineInterface::AlarmCLI::help() {
 
 String CommandLineInterface::ConfigCLI::executeCommand(String commandLine) {
     CommandAndArguments configCommand = commandLineInterface.splitCommandAndArguments(commandLine);
-    serialLogger.debug("CommandLineInterface::Config::executeCommand:'" + configCommand.command + "', args: '" +
+    Logger::debug("CommandLineInterface::Config::executeCommand:'" + configCommand.command + "', args: '" +
                        configCommand.arguments + "'");
 
     if (configCommand.command.equals(CLI_COMMAND_CONFIG_GET)) {
@@ -116,7 +116,7 @@ String CommandLineInterface::ConfigCLI::get(String key) {
         return result.value;
     }
 
-    serialLogger.error("CommandLineInterface::ConfigCLI::get: key: '" + key + "', error message: " + result.value);
+    Logger::error("CommandLineInterface::ConfigCLI::get: key: '" + key + "', error message: " + result.value);
     return result.value;
 }
 
@@ -137,7 +137,7 @@ String CommandLineInterface::ConfigCLI::set(String keyAndValue) {
         return "Configuration updated: " + keyAndValue;
     }
 
-    serialLogger.error("CommandLineInterface::ConfigCLI::set: "
+    Logger::error("CommandLineInterface::ConfigCLI::set: "
                        "key: '" + keyValuePair.key + "', value: '" + keyValuePair.value +
                        "', error message: " + result.message);
     return "ERROR: " + result.message;
@@ -161,7 +161,7 @@ String CommandLineInterface::ConfigCLI::help() {
 
 String CommandLineInterface::SDCardCLI::executeCommand(String commandLine) {
     CommandAndArguments sdCardCommand = commandLineInterface.splitCommandAndArguments(commandLine);
-    serialLogger.debug("CommandLineInterface::SDCard::executeCommand:'" + sdCardCommand.command + "', args: '" +
+    Logger::debug("CommandLineInterface::SDCard::executeCommand:'" + sdCardCommand.command + "', args: '" +
                        sdCardCommand.arguments + "'");
 
     if (sdCardCommand.command.equals(CLI_COMMAND_SDCARD_CAT)) {
@@ -239,7 +239,7 @@ String CommandLineInterface::SDCardCLI::help() {
 
 String CommandLineInterface::StatusCLI::executeCommand(String commandLine) {
     CommandAndArguments statusCommand = commandLineInterface.splitCommandAndArguments(commandLine);
-    serialLogger.debug("CommandLineInterface::Status::executeCommand:'" + statusCommand.command + "', args: '" +
+    Logger::debug("CommandLineInterface::Status::executeCommand:'" + statusCommand.command + "', args: '" +
                        statusCommand.arguments + "'");
 
     if (statusCommand.command.equals(CLI_COMMAND_STATUS_GET)) {

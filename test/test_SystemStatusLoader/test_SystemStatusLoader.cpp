@@ -28,8 +28,6 @@ void test_load_withCorruptStatusFile() {
     persistentStorage.writeFile(testFilePath, "corrupt content");
     TEST_ASSERT_EQUAL_STRING("corrupt content", persistentStorage.readFile(testFilePath).c_str());
     TEST_ASSERT_FALSE(SystemStatusLoader::load());
-
-    serialLogger.debug(".as<String>(): " + systemStatus.toJsonDocument().as<String>());
 }
 
 void test_load_withValidStatusFile() {

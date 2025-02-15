@@ -3,9 +3,9 @@
 
 #include <Arduino.h>
 
-#include "SerialLogger.h"
 #include "RTCAdapter.h"
 #include "NTPClientAdapter.h"
+#include "Logger.h"
 
 class SyncTimeTask {
 public:

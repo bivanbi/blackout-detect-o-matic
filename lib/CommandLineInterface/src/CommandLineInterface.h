@@ -5,7 +5,7 @@
 
 #include "SystemStatus.h"
 #include "RTCAdapter.h"
-#include "SerialLogger.h"
+#include "Logger.h"
 #include "SystemStatusLoader.h"
 #include "ConfigurationLoader.h"
 #include "PeriodicTaskScheduler.h"

@@ -3,6 +3,7 @@
 Configuration::Configuration(JsonObject doc) {
     heartbeatFileLogInterval = doc[CONFIGURATION_FIELD_HEARTBEAT_FILE_LOG_INTERVAL];
     heartbeatSerialLogInterval = doc[CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL];
+    logFileName = doc[CONFIGURATION_FIELD_LOG_FILE_NAME].as<String>();
     logDirectory = doc[CONFIGURATION_FIELD_LOG_DIRECTORY].as<String>();
     ntpOffset = doc[CONFIGURATION_FIELD_NTP_OFFSET];
     ntpServer = doc[CONFIGURATION_FIELD_NTP_SERVER].as<String>();
@@ -19,6 +20,8 @@ Configuration::GetResult Configuration::get(const String& key) {
         return {OK, String(getHeartbeatFileLogInterval())};
     } else if (key == CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL) {
         return {OK, String(getHeartbeatSerialLogInterval())};
+    } else if (key == CONFIGURATION_FIELD_LOG_FILE_NAME) {
+        return {OK, getLogFileName()};
     } else if (key == CONFIGURATION_FIELD_LOG_DIRECTORY) {
         return {OK, getLogDirectory()};
     } else if (key == CONFIGURATION_FIELD_NTP_OFFSET) {
@@ -48,6 +51,10 @@ unsigned long Configuration::getHeartbeatFileLogInterval() const {
 
 unsigned long Configuration::getHeartbeatSerialLogInterval() const {
     return heartbeatSerialLogInterval;
+}
+
+String Configuration::getLogFileName() {
+    return logFileName;
 }
 
 String Configuration::getLogDirectory() {
@@ -93,6 +100,9 @@ Configuration::SetResult Configuration::set(const String& key, const String& val
     } else if (key == CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL) {
         heartbeatSerialLogInterval = value.toInt();
         return {OK, "updated"};
+    } else if (key == CONFIGURATION_FIELD_LOG_FILE_NAME) {
+        setLogFileName(value);
+        return {OK, "updated"};
     } else if (key == CONFIGURATION_FIELD_LOG_DIRECTORY) {
         setLogDirectory(value);
         return {OK, "updated"};
@@ -131,6 +141,10 @@ void Configuration::setHeartbeatFileLogInterval(unsigned long interval) {
 
 void Configuration::setHeartbeatSerialLogInterval(unsigned long interval) {
     heartbeatSerialLogInterval = interval;
+}
+
+void Configuration::setLogFileName(String fileName) {
+    logFileName = std::move(fileName);
 }
 
 void Configuration::setLogDirectory(String directory) {
@@ -174,6 +188,7 @@ JsonDocument Configuration::toJsonDocument() {
 
     doc[CONFIGURATION_FIELD_HEARTBEAT_FILE_LOG_INTERVAL] = heartbeatFileLogInterval;
     doc[CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL] = heartbeatSerialLogInterval;
+    doc[CONFIGURATION_FIELD_LOG_FILE_NAME] = logFileName;
     doc[CONFIGURATION_FIELD_LOG_DIRECTORY] = logDirectory;
     doc[CONFIGURATION_FIELD_NTP_OFFSET] = ntpOffset;
     doc[CONFIGURATION_FIELD_NTP_SERVER] = ntpServer;
