@@ -136,11 +136,12 @@ void test_status_reset() {
 }
 
 void test_status_save() {
+    String expectedSavedStatus = systemStatus.toJsonDocument().as<String>();
     String response = commandLineInterface.executeCommand("status save");
 
     TEST_ASSERT_EQUAL_STRING("Status saved", response.c_str());
     TEST_ASSERT_TRUE(persistentStorage.exists(systemStatusFilePath));
-    TEST_ASSERT_EQUAL_STRING(persistentStorage.readFile(systemStatusFilePath).c_str(), systemStatus.toJsonDocument().as<String>().c_str());
+    TEST_ASSERT_EQUAL_STRING(expectedSavedStatus.c_str(), persistentStorage.readFile(systemStatusFilePath).c_str());
 }
 
 void test_config_get() {
