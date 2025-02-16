@@ -9,8 +9,4 @@
 
 #define TEST_DIRECTORY "/test"
 
-void initTestDirectory();
-
-void listDir(String dirname, uint8_t levels);
-
 #endif //BLACKOUT_DETECT_O_MATIC_TEST_PERSISTENT_STORAGE_H
