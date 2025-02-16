@@ -44,6 +44,8 @@ public:
 
     bool rename(const String &pathFrom, const String &pathTo);
 
+    uint64_t getSize(const String &path);
+
     UnixTimeWithMilliSeconds getLastModificationDate(const String &path);
 
     UnixTimeWithMilliSeconds getLastModificationDate(File file);

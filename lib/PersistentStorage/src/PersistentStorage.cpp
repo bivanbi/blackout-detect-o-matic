@@ -141,6 +141,17 @@ bool PersistentStorage::rename(const String &pathFrom, const String &pathTo) {
     return SD_MMC.rename(pathFrom, pathTo);
 }
 
+uint64_t PersistentStorage::getSize(const String& path) {
+    File file = SD_MMC.open(path);
+    if (!file) {
+        return 0;
+    }
+
+    uint64_t size = file.size();
+    file.close();
+    return size;
+}
+
 UnixTimeWithMilliSeconds PersistentStorage::getLastModificationDate(const String& path) {
     File file = SD_MMC.open(path);
     UnixTimeWithMilliSeconds result = getLastModificationDate(file);
