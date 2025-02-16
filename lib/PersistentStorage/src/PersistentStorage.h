@@ -42,6 +42,8 @@ public:
 
     bool removeFile(const String &path);
 
+    bool rename(const String &pathFrom, const String &pathTo);
+
     UnixTimeWithMilliSeconds getLastModificationDate(const String &path);
 
     UnixTimeWithMilliSeconds getLastModificationDate(File file);

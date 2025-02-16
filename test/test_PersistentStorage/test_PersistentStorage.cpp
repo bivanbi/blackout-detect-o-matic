@@ -110,6 +110,18 @@ void test_removeFile() {
     TEST_ASSERT_FALSE(persistentStorage.exists(path));
 }
 
+void test_rename() {
+    String path = TEST_DIRECTORY + String("/rename-file-test.txt");
+    String newPath = TEST_DIRECTORY + String("/renamed-file-test.txt");
+    persistentStorage.writeFile(path, "content of Test File to be renamed");
+
+    persistentStorage.rename(path, newPath);
+
+    TEST_ASSERT_FALSE(persistentStorage.exists(path));
+    TEST_ASSERT_TRUE(persistentStorage.exists(newPath));
+    TEST_ASSERT_EQUAL_STRING("content of Test File to be renamed", persistentStorage.readFile(newPath).c_str());
+}
+
 void test_getLastModificationDate() {
     rtcAdapter.pause();
     String path = TEST_DIRECTORY + String("/file-date-test.txt");
@@ -148,6 +160,7 @@ int runUnityTests(void) {
     RUN_TEST(test_writeFile);
     RUN_TEST(test_appendFile);
     RUN_TEST(test_removeFile);
+    RUN_TEST(test_rename);
 
     RUN_TEST(test_getLastModificationDate);
     RUN_TEST(test_getFreeSpace);

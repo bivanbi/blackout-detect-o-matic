@@ -137,6 +137,10 @@ bool PersistentStorage::removeFile(const String& path) {
     return SD_MMC.remove(path);
 }
 
+bool PersistentStorage::rename(const String &pathFrom, const String &pathTo) {
+    return SD_MMC.rename(pathFrom, pathTo);
+}
+
 UnixTimeWithMilliSeconds PersistentStorage::getLastModificationDate(const String& path) {
     File file = SD_MMC.open(path);
     UnixTimeWithMilliSeconds result = getLastModificationDate(file);
