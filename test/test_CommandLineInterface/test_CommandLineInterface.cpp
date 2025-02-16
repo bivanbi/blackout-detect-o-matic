@@ -175,7 +175,7 @@ void test_config_save() {
     TEST_ASSERT_EQUAL_STRING(persistentStorage.readFile(CONFIGURATION_FILE_PATH).c_str(), configuration.toJsonDocument().as<String>().c_str());
 }
 
-int runUnitTests() {
+int runUnityTests(void) {
     UNITY_BEGIN();
 
     RUN_TEST(test_splitCommandAndArguments_withEmptyString);
@@ -204,7 +204,7 @@ int runUnitTests() {
 
 void setup() {
     delay(2000);
-    runUnitTests();
+    runUnityTests();
 }
 
 void loop() {

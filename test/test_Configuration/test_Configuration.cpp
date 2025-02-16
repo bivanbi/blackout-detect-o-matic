@@ -151,7 +151,7 @@ void test_get_withValidKey() {
     TEST_ASSERT_EQUAL_STRING("TestDummyWifiSSID", configuration.getWifiSSID().c_str());
 }
 
-int runUnityTests() {
+int runUnityTests(void) {
     UNITY_BEGIN();
 
     RUN_TEST(test_constructor_default);

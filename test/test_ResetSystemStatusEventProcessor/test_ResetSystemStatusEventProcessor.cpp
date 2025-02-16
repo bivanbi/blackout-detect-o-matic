@@ -35,7 +35,7 @@ void test_processEvents_withEvents() {
     TEST_ASSERT_EQUAL(1234, systemStatus.getLastResetTimeStamp().getUnixTime());
 }
 
-int runUnitTests() {
+int runUnityTests(void) {
     UNITY_BEGIN();
 
     RUN_TEST(test_constructor);
@@ -47,7 +47,7 @@ int runUnitTests() {
 
 void setup() {
     delay(2000);
-    runUnitTests();
+    runUnityTests();
 }
 
 void loop() {

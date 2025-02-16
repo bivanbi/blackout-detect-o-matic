@@ -52,7 +52,7 @@ void test_processEvents_withEvents_withActiveAlarm() {
     TEST_ASSERT_FALSE(systemStatus.isAlarmActive());
 }
 
-int runUnitTests() {
+int runUnityTests(void) {
     UNITY_BEGIN();
 
     RUN_TEST(test_constructor);
@@ -66,7 +66,7 @@ int runUnitTests() {
 
 void setup() {
     delay(2000);
-    runUnitTests();
+    runUnityTests();
 }
 
 void loop() {

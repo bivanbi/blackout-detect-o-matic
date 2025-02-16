@@ -60,7 +60,7 @@ void test_setLoglevel() {
     TEST_ASSERT_TRUE(logFileContent.indexOf("Test debug message") > 0);
 }
 
-int runTests() {
+int runUnityTests(void) {
     UNITY_BEGIN();
 
     RUN_TEST(test_logFilePath);
@@ -72,7 +72,7 @@ int runTests() {
 
 void setup() {
     delay(2000);
-    runTests();
+    runUnityTests();
 };
 
 void loop() {};

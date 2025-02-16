@@ -66,7 +66,7 @@ void test_getFormatterUptime(void) {
     TEST_ASSERT_EQUAL_STRING("2 days 04:09:08.257", UptimeAdapter::getFormattedUptime().c_str());
 }
 
-int runTest() {
+int runUnityTests(void) {
     UNITY_BEGIN();
 
     RUN_TEST(test_get);
@@ -82,7 +82,7 @@ int runTest() {
 
 void setup() {
     delay(2000);
-    runTest();
+    runUnityTests();
 }
 
 void loop() {
