@@ -27,6 +27,18 @@
 #define LOG_FILE_NAME "blackout-detect-o-matic.log"
 #endif
 
+#ifndef LOG_ROTATE_MINIMUM_FILE_SIZE
+#define LOG_ROTATE_MINIMUM_FILE_SIZE 1048576 // bytes, e.g. 1048576 = 1 MB
+#endif
+
+#ifndef LOG_ROTATE_TASK_INTERVAL
+#define LOG_ROTATE_TASK_INTERVAL 86400 // seconds, e.g. 86400 = 1 day
+#endif
+
+#ifndef LOG_ROTATE_NUMBER_OF_FILES_KEPT
+#define LOG_ROTATE_NUMBER_OF_FILES_KEPT 60 // number of files kept above active log file
+#endif
+
 #ifndef SYSTEM_STATUS_FILE_PATH
 #define SYSTEM_STATUS_FILE_PATH "/status.json"
 #endif
@@ -79,6 +91,9 @@
 #define CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL "heartbeatSerialLogInterval"
 #define CONFIGURATION_FIELD_LOG_FILE_NAME "logFileName"
 #define CONFIGURATION_FIELD_LOG_DIRECTORY "logDirectory"
+#define CONFIGURATION_FIELD_LOG_ROTATE_MINIMUM_FILE_SIZE "logRotateMinimumFileSize"
+#define CONFIGURATION_FIELD_LOG_ROTATE_TASK_INTERVAL "logRotateTaskInterval"
+#define CONFIGURATION_FIELD_LOG_ROTATE_NUMBER_OF_FILES_KEPT "logRotateNumberOfFilesKept"
 #define CONFIGURATION_FIELD_NTP_OFFSET "ntpOffset"
 #define CONFIGURATION_FIELD_NTP_SERVER "ntpServer"
 #define CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL "ntpUpdateInterval"
@@ -121,6 +136,28 @@ public:
 
     String getLogDirectory();
 
+    /**
+     * Get the minimum file size in bytes before rotating the log file.
+     *
+     * @return minimum log file size in bytes
+     */
+    unsigned long getLogRotateMinimumFileSize() const;
+
+    /**
+     * Get the interval in seconds for running the logrotate task.
+     * Rotation will only occur, if the active log file size reaches the minimum file size.
+     *
+     * @return task interval in seconds
+     */
+    unsigned long getLogRotateTaskInterval() const;
+
+    /**
+     * Get the number of log files (above active log file) to keep before deleting the oldest.
+     *
+     * @return number of rotated log files to be kept
+     */
+    unsigned long getLogRotateNumberOfFilesKept() const;
+
     int getNtpOffset() const;
 
     String getNtpServer() const;
@@ -148,6 +185,23 @@ public:
     void setLogFileName(String fileName);
 
     void setLogDirectory(String directory);
+
+    /**
+     * Set the minimum file size in bytes before rotating the log file.
+     *
+     * @param fileSize in bytes
+     */
+    void setLogRotateMinimumFileSize(unsigned long fileSize);
+
+    void setLogRotateTaskInterval(unsigned long interval);
+
+    /**
+     * Set the number of log files (above active log file) to keep before deleting the oldest.
+     * For example, if set to 7, then there will be the active log file plus 7 rotated log files.
+     *
+     * @param numberOfFilesKept number of rotated log files to be kept
+     */
+    void setLogRotateNumberOfFilesKept(unsigned long numberOfFilesKept);
 
     void setNtpOffset(int offset);
 
@@ -180,6 +234,9 @@ private:
 
     String logFileName = LOG_FILE_NAME;
     String logDirectory = LOG_DIRECTORY;
+    unsigned long logRotateFileSize = LOG_ROTATE_MINIMUM_FILE_SIZE;
+    unsigned long logRotateInterval = LOG_ROTATE_TASK_INTERVAL;
+    unsigned long logRotateNumberOfFilesKept = LOG_ROTATE_NUMBER_OF_FILES_KEPT;
 
     /**
      * Offset from UTC in seconds

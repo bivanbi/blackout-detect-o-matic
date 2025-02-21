@@ -18,6 +18,7 @@
 #include "SystemStatusLoader.h"
 #include "UptimeAdapter.h"
 #include "SyncTimeTask.h"
+#include "LogRotate.h"
 
 class PeriodicTaskScheduler {
     /**
@@ -27,6 +28,7 @@ class PeriodicTaskScheduler {
         unsigned long timeSync = 0;
         unsigned long serialHeartBeat = 0;
         unsigned long fileHeartBeat = 0;
+        unsigned long logRotate = 0;
         unsigned long saveSystemStatus = 0;
         unsigned long reboot = 0;
     };
@@ -57,23 +59,27 @@ public:
 private:
     static void tick();
 
-    static void reboot();
+    static void heartBeat();
+
+    static bool isFileHeartBeatDue();
+
+    static bool isLogRotateDue();
+
+    static bool isSerialHeartBeatDue();
 
     static bool isSyncTimeDue();
+
+    static bool isSystemStatusSaveDue();
 
     static void updateSystemStatus();
 
     static void processEvents();
 
-    static void heartBeat();
+    static void reboot();
+
+    static void rotateLogs();
 
     static void saveSystemStatus();
-
-    static bool isSystemStatusSaveDue();
-
-    static bool isSerialHeartBeatDue();
-
-    static bool isFileHeartBeatDue();
 
     static String getHeartBeatMessage();
 

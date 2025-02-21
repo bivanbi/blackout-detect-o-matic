@@ -17,6 +17,7 @@ void PeriodicTaskScheduler::loop() {
         tick();
         reboot();
         syncTime();
+        rotateLogs();
         processEvents();
         updateSystemStatus();
         AlarmLED::update(systemStatus.isAlarmActive());
@@ -30,6 +31,7 @@ void PeriodicTaskScheduler::tick() {
     tickCounter.timeSync += PERIODIC_TASK_INTERVAL;
     tickCounter.serialHeartBeat += PERIODIC_TASK_INTERVAL;
     tickCounter.fileHeartBeat += PERIODIC_TASK_INTERVAL;
+    tickCounter.logRotate += PERIODIC_TASK_INTERVAL;
 
     if (rebootRequested >= 0) {
         tickCounter.reboot += PERIODIC_TASK_INTERVAL;
@@ -71,6 +73,13 @@ void PeriodicTaskScheduler::saveSystemStatus() {
     }
 }
 
+void PeriodicTaskScheduler::rotateLogs() {
+    if (isLogRotateDue()) {
+        LogRotate::rotate();
+        tickCounter.logRotate = 0;
+    }
+}
+
 bool PeriodicTaskScheduler::isSystemStatusSaveDue() {
     return tickCounter.saveSystemStatus >= configuration.getSystemStatusSaveInterval() * 1000;
 }
@@ -93,6 +102,10 @@ bool PeriodicTaskScheduler::isSerialHeartBeatDue() {
 
 bool PeriodicTaskScheduler::isFileHeartBeatDue() {
     return tickCounter.fileHeartBeat >= configuration.getHeartbeatFileLogInterval() * 1000;
+}
+
+bool PeriodicTaskScheduler::isLogRotateDue() {
+    return tickCounter.logRotate >= configuration.getLogRotateTaskInterval() * 1000;
 }
 
 void PeriodicTaskScheduler::scheduleReboot(long delay) {

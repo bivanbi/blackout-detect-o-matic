@@ -12,6 +12,9 @@ void test_constructor_default() {
     TEST_ASSERT_EQUAL(HEARTBEAT_SERIAL_LOG_INTERVAL, configuration.getHeartbeatSerialLogInterval());
     TEST_ASSERT_EQUAL_STRING(LOG_DIRECTORY, configuration.getLogDirectory().c_str());
     TEST_ASSERT_EQUAL_STRING(LOG_FILE_NAME, configuration.getLogFileName().c_str());
+    TEST_ASSERT_EQUAL(LOG_ROTATE_MINIMUM_FILE_SIZE, configuration.getLogRotateMinimumFileSize());
+    TEST_ASSERT_EQUAL(LOG_ROTATE_TASK_INTERVAL, configuration.getLogRotateTaskInterval());
+    TEST_ASSERT_EQUAL(LOG_ROTATE_NUMBER_OF_FILES_KEPT, configuration.getLogRotateNumberOfFilesKept());
     TEST_ASSERT_EQUAL_STRING(NTP_SERVER, configuration.getNtpServer().c_str());
     TEST_ASSERT_EQUAL(NTP_OFFSET, configuration.getNtpOffset());
     TEST_ASSERT_EQUAL(NTP_UPDATE_INTERVAL, configuration.getNtpUpdateInterval());
@@ -27,6 +30,9 @@ void test_constructor_withJsonDocument() {
     doc[CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL] = 987;
     doc[CONFIGURATION_FIELD_LOG_FILE_NAME] = "dummy-log-file-name.log";
     doc[CONFIGURATION_FIELD_LOG_DIRECTORY] = "/dummy-log-directory";
+    doc[CONFIGURATION_FIELD_LOG_ROTATE_MINIMUM_FILE_SIZE] = 2234567;
+    doc[CONFIGURATION_FIELD_LOG_ROTATE_TASK_INTERVAL] = 3234567;
+    doc[CONFIGURATION_FIELD_LOG_ROTATE_NUMBER_OF_FILES_KEPT] = 4234567;
     doc[CONFIGURATION_FIELD_NTP_OFFSET] = 123;
     doc[CONFIGURATION_FIELD_NTP_SERVER] = "test.europe.pool.ntp.org";
     doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL] = 456;
@@ -42,6 +48,9 @@ void test_constructor_withJsonDocument() {
     TEST_ASSERT_EQUAL(987, configuration.getHeartbeatSerialLogInterval());
     TEST_ASSERT_EQUAL_STRING("dummy-log-file-name.log", configuration.getLogFileName().c_str());
     TEST_ASSERT_EQUAL_STRING("/dummy-log-directory", configuration.getLogDirectory().c_str());
+    TEST_ASSERT_EQUAL(2234567, configuration.getLogRotateMinimumFileSize());
+    TEST_ASSERT_EQUAL(3234567, configuration.getLogRotateTaskInterval());
+    TEST_ASSERT_EQUAL(4234567, configuration.getLogRotateNumberOfFilesKept());
     TEST_ASSERT_EQUAL(123, configuration.getNtpOffset());
     TEST_ASSERT_EQUAL_STRING("test.europe.pool.ntp.org", configuration.getNtpServer().c_str());
     TEST_ASSERT_EQUAL(456, configuration.getNtpUpdateInterval());
@@ -59,6 +68,9 @@ void test_toJsonDocument() {
     TEST_ASSERT_EQUAL(HEARTBEAT_SERIAL_LOG_INTERVAL, doc[CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL]);
     TEST_ASSERT_EQUAL_STRING(LOG_FILE_NAME, doc[CONFIGURATION_FIELD_LOG_FILE_NAME].as<String>().c_str());
     TEST_ASSERT_EQUAL_STRING(LOG_DIRECTORY, doc[CONFIGURATION_FIELD_LOG_DIRECTORY].as<String>().c_str());
+    TEST_ASSERT_EQUAL(LOG_ROTATE_MINIMUM_FILE_SIZE, doc[CONFIGURATION_FIELD_LOG_ROTATE_MINIMUM_FILE_SIZE]);
+    TEST_ASSERT_EQUAL(LOG_ROTATE_TASK_INTERVAL, doc[CONFIGURATION_FIELD_LOG_ROTATE_TASK_INTERVAL]);
+    TEST_ASSERT_EQUAL(LOG_ROTATE_NUMBER_OF_FILES_KEPT, doc[CONFIGURATION_FIELD_LOG_ROTATE_NUMBER_OF_FILES_KEPT]);
     TEST_ASSERT_EQUAL(NTP_OFFSET, doc[CONFIGURATION_FIELD_NTP_OFFSET]);
     TEST_ASSERT_EQUAL_STRING(NTP_SERVER, doc[CONFIGURATION_FIELD_NTP_SERVER].as<String>().c_str());
     TEST_ASSERT_EQUAL(NTP_UPDATE_INTERVAL, doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL]);
@@ -87,6 +99,21 @@ void test_setLogFileName() {
 void test_setLogDirectory() {
     configuration.setLogDirectory("/dummy-log-directory");
     TEST_ASSERT_EQUAL_STRING("/dummy-log-directory", configuration.getLogDirectory().c_str());
+}
+
+void test_setLogRotateMinimumFileSize() {
+    configuration.setLogRotateMinimumFileSize(1234567);
+    TEST_ASSERT_EQUAL(1234567, configuration.getLogRotateMinimumFileSize());
+}
+
+void test_setLogRotateTaskInterval() {
+    configuration.setLogRotateTaskInterval(1234567);
+    TEST_ASSERT_EQUAL(1234567, configuration.getLogRotateTaskInterval());
+}
+
+void test_setLogRotateNumberOfFilesKept() {
+    configuration.setLogRotateNumberOfFilesKept(1234567);
+    TEST_ASSERT_EQUAL(1234567, configuration.getLogRotateNumberOfFilesKept());
 }
 
 void test_setNtpOffset() {
@@ -162,6 +189,9 @@ int runUnityTests(void) {
     RUN_TEST(test_setHeartbeatSerialLogInterval);
     RUN_TEST(test_setLogFileName);
     RUN_TEST(test_setLogDirectory);
+    RUN_TEST(test_setLogRotateMinimumFileSize);
+    RUN_TEST(test_setLogRotateTaskInterval);
+    RUN_TEST(test_setLogRotateNumberOfFilesKept);
     RUN_TEST(test_setNtpOffset);
     RUN_TEST(test_setNtpServer);
     RUN_TEST(test_setNtpUpdateInterval);

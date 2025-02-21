@@ -5,6 +5,9 @@ Configuration::Configuration(JsonObject doc) {
     heartbeatSerialLogInterval = doc[CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL];
     logFileName = doc[CONFIGURATION_FIELD_LOG_FILE_NAME].as<String>();
     logDirectory = doc[CONFIGURATION_FIELD_LOG_DIRECTORY].as<String>();
+    logRotateFileSize = doc[CONFIGURATION_FIELD_LOG_ROTATE_MINIMUM_FILE_SIZE];
+    logRotateInterval = doc[CONFIGURATION_FIELD_LOG_ROTATE_TASK_INTERVAL];
+    logRotateNumberOfFilesKept = doc[CONFIGURATION_FIELD_LOG_ROTATE_NUMBER_OF_FILES_KEPT];
     ntpOffset = doc[CONFIGURATION_FIELD_NTP_OFFSET];
     ntpServer = doc[CONFIGURATION_FIELD_NTP_SERVER].as<String>();
     ntpUpdateInterval = doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL];
@@ -24,6 +27,12 @@ Configuration::GetResult Configuration::get(const String& key) {
         return {OK, getLogFileName()};
     } else if (key == CONFIGURATION_FIELD_LOG_DIRECTORY) {
         return {OK, getLogDirectory()};
+    } else if (key == CONFIGURATION_FIELD_LOG_ROTATE_MINIMUM_FILE_SIZE) {
+        return {OK, String(getLogRotateMinimumFileSize())};
+    } else if (key == CONFIGURATION_FIELD_LOG_ROTATE_TASK_INTERVAL) {
+        return {OK, String(getLogRotateTaskInterval())};
+    } else if (key == CONFIGURATION_FIELD_LOG_ROTATE_NUMBER_OF_FILES_KEPT) {
+        return {OK, String(getLogRotateNumberOfFilesKept())};
     } else if (key == CONFIGURATION_FIELD_NTP_OFFSET) {
         return {OK, String(getNtpOffset())};
     } else if (key == CONFIGURATION_FIELD_NTP_SERVER) {
@@ -59,6 +68,18 @@ String Configuration::getLogFileName() {
 
 String Configuration::getLogDirectory() {
     return logDirectory;
+}
+
+unsigned long Configuration::getLogRotateMinimumFileSize() const {
+    return logRotateFileSize;
+}
+
+unsigned long Configuration::getLogRotateTaskInterval() const {
+    return logRotateInterval;
+}
+
+unsigned long Configuration::getLogRotateNumberOfFilesKept() const {
+    return logRotateNumberOfFilesKept;
 }
 
 int Configuration::getNtpOffset() const {
@@ -106,6 +127,15 @@ Configuration::SetResult Configuration::set(const String& key, const String& val
     } else if (key == CONFIGURATION_FIELD_LOG_DIRECTORY) {
         setLogDirectory(value);
         return {OK, "updated"};
+    } else if (key == CONFIGURATION_FIELD_LOG_ROTATE_MINIMUM_FILE_SIZE) {
+        logRotateFileSize = value.toInt();
+        return {OK, "updated"};
+    } else if (key == CONFIGURATION_FIELD_LOG_ROTATE_TASK_INTERVAL) {
+        logRotateInterval = value.toInt();
+        return {OK, "updated"};
+    } else if (key == CONFIGURATION_FIELD_LOG_ROTATE_NUMBER_OF_FILES_KEPT) {
+        logRotateNumberOfFilesKept = value.toInt();
+        return {OK, "updated"};
     } else if (key == CONFIGURATION_FIELD_NTP_SERVER) {
         ntpServer = value;
         return {OK, "updated"};
@@ -151,6 +181,18 @@ void Configuration::setLogDirectory(String directory) {
     logDirectory = std::move(directory);
 }
 
+void Configuration::setLogRotateMinimumFileSize(unsigned long fileSize) {
+    logRotateFileSize = fileSize;
+}
+
+void Configuration::setLogRotateTaskInterval(unsigned long interval) {
+    logRotateInterval = interval;
+}
+
+void Configuration::setLogRotateNumberOfFilesKept(unsigned long numberOfFilesKept) {
+    logRotateNumberOfFilesKept = numberOfFilesKept;
+}
+
 void Configuration::setNtpOffset(int offset) {
     ntpOffset = offset;
 }
@@ -190,6 +232,9 @@ JsonDocument Configuration::toJsonDocument() {
     doc[CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL] = heartbeatSerialLogInterval;
     doc[CONFIGURATION_FIELD_LOG_FILE_NAME] = logFileName;
     doc[CONFIGURATION_FIELD_LOG_DIRECTORY] = logDirectory;
+    doc[CONFIGURATION_FIELD_LOG_ROTATE_MINIMUM_FILE_SIZE] = logRotateFileSize;
+    doc[CONFIGURATION_FIELD_LOG_ROTATE_TASK_INTERVAL] = logRotateInterval;
+    doc[CONFIGURATION_FIELD_LOG_ROTATE_NUMBER_OF_FILES_KEPT] = logRotateNumberOfFilesKept;
     doc[CONFIGURATION_FIELD_NTP_OFFSET] = ntpOffset;
     doc[CONFIGURATION_FIELD_NTP_SERVER] = ntpServer;
     doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL] = ntpUpdateInterval;
