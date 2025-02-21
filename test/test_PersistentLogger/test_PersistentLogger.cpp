@@ -1,7 +1,6 @@
 #include "test_PersistentLogger.h"
 
 void setUp() {
-    Serial.begin(115200);
     configuration.setLogDirectory(TEST_LOG_DIRECTORY);
     configuration.setLogFileName(TEST_LOG_FILE_NAME);
 
@@ -25,11 +24,8 @@ void tearDown() {
 }
 
 void test_logFilePath() {
-    Serial.println("config getlogfilename: " + configuration.getLogFileName());
-    Serial.println("persistentlogger logfilepath: " + PersistentLogger::logFilePath);
-
     TEST_ASSERT_EQUAL_STRING(TEST_LOG_FILE_NAME, configuration.getLogFileName().c_str());
-    TEST_ASSERT_EQUAL_STRING(TEST_LOG_FILE_PATH, PersistentLogger::logFilePath.c_str());
+    TEST_ASSERT_EQUAL_STRING(TEST_LOG_FILE_PATH, PersistentLogger::getLogFilePath().c_str());
 }
 
 void test_log_defaultLevel() {

@@ -1,13 +1,12 @@
 #include "PersistentLogger.h"
 
 void PersistentLogger::begin() {
-    logFilePath = configuration.getLogDirectory() + "/" + configuration.getLogFileName();
     logLevel = LogSeverity::Severity::INFO;
 }
 
 void PersistentLogger::log(LogSeverity::Severity severity, const String& message) {
     if (severity <= logLevel) {
-        persistentStorage.appendFile(logFilePath, LogHelper::getLogHeader(severity) + message + "\n");
+        persistentStorage.appendFile(getLogFilePath(), LogHelper::getLogHeader(severity) + message + "\n");
     }
 }
 
@@ -15,5 +14,8 @@ void PersistentLogger::setLogLevel(LogSeverity::Severity level) {
     logLevel = level;
 }
 
-String PersistentLogger::logFilePath;
+String PersistentLogger::getLogFilePath() {
+    return configuration.getLogDirectory() + "/" + configuration.getLogFileName();
+}
+
 LogSeverity::Severity PersistentLogger::logLevel;

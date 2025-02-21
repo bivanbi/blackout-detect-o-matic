@@ -17,9 +17,9 @@ public:
 
     static void log(LogSeverity::Severity severity, const String& message);
 
-    static String logFilePath;
+    static String getLogFilePath();
+
     static LogSeverity::Severity logLevel;
-private:
 };
 
 #endif //BLACKOUT_DETECT_O_MATIC_PERSISTENT_LOGGER_H
