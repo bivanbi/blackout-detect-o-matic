@@ -18,6 +18,7 @@ void test_constructor_default() {
     TEST_ASSERT_EQUAL_STRING(NTP_SERVER, configuration.getNtpServer().c_str());
     TEST_ASSERT_EQUAL(NTP_OFFSET, configuration.getNtpOffset());
     TEST_ASSERT_EQUAL(NTP_UPDATE_INTERVAL, configuration.getNtpUpdateInterval());
+    TEST_ASSERT_EQUAL_STRING(OTA_PASSWORD, configuration.getOTAPassword().c_str());
     TEST_ASSERT_EQUAL_STRING(SYSTEM_STATUS_FILE_PATH, configuration.getSystemStatusFilePath().c_str());
     TEST_ASSERT_EQUAL(TELNET_SERVER_PORT, configuration.getTelnetServerPort());
     TEST_ASSERT_EQUAL_STRING(WIFI_SECRET, configuration.getWifiSecret().c_str());
@@ -36,6 +37,7 @@ void test_constructor_withJsonDocument() {
     doc[CONFIGURATION_FIELD_NTP_OFFSET] = 123;
     doc[CONFIGURATION_FIELD_NTP_SERVER] = "test.europe.pool.ntp.org";
     doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL] = 456;
+    doc[CONFIGURATION_FIELD_OTA_PASSWORD] = "dummy-ota-password";
     doc[CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH] = "/dummy-system-status-file-path";
     doc[CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL] = 654245;
     doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT] = 789;
@@ -54,6 +56,7 @@ void test_constructor_withJsonDocument() {
     TEST_ASSERT_EQUAL(123, configuration.getNtpOffset());
     TEST_ASSERT_EQUAL_STRING("test.europe.pool.ntp.org", configuration.getNtpServer().c_str());
     TEST_ASSERT_EQUAL(456, configuration.getNtpUpdateInterval());
+    TEST_ASSERT_EQUAL_STRING("dummy-ota-password", configuration.getOTAPassword().c_str());
     TEST_ASSERT_EQUAL_STRING("/dummy-system-status-file-path", configuration.getSystemStatusFilePath().c_str());
     TEST_ASSERT_EQUAL(654245, configuration.getSystemStatusSaveInterval());
     TEST_ASSERT_EQUAL(789, configuration.getTelnetServerPort());
@@ -74,6 +77,7 @@ void test_toJsonDocument() {
     TEST_ASSERT_EQUAL(NTP_OFFSET, doc[CONFIGURATION_FIELD_NTP_OFFSET]);
     TEST_ASSERT_EQUAL_STRING(NTP_SERVER, doc[CONFIGURATION_FIELD_NTP_SERVER].as<String>().c_str());
     TEST_ASSERT_EQUAL(NTP_UPDATE_INTERVAL, doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL]);
+    TEST_ASSERT_EQUAL_STRING(OTA_PASSWORD, doc[CONFIGURATION_FIELD_OTA_PASSWORD].as<String>().c_str());
     TEST_ASSERT_EQUAL_STRING(SYSTEM_STATUS_FILE_PATH, doc[CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH].as<String>().c_str());
     TEST_ASSERT_EQUAL(SYSTEM_STATUS_SAVE_INTERVAL, doc[CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL]);
     TEST_ASSERT_EQUAL(TELNET_SERVER_PORT, doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT]);
@@ -129,6 +133,11 @@ void test_setNtpServer() {
 void test_setNtpUpdateInterval() {
     configuration.setNtpUpdateInterval(456);
     TEST_ASSERT_EQUAL(456, configuration.getNtpUpdateInterval());
+}
+
+void test_setOTAPassword() {
+    configuration.setOTAPassword("dummy-ota-password");
+    TEST_ASSERT_EQUAL_STRING("dummy-ota-password", configuration.getOTAPassword().c_str());
 }
 
 void test_setSystemStatusFilePath() {
@@ -195,6 +204,7 @@ int runUnityTests(void) {
     RUN_TEST(test_setNtpOffset);
     RUN_TEST(test_setNtpServer);
     RUN_TEST(test_setNtpUpdateInterval);
+    RUN_TEST(test_setOTAPassword);
     RUN_TEST(test_setSystemStatusFilePath);
     RUN_TEST(test_setSystemStatusSaveInterval);
     RUN_TEST(test_setTelnetServerPort);

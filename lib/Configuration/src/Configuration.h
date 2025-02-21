@@ -67,6 +67,10 @@
 #define NTP_UPDATE_INTERVAL 300 // seconds
 #endif
 
+#ifndef OTA_PASSWORD
+#define OTA_PASSWORD ""
+#endif
+
 #ifndef TELNET_SERVER_PORT
 #define TELNET_SERVER_PORT 23
 #endif
@@ -97,6 +101,7 @@
 #define CONFIGURATION_FIELD_NTP_OFFSET "ntpOffset"
 #define CONFIGURATION_FIELD_NTP_SERVER "ntpServer"
 #define CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL "ntpUpdateInterval"
+#define CONFIGURATION_FIELD_OTA_PASSWORD "otaPassword"
 #define CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH "systemStatusFilePath"
 #define CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL "systemStatusSaveInterval"
 #define CONFIGURATION_FIELD_TELNET_SERVER_PORT "telnetServerPort"
@@ -164,6 +169,8 @@ public:
 
     unsigned int getNtpUpdateInterval() const;
 
+    String getOTAPassword() const;
+
     String getSystemStatusFilePath();
 
     unsigned long getSystemStatusSaveInterval() const;
@@ -209,6 +216,8 @@ public:
 
     void setNtpUpdateInterval(int interval);
 
+    void setOTAPassword(String password);
+
     void setSystemStatusFilePath(String path);
 
     void setSystemStatusSaveInterval(unsigned long interval);
@@ -252,6 +261,9 @@ private:
      * NTP update interval in seconds
      */
     int ntpUpdateInterval = NTP_UPDATE_INTERVAL;
+
+    String otaPassword = OTA_PASSWORD;
+
     unsigned int telnetServerPort = TELNET_SERVER_PORT;
 
 

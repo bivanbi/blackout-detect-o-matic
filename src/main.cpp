@@ -16,11 +16,13 @@ void setup() {
     initPins();
     PeriodicTaskScheduler::init();
     initTelnetServer();
+    OTAAdapter::init();
     Logger::info("main::setup(): done");
 }
 
 void loop() {
     TelnetServer::loop();
+    OTAAdapter::loop();
     serialCLI.loop();
     PeriodicTaskScheduler::loop();
 }
@@ -48,11 +50,11 @@ void initWiFi() {
     wifiClientAdapter.connect(configuration.getWifiSSID(), configuration.getWifiSecret());
     while (!wifiClientAdapter.isConnected()) {
         Logger::info("Init: Connecting to WiFi network " + String(WIFI_SSID) + ", mac address: " +
-                          String(wifiClientAdapter.getMacAddress()));
+                     String(wifiClientAdapter.getMacAddress()));
         delay(1000);
     }
     Logger::info("Init: Connected to WiFi network " + String(WIFI_SSID) + ", IP address: " +
-                      String(wifiClientAdapter.getIpAddress()));
+                 String(wifiClientAdapter.getIpAddress()));
 }
 
 void initNTP() {
@@ -62,8 +64,8 @@ void initNTP() {
     }
 
     Logger::info("initNTPClient: Setting NTP server: " + configuration.getNtpServer() + ", update interval: " +
-                      configuration.getNtpUpdateInterval() + " seconds, offset: " + configuration.getNtpOffset() +
-                      " seconds");
+                 configuration.getNtpUpdateInterval() + " seconds, offset: " + configuration.getNtpOffset() +
+                 " seconds");
     ntpClientAdapter.setServerName(configuration.getNtpServer());
     ntpClientAdapter.setUpdateInterval(configuration.getNtpUpdateInterval());
     ntpClientAdapter.setTimeOffset(configuration.getNtpOffset());

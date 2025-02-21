@@ -11,6 +11,7 @@ Configuration::Configuration(JsonObject doc) {
     ntpOffset = doc[CONFIGURATION_FIELD_NTP_OFFSET];
     ntpServer = doc[CONFIGURATION_FIELD_NTP_SERVER].as<String>();
     ntpUpdateInterval = doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL];
+    otaPassword = doc[CONFIGURATION_FIELD_OTA_PASSWORD].as<String>();
     systemStatusFilePath = doc[CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH].as<String>();
     systemStatusSaveInterval = doc[CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL];
     telnetServerPort = doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT];
@@ -39,6 +40,8 @@ Configuration::GetResult Configuration::get(const String& key) {
         return {OK, getNtpServer()};
     } else if (key == CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL) {
         return {OK, String(getNtpUpdateInterval())};
+    } else if (key == CONFIGURATION_FIELD_OTA_PASSWORD) {
+        return {OK, getOTAPassword()};
     } else if (key == CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH) {
         return {OK, getSystemStatusFilePath()};
     } else if (key == CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL) {
@@ -94,6 +97,10 @@ unsigned int Configuration::getNtpUpdateInterval() const {
     return ntpUpdateInterval;
 }
 
+String Configuration::getOTAPassword() const {
+    return otaPassword;
+}
+
 String Configuration::getSystemStatusFilePath() {
     return systemStatusFilePath;
 }
@@ -144,6 +151,9 @@ Configuration::SetResult Configuration::set(const String& key, const String& val
         return {OK, "updated"};
     } else if (key == CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL) {
         ntpUpdateInterval = value.toInt();
+        return {OK, "updated"};
+    } else if (key == CONFIGURATION_FIELD_OTA_PASSWORD) {
+        setOTAPassword(value);
         return {OK, "updated"};
     } else if (key == CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH) {
         setSystemStatusFilePath(value);
@@ -205,6 +215,10 @@ void Configuration::setNtpUpdateInterval(int interval) {
     ntpUpdateInterval = interval;
 }
 
+void Configuration::setOTAPassword(String password) {
+    otaPassword = std::move(password);
+}
+
 void Configuration::setSystemStatusFilePath(String path) {
     systemStatusFilePath = std::move(path);
 }
@@ -238,6 +252,7 @@ JsonDocument Configuration::toJsonDocument() {
     doc[CONFIGURATION_FIELD_NTP_OFFSET] = ntpOffset;
     doc[CONFIGURATION_FIELD_NTP_SERVER] = ntpServer;
     doc[CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL] = ntpUpdateInterval;
+    doc[CONFIGURATION_FIELD_OTA_PASSWORD] = otaPassword;
     doc[CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH] = systemStatusFilePath;
     doc[CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL] = systemStatusSaveInterval;
     doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT] = telnetServerPort;

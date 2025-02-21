@@ -22,6 +22,7 @@
 #include "SystemStatusLoader.h"
 #include "ConfigurationLoader.h"
 #include "SerialCommandInterface.h"
+#include "OTAAdapter.h"
 
 void initConfiguration();
 
