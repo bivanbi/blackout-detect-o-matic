@@ -61,15 +61,7 @@ private:
 
     static void heartBeat();
 
-    static bool isFileHeartBeatDue();
-
-    static bool isLogRotateDue();
-
-    static bool isSerialHeartBeatDue();
-
-    static bool isSyncTimeDue();
-
-    static bool isSystemStatusSaveDue();
+    static bool isTaskDue(unsigned long taskRunInterval);
 
     static void updateSystemStatus();
 

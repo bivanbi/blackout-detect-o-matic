@@ -45,14 +45,14 @@ void PeriodicTaskScheduler::reboot() {
 }
 
 void PeriodicTaskScheduler::syncTime(bool force) {
-    if (isSyncTimeDue() || force) {
+    if (isTaskDue(tickCounter.timeSync) || force) {
         SyncTimeTask::syncTime();
         tickCounter.timeSync = 0;
     }
 }
 
-bool PeriodicTaskScheduler::isSyncTimeDue() {
-    return tickCounter.timeSync >= configuration.getNtpUpdateInterval() * 1000;
+bool PeriodicTaskScheduler::isTaskDue(unsigned long taskRunInterval) {
+    return taskRunInterval >= configuration.getNtpUpdateInterval() * 1000;
 }
 
 void PeriodicTaskScheduler::processEvents() {
@@ -67,45 +67,29 @@ void PeriodicTaskScheduler::updateSystemStatus() {
 }
 
 void PeriodicTaskScheduler::saveSystemStatus() {
-    if (isSystemStatusSaveDue()) {
+    if (isTaskDue(tickCounter.saveSystemStatus)) {
         SystemStatusLoader::save();
         tickCounter.saveSystemStatus = 0;
     }
 }
 
 void PeriodicTaskScheduler::rotateLogs() {
-    if (isLogRotateDue()) {
+    if (isTaskDue(tickCounter.logRotate)) {
         LogRotate::rotate();
         tickCounter.logRotate = 0;
     }
 }
 
-bool PeriodicTaskScheduler::isSystemStatusSaveDue() {
-    return tickCounter.saveSystemStatus >= configuration.getSystemStatusSaveInterval() * 1000;
-}
-
 void PeriodicTaskScheduler::heartBeat() {
-    if (isSerialHeartBeatDue()) {
+    if (isTaskDue(tickCounter.serialHeartBeat)) {
         Logger::info(getHeartBeatMessage(), {Logger::Channel::SERIAL_PORT});
         tickCounter.serialHeartBeat = 0;
     }
 
-    if (isFileHeartBeatDue()) {
+    if (isTaskDue(tickCounter.fileHeartBeat)) {
         Logger::info(getHeartBeatMessage(), {Logger::Channel::PERSISTENT_STORAGE});
         tickCounter.fileHeartBeat = 0;
     }
-}
-
-bool PeriodicTaskScheduler::isSerialHeartBeatDue() {
-    return tickCounter.serialHeartBeat >= configuration.getHeartbeatSerialLogInterval() * 1000;
-}
-
-bool PeriodicTaskScheduler::isFileHeartBeatDue() {
-    return tickCounter.fileHeartBeat >= configuration.getHeartbeatFileLogInterval() * 1000;
-}
-
-bool PeriodicTaskScheduler::isLogRotateDue() {
-    return tickCounter.logRotate >= configuration.getLogRotateTaskInterval() * 1000;
 }
 
 void PeriodicTaskScheduler::scheduleReboot(long delay) {
