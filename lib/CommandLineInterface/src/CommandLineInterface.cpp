@@ -261,7 +261,7 @@ String CommandLineInterface::StatusCLI::executeCommand(String commandLine) {
 String CommandLineInterface::StatusCLI::get() {
     String result;
     serializeJsonPretty(systemStatus.toHumanReadableJsonDocument(), result);
-    return result;
+    return result + "\n";
 }
 
 String CommandLineInterface::StatusCLI::reset() {
