@@ -26,9 +26,17 @@ private:
 
     static void onInputReceived(String input);
 
-    static String getWelcomeMessage();
+    static void requireAuthentication();
+
+    static String authenticate(String input);
+
+    static String getPasswordPrompt();
 
     static String getHelp();
+
+    static bool clientAuthenticated;
+    static String prompt;
+    static String logTag;
 };
 
 #endif //BLACKOUT_DETECT_O_MATIC_TELNET_SERVER_H

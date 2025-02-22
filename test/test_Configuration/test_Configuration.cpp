@@ -20,6 +20,7 @@ void test_constructor_default() {
     TEST_ASSERT_EQUAL(NTP_UPDATE_INTERVAL, configuration.getNtpUpdateInterval());
     TEST_ASSERT_EQUAL_STRING(OTA_PASSWORD, configuration.getOTAPassword().c_str());
     TEST_ASSERT_EQUAL_STRING(SYSTEM_STATUS_FILE_PATH, configuration.getSystemStatusFilePath().c_str());
+    TEST_ASSERT_EQUAL_STRING(TELNET_PASSWORD, configuration.getTelnetPassword().c_str());
     TEST_ASSERT_EQUAL(TELNET_SERVER_PORT, configuration.getTelnetServerPort());
     TEST_ASSERT_EQUAL_STRING(WIFI_SECRET, configuration.getWifiSecret().c_str());
     TEST_ASSERT_EQUAL_STRING(WIFI_SSID, configuration.getWifiSSID().c_str());
@@ -40,6 +41,7 @@ void test_constructor_withJsonDocument() {
     doc[CONFIGURATION_FIELD_OTA_PASSWORD] = "dummy-ota-password";
     doc[CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH] = "/dummy-system-status-file-path";
     doc[CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL] = 654245;
+    doc[CONFIGURATION_FIELD_TELNET_PASSWORD] = "dummy-telnet-password";
     doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT] = 789;
     doc[CONFIGURATION_FIELD_WIFI_SECRET] = "TestDummyWifiPassword";
     doc[CONFIGURATION_FIELD_WIFI_SSID] = "TestDummyWifiSSID";
@@ -59,6 +61,7 @@ void test_constructor_withJsonDocument() {
     TEST_ASSERT_EQUAL_STRING("dummy-ota-password", configuration.getOTAPassword().c_str());
     TEST_ASSERT_EQUAL_STRING("/dummy-system-status-file-path", configuration.getSystemStatusFilePath().c_str());
     TEST_ASSERT_EQUAL(654245, configuration.getSystemStatusSaveInterval());
+    TEST_ASSERT_EQUAL_STRING("dummy-telnet-password", configuration.getTelnetPassword().c_str());
     TEST_ASSERT_EQUAL(789, configuration.getTelnetServerPort());
     TEST_ASSERT_EQUAL_STRING("TestDummyWifiSSID", configuration.getWifiSSID().c_str());
     TEST_ASSERT_EQUAL_STRING("TestDummyWifiPassword", configuration.getWifiSecret().c_str());
@@ -80,6 +83,7 @@ void test_toJsonDocument() {
     TEST_ASSERT_EQUAL_STRING(OTA_PASSWORD, doc[CONFIGURATION_FIELD_OTA_PASSWORD].as<String>().c_str());
     TEST_ASSERT_EQUAL_STRING(SYSTEM_STATUS_FILE_PATH, doc[CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH].as<String>().c_str());
     TEST_ASSERT_EQUAL(SYSTEM_STATUS_SAVE_INTERVAL, doc[CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL]);
+    TEST_ASSERT_EQUAL_STRING(TELNET_PASSWORD, doc[CONFIGURATION_FIELD_TELNET_PASSWORD].as<String>().c_str());
     TEST_ASSERT_EQUAL(TELNET_SERVER_PORT, doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT]);
     TEST_ASSERT_EQUAL_STRING(WIFI_SECRET, doc[CONFIGURATION_FIELD_WIFI_SECRET].as<String>().c_str());
     TEST_ASSERT_EQUAL_STRING(WIFI_SSID, doc[CONFIGURATION_FIELD_WIFI_SSID].as<String>().c_str());
@@ -150,6 +154,11 @@ void test_setSystemStatusSaveInterval() {
     TEST_ASSERT_EQUAL(1234567, configuration.getSystemStatusSaveInterval());
 }
 
+void test_setTelnetPassword() {
+    configuration.setTelnetPassword("dummy-telnet-password");
+    TEST_ASSERT_EQUAL_STRING("dummy-telnet-password", configuration.getTelnetPassword().c_str());
+}
+
 void test_setTelnetServerPort() {
     configuration.setTelnetServerPort(789);
     TEST_ASSERT_EQUAL(789, configuration.getTelnetServerPort());
@@ -207,6 +216,7 @@ int runUnityTests(void) {
     RUN_TEST(test_setOTAPassword);
     RUN_TEST(test_setSystemStatusFilePath);
     RUN_TEST(test_setSystemStatusSaveInterval);
+    RUN_TEST(test_setTelnetPassword);
     RUN_TEST(test_setTelnetServerPort);
     RUN_TEST(test_setWifiSecret);
     RUN_TEST(test_setWifiSSID);

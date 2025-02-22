@@ -14,12 +14,13 @@ Configuration::Configuration(JsonObject doc) {
     otaPassword = doc[CONFIGURATION_FIELD_OTA_PASSWORD].as<String>();
     systemStatusFilePath = doc[CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH].as<String>();
     systemStatusSaveInterval = doc[CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL];
+    telnetPassword = doc[CONFIGURATION_FIELD_TELNET_PASSWORD].as<String>();
     telnetServerPort = doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT];
     wifiSecret = doc[CONFIGURATION_FIELD_WIFI_SECRET].as<String>();
     wifiSSID = doc[CONFIGURATION_FIELD_WIFI_SSID].as<String>();
 }
 
-Configuration::GetResult Configuration::get(const String& key) {
+Configuration::GetResult Configuration::get(const String &key) {
     if (key == CONFIGURATION_FIELD_HEARTBEAT_FILE_LOG_INTERVAL) {
         return {OK, String(getHeartbeatFileLogInterval())};
     } else if (key == CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL) {
@@ -46,6 +47,8 @@ Configuration::GetResult Configuration::get(const String& key) {
         return {OK, getSystemStatusFilePath()};
     } else if (key == CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL) {
         return {OK, String(getSystemStatusSaveInterval())};
+    } else if (key == CONFIGURATION_FIELD_TELNET_PASSWORD) {
+        return {OK, getTelnetPassword()};
     } else if (key == CONFIGURATION_FIELD_TELNET_SERVER_PORT) {
         return {OK, String(getTelnetServerPort())};
     } else if (key == CONFIGURATION_FIELD_WIFI_SECRET) {
@@ -109,6 +112,10 @@ unsigned long Configuration::getSystemStatusSaveInterval() const {
     return systemStatusSaveInterval;
 }
 
+String Configuration::getTelnetPassword() const {
+    return telnetPassword;
+}
+
 unsigned int Configuration::getTelnetServerPort() const {
     return telnetServerPort;
 }
@@ -121,58 +128,46 @@ String Configuration::getWifiSSID() const {
     return wifiSSID;
 }
 
-Configuration::SetResult Configuration::set(const String& key, const String& value) {
+Configuration::SetResult Configuration::set(const String &key, const String &value) {
     if (key == CONFIGURATION_FIELD_HEARTBEAT_FILE_LOG_INTERVAL) {
-        heartbeatFileLogInterval = value.toInt();
-        return {OK, "updated"};
+        setHeartbeatFileLogInterval(value.toInt());
     } else if (key == CONFIGURATION_FIELD_HEARTBEAT_SERIAL_LOG_INTERVAL) {
-        heartbeatSerialLogInterval = value.toInt();
-        return {OK, "updated"};
+        setHeartbeatSerialLogInterval(value.toInt());
     } else if (key == CONFIGURATION_FIELD_LOG_FILE_NAME) {
         setLogFileName(value);
-        return {OK, "updated"};
     } else if (key == CONFIGURATION_FIELD_LOG_DIRECTORY) {
         setLogDirectory(value);
-        return {OK, "updated"};
     } else if (key == CONFIGURATION_FIELD_LOG_ROTATE_MINIMUM_FILE_SIZE) {
-        logRotateFileSize = value.toInt();
-        return {OK, "updated"};
+        setLogRotateMinimumFileSize(value.toInt());
     } else if (key == CONFIGURATION_FIELD_LOG_ROTATE_TASK_INTERVAL) {
-        logRotateInterval = value.toInt();
-        return {OK, "updated"};
+        setLogRotateTaskInterval(value.toInt());
     } else if (key == CONFIGURATION_FIELD_LOG_ROTATE_NUMBER_OF_FILES_KEPT) {
-        logRotateNumberOfFilesKept = value.toInt();
-        return {OK, "updated"};
+        setLogRotateNumberOfFilesKept(value.toInt());
     } else if (key == CONFIGURATION_FIELD_NTP_SERVER) {
-        ntpServer = value;
-        return {OK, "updated"};
+        setNtpServer(value);
     } else if (key == CONFIGURATION_FIELD_NTP_OFFSET) {
-        ntpOffset = value.toInt();
-        return {OK, "updated"};
+        setNtpOffset(value.toInt());
     } else if (key == CONFIGURATION_FIELD_NTP_UPDATE_INTERVAL) {
-        ntpUpdateInterval = value.toInt();
-        return {OK, "updated"};
+        setNtpUpdateInterval(value.toInt());
     } else if (key == CONFIGURATION_FIELD_OTA_PASSWORD) {
         setOTAPassword(value);
-        return {OK, "updated"};
     } else if (key == CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH) {
         setSystemStatusFilePath(value);
-        return {OK, "updated"};
     } else if (key == CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL) {
-        systemStatusSaveInterval = value.toInt();
-        return {OK, "updated"};
+        setSystemStatusSaveInterval(value.toInt());
+    } else if (key == CONFIGURATION_FIELD_TELNET_PASSWORD) {
+        setTelnetPassword(value);
     } else if (key == CONFIGURATION_FIELD_TELNET_SERVER_PORT) {
-        telnetServerPort = value.toInt();
-        return {OK, "updated"};
+        setTelnetServerPort(value.toInt());
     } else if (key == CONFIGURATION_FIELD_WIFI_SECRET) {
-        wifiSecret = value;
-        return {OK, "updated"};
+        setWifiSecret(value);
     } else if (key == CONFIGURATION_FIELD_WIFI_SSID) {
         setWifiSSID(value);
-        return {OK, "updated"};
+    } else {
+        return {INVALID_KEY, "unknown key"};
     }
 
-    return {INVALID_KEY, "unknown key"};
+    return {OK, "updated"};
 }
 
 void Configuration::setHeartbeatFileLogInterval(unsigned long interval) {
@@ -227,6 +222,10 @@ void Configuration::setSystemStatusSaveInterval(unsigned long interval) {
     systemStatusSaveInterval = interval;
 }
 
+void Configuration::setTelnetPassword(String password) {
+    telnetPassword = std::move(password);
+}
+
 void Configuration::setTelnetServerPort(unsigned int port) {
     telnetServerPort = port;
 }
@@ -255,6 +254,7 @@ JsonDocument Configuration::toJsonDocument() {
     doc[CONFIGURATION_FIELD_OTA_PASSWORD] = otaPassword;
     doc[CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH] = systemStatusFilePath;
     doc[CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL] = systemStatusSaveInterval;
+    doc[CONFIGURATION_FIELD_TELNET_PASSWORD] = telnetPassword;
     doc[CONFIGURATION_FIELD_TELNET_SERVER_PORT] = telnetServerPort;
     doc[CONFIGURATION_FIELD_WIFI_SECRET] = wifiSecret;
     doc[CONFIGURATION_FIELD_WIFI_SSID] = wifiSSID;

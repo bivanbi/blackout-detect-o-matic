@@ -35,7 +35,7 @@ String CommandLineInterface::executeCommand(String commandLine) {
 
 String CommandLineInterface::date() {
     return "Clock source: " + rtcAdapter.clockSourceToString(rtcAdapter.getClockSource())
-           + ", time: " + rtcAdapter.getTime().getFormattedTime();
+           + ", time: " + rtcAdapter.getTime().getFormattedTime() + "\n";
 }
 
 String CommandLineInterface::help() {
@@ -55,12 +55,12 @@ String CommandLineInterface::scheduleReboot(CommandLineInterface::CommandAndArgu
         }
 
         PeriodicTaskScheduler::scheduleReboot(cmd.arguments.toInt());
-        return "Rebooting in " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds";
+        return "Rebooting in " + String(CLI_DEFAULT_REBOOT_DELAY) + " seconds\n";
 }
 
 String CommandLineInterface::uptime() {
     return rtcAdapter.getTime().getFormattedTime() + " up "
-           + UptimeAdapter::getFormattedUptime();
+           + UptimeAdapter::getFormattedUptime() + "\n";
 }
 
 String CommandLineInterface::AlarmCLI::executeCommand(String commandLine) {
@@ -80,7 +80,7 @@ String CommandLineInterface::AlarmCLI::executeCommand(String commandLine) {
 
 String CommandLineInterface::AlarmCLI::clear() {
     systemStatus.clearAlarm(rtcAdapter.getTime());
-    return "Alarm cleared";
+    return "Alarm cleared\n";
 }
 
 String CommandLineInterface::AlarmCLI::help() {
@@ -113,42 +113,42 @@ String CommandLineInterface::ConfigCLI::get(String key) {
 
     Configuration::GetResult result = configuration.get(key);
     if (result.code == Configuration::ResultCode::OK) {
-        return result.value;
+        return result.value + "\n";
     }
 
     Logger::error("CommandLineInterface::ConfigCLI::get: key: '" + key + "', error message: " + result.value);
-    return result.value;
+    return result.value + "\n";
 }
 
 String CommandLineInterface::ConfigCLI::get() {
     String result;
     serializeJsonPretty(configuration.toJsonDocument(), result);
-    return result;
+    return result + "\n";
 }
 
 String CommandLineInterface::ConfigCLI::set(String keyAndValue) {
     KeyValue keyValuePair = commandLineInterface.splitKeyValuePair(keyAndValue);
     if (keyValuePair.key.isEmpty()) {
-        return "ERROR: expected key=value pair";
+        return "ERROR: expected key=value pair\n";
     }
 
     Configuration::SetResult result = configuration.set(keyValuePair.key, keyValuePair.value);
     if (result.code == Configuration::ResultCode::OK) {
-        return "Configuration updated: " + keyAndValue;
+        return "Configuration updated: " + keyAndValue + "\n";
     }
 
     Logger::error("CommandLineInterface::ConfigCLI::set: "
                        "key: '" + keyValuePair.key + "', value: '" + keyValuePair.value +
                        "', error message: " + result.message);
-    return "ERROR: " + result.message;
+    return "ERROR: " + result.message + "\n";
 }
 
 String CommandLineInterface::ConfigCLI::save() {
     if (ConfigurationLoader::save()) {
-        return "Configuration saved";
+        return "Configuration saved\n";
     }
 
-    return "Failed to save configuration";
+    return "Failed to save configuration\n";
 }
 
 String CommandLineInterface::ConfigCLI::help() {
@@ -182,18 +182,18 @@ String CommandLineInterface::SDCardCLI::executeCommand(String commandLine) {
 
 String CommandLineInterface::SDCardCLI::cat(String filename) {
     if (filename.isEmpty()) {
-        return "ERROR: missing file name";
+        return "ERROR: missing file name\n";
     }
 
     if (!persistentStorage.exists(filename)) {
-        return "ERROR: file not found";
+        return "ERROR: file not found\n";
     }
 
     if (persistentStorage.isDirectory(filename)) {
-        return "ERROR: not a file";
+        return "ERROR: not a file\n";
     }
 
-    return persistentStorage.readFile(filename);
+    return persistentStorage.readFile(filename) + "\n";
 }
 
 String CommandLineInterface::SDCardCLI::list(String directory) {
@@ -206,22 +206,22 @@ String CommandLineInterface::SDCardCLI::list(String directory) {
 
 String CommandLineInterface::SDCardCLI::remove(String fileName) {
     if (fileName.isEmpty()) {
-        return "ERROR: missing file name";
+        return "ERROR: missing file name\n";
     }
 
     if (!persistentStorage.exists(fileName)) {
-        return "ERROR: file not found";
+        return "ERROR: file not found\n";
     }
 
     if (persistentStorage.isDirectory(fileName)) {
-        return "ERROR: not a file";
+        return "ERROR: not a file\n";
     }
 
     if (persistentStorage.removeFile(fileName)) {
-        return "File removed";
+        return "File removed\n";
     }
 
-    return "Failed to remove file";
+    return "Failed to remove file\n";
 }
 
 String CommandLineInterface::SDCardCLI::usage() {
@@ -264,15 +264,15 @@ String CommandLineInterface::StatusCLI::get() {
 
 String CommandLineInterface::StatusCLI::reset() {
     systemStatus.reset(rtcAdapter.getTime());
-    return "Status reset";
+    return "Status reset\n";
 }
 
 String CommandLineInterface::StatusCLI::save() {
     if (SystemStatusLoader::save()) {
-        return "Status saved";
+        return "Status saved\n";
     }
 
-    return "Failed to save status";
+    return "Failed to save status\n";
 }
 
 String CommandLineInterface::StatusCLI::help() {

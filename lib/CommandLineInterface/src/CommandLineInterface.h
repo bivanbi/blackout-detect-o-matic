@@ -41,7 +41,7 @@
 
 #define CLI_COMMAND_UPTIME "uptime"
 
-#define CLI_RESPONSE_UNKNOWN_COMMAND "unknown command"
+#define CLI_RESPONSE_UNKNOWN_COMMAND "unknown command\n"
 
 class CommandLineInterface {
 public:

@@ -4,7 +4,8 @@
 #include "TelnetServer.h"
 
 ESPTelnet telnet;
-String prompt = "> ";
+String TelnetServer::prompt = "> ";
+String TelnetServer::logTag = "TelnetServer: ";
 
 void TelnetServer::begin(unsigned int port) {
     telnet.onConnect(onConnect);
@@ -13,11 +14,10 @@ void TelnetServer::begin(unsigned int port) {
     telnet.onDisconnect(onDisconnect);
     telnet.onInputReceived(onInputReceived);
 
-    Serial.print("- Telnet: ");
     if (telnet.begin(port, true)) {
-        Logger::info("TelnetServer: listening on " + String(WiFi.localIP()) + ":" + port);
+        Logger::info(logTag + "listening on " + String(WiFi.localIP()) + ":" + port);
     } else {
-        Logger::error("TelnetServer: failed to start");
+        Logger::error(logTag + "failed to start");
     }
 }
 
@@ -26,35 +26,58 @@ void TelnetServer::loop() {
 }
 
 void TelnetServer::onConnect(String ip) {
-    Logger::info("TelnetServer: onConnect: client ip: " + ip);
-    telnet.println(TelnetServer::getWelcomeMessage());
-    telnet.print(prompt);
+    Logger::info(logTag + "onConnect: client ip: " + ip);
+    requireAuthentication();
 }
 
 void TelnetServer::onConnectionAttempt(String ip) {
-    Logger::info("TelnetServer: onConnectionAttempt: client ip: " + ip);
+    Logger::info(logTag + "onConnectionAttempt: client ip: " + ip);
 }
 
 void TelnetServer::onReconnect(String ip) {
-    Logger::info("TelnetServer: onReconnect: client ip: " + ip);
+    Logger::info(logTag + "onReconnect: client ip: " + ip);
+    requireAuthentication();
 }
 
 void TelnetServer::onDisconnect(String ip) {
-    Logger::info("TelnetServer: onDisconnect: client ip: " + ip);
+    clientAuthenticated = false;
+    Logger::info(logTag + "onDisconnect: client ip: " + ip);
 }
 
 void TelnetServer::onInputReceived(String input) {
-    Logger::debug("TelnetServer: onInputReceived: " + input);
+    Logger::debug(logTag + "onInputReceived: " + input);
 
-    if (input.equals("exit") || input.equals("quit")) {
-        telnet.disconnectClient();
-    } else if (input.equals("help")) {
-        telnet.println(TelnetServer::getHelp());
-        telnet.print(prompt);
+    if (clientAuthenticated) {
+        if (input.equals("exit") || input.equals("quit")) {
+            telnet.disconnectClient();
+        } else if (input.equals("help")) {
+            telnet.print("quit - disconnect\n" + commandLineInterface.help() + prompt);
+        } else {
+            telnet.print(commandLineInterface.executeCommand(input) + prompt);
+        }
     } else {
-        telnet.println(commandLineInterface.executeCommand(input));
-        telnet.print(prompt);
+        telnet.print(authenticate(input));
     }
+}
+
+void TelnetServer::requireAuthentication() {
+    clientAuthenticated = false;
+    telnet.print(TelnetServer::getPasswordPrompt());
+}
+
+String TelnetServer::authenticate(String input) {
+    if (input.equals(configuration.getTelnetPassword())) {
+        clientAuthenticated = true;
+        return {"Welcome to Blackout Detect-o-matic\n"
+                "Type 'help' for a list of commands\n" + prompt};
+    }
+
+    Logger::info(logTag + "authentication failed");
+    return {"Authentication failed\n" + getPasswordPrompt()};
+}
+
+String TelnetServer::getPasswordPrompt() {
+    return "Enter password: ";
 }
 
 String TelnetServer::getHelp() {
@@ -62,9 +85,6 @@ String TelnetServer::getHelp() {
            + commandLineInterface.help();
 }
 
-String TelnetServer::getWelcomeMessage() {
-    return {"Welcome to Blackout Detect-o-matic\n"
-            "Type 'help' for a list of commands\n"};
-}
+bool TelnetServer::clientAuthenticated = false;
 
 #pragma clang diagnostic pop

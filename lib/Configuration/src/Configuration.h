@@ -71,6 +71,10 @@
 #define OTA_PASSWORD ""
 #endif
 
+#ifndef TELNET_PASSWORD
+#define TELNET_PASSWORD "DetectOTelnet"
+#endif
+
 #ifndef TELNET_SERVER_PORT
 #define TELNET_SERVER_PORT 23
 #endif
@@ -104,6 +108,7 @@
 #define CONFIGURATION_FIELD_OTA_PASSWORD "otaPassword"
 #define CONFIGURATION_FIELD_SYSTEM_STATUS_FILE_PATH "systemStatusFilePath"
 #define CONFIGURATION_FIELD_SYSTEM_STATUS_SAVE_INTERVAL "systemStatusSaveInterval"
+#define CONFIGURATION_FIELD_TELNET_PASSWORD "telnetPassword"
 #define CONFIGURATION_FIELD_TELNET_SERVER_PORT "telnetServerPort"
 #define CONFIGURATION_FIELD_WIFI_SECRET "wifiSecret"
 #define CONFIGURATION_FIELD_WIFI_SSID "wifiSSID"
@@ -175,6 +180,8 @@ public:
 
     unsigned long getSystemStatusSaveInterval() const;
 
+    String getTelnetPassword() const;
+
     unsigned int getTelnetServerPort() const;
 
     String getWifiSecret() const;
@@ -222,6 +229,8 @@ public:
 
     void setSystemStatusSaveInterval(unsigned long interval);
 
+    void setTelnetPassword(String password);
+
     void setTelnetServerPort(unsigned int port);
 
     void setWifiSecret(String secret);
@@ -264,8 +273,8 @@ private:
 
     String otaPassword = OTA_PASSWORD;
 
+    String telnetPassword = TELNET_PASSWORD;
     unsigned int telnetServerPort = TELNET_SERVER_PORT;
-
 
     String systemStatusFilePath = SYSTEM_STATUS_FILE_PATH;
 
