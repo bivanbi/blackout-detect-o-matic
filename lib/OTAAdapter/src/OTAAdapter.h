@@ -11,6 +11,8 @@ public:
     static void init();
 
     static void loop();
+
+    static const String logTag;
 };
 
 

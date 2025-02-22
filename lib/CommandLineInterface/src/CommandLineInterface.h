@@ -140,6 +140,8 @@ private:
      * @param delay in seconds
      */
     String scheduleReboot(CommandAndArguments cmd);
+
+    static const String logTag;
 };
 
 extern CommandLineInterface commandLineInterface;

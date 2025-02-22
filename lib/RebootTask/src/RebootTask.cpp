@@ -1,35 +1,37 @@
 #include "RebootTask.h"
 
+const String RebootTask::logTag = "RebootTask: ";
+
 void RebootTask::reboot() {
-    Logger::info("RebootTask: reboot requested");
+    Logger::info(logTag + "reboot requested");
     executePreRebootTasks();
-    Logger::info("RebootTask: rebooting...");
+    Logger::info(logTag + "rebooting...");
     esp_restart();
 }
 
 void RebootTask::executePreRebootTasks() {
-    Logger::info("RebootTask: executePreRebootTasks: executing pre-reboot tasks");
+    Logger::info(logTag + "executePreRebootTasks: executing pre-reboot tasks");
     saveSystemStatus();
     unmount();
     finalDelayBeforeReboot();
 }
 
 void RebootTask::saveSystemStatus() {
-    Logger::info("RebootTask: executePreRebootTasks: saving system status");
+    Logger::info(logTag + "executePreRebootTasks: saving system status");
     bool result = SystemStatusLoader::save();
     if (result) {
-        Logger::info("RebootTask: executePreRebootTasks: system status saved");
+        Logger::info(logTag + "executePreRebootTasks: system status saved");
     } else {
-        Logger::error("RebootTask: executePreRebootTasks: failed to save system status");
+        Logger::error(logTag + "executePreRebootTasks: failed to save system status");
     }
 }
 
 void RebootTask::unmount() {
-    Logger::info("RebootTask: unmount: unmounting filesystem");
+    Logger::info(logTag + "unmount: unmounting filesystem");
     persistentStorage.unMount();
 }
 
 void RebootTask::finalDelayBeforeReboot() {
-    Logger::info("RebootTask: finalDelayBeforeReboot: final delay before reboot");
+    Logger::info(logTag + "finalDelayBeforeReboot: final delay before reboot");
     delay(1000);
 }

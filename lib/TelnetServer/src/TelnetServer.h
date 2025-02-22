@@ -35,8 +35,8 @@ private:
     static String getHelp();
 
     static bool clientAuthenticated;
-    static String prompt;
-    static String logTag;
+    static const String prompt;
+    static const String logTag;
 };
 
 #endif //BLACKOUT_DETECT_O_MATIC_TELNET_SERVER_H

@@ -15,6 +15,7 @@ public:
 
 private:
     static JsonDocument getConfigurationFile(const String &path);
+    static const String logTag;
 };
 
 #endif //BLACKOUT_DETECT_O_MATIC_CONFIGURATION_LOADER_H

@@ -1,7 +1,9 @@
 #include "OTAAdapter.h"
 
+const String OTAAdapter::logTag = "OTAAdapter: ";
+
 void OTAAdapter::init() {
-    Logger::info("OTA: init begin");
+    Logger::info(logTag + "init begin");
     String password = configuration.getOTAPassword();
 
     ArduinoOTA.setPassword(configuration.getOTAPassword().c_str());
@@ -15,31 +17,31 @@ void OTAAdapter::init() {
                 }
 
                 // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-                Logger::info("OTA: Start updating " + type);
+                Logger::info(logTag + "Start updating " + type);
             })
             .onEnd([]() {
-                Logger::info("OTA: end");
+                Logger::info(logTag + "end");
             })
             .onProgress([](unsigned int progress, unsigned int total) {
-                Logger::debug("OTA: Progress: " + String (progress / (total / 100)));
+                Logger::debug(logTag + "Progress: " + String (progress / (total / 100)));
             })
             .onError([](ota_error_t error) {
-                Logger::error("OTA: there was an error");
+                Logger::error(logTag + "there was an error");
                 if (error == OTA_AUTH_ERROR) {
-                    Logger::error("OTA: Auth Failed");
+                    Logger::error(logTag + "Auth Failed");
                 } else if (error == OTA_BEGIN_ERROR) {
-                    Logger::error("OTA: Begin Failed");
+                    Logger::error(logTag + "Begin Failed");
                 } else if (error == OTA_CONNECT_ERROR) {
-                    Logger::error("OTA: Connect Failed");
+                    Logger::error(logTag + "Connect Failed");
                 } else if (error == OTA_RECEIVE_ERROR) {
-                    Logger::error("OTA: Receive Failed");
+                    Logger::error(logTag + "Receive Failed");
                 } else if (error == OTA_END_ERROR) {
-                    Logger::error("OTA: End Failed");
+                    Logger::error(logTag + "End Failed");
                 }
             });
 
     ArduinoOTA.begin();
-    Logger::info("OTA: init end");
+    Logger::info(logTag + "init end");
 };
 
 void OTAAdapter::loop() {

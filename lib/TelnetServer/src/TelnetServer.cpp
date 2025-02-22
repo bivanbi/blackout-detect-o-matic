@@ -4,8 +4,8 @@
 #include "TelnetServer.h"
 
 ESPTelnet telnet;
-String TelnetServer::prompt = "> ";
-String TelnetServer::logTag = "TelnetServer: ";
+const String TelnetServer::prompt = "> ";
+const String TelnetServer::logTag = "TelnetServer: ";
 
 void TelnetServer::begin(unsigned int port) {
     telnet.onConnect(onConnect);

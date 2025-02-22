@@ -6,6 +6,8 @@
 PowerChangeEventProcessor powerChangeEventProcessor = PowerChangeEventProcessor();
 PowerChangeEventBuffer powerChangeEventBuffer;
 
+const String PowerChangeEventProcessor::logTag = "PowerChangeEventProcessor: ";
+
 void PowerChangeEventProcessor::processEvents(bool isPowerOnline) {
     logEventStats(isPowerOnline);
     if (isPowerOnline) {

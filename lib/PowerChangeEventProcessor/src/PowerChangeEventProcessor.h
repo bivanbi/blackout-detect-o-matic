@@ -27,7 +27,7 @@ private:
 
     void clearEvents();
 
-    const String logTag = "PowerChangeEventProcessor: ";
+    static const String logTag;
 };
 
 extern PowerChangeEventProcessor powerChangeEventProcessor;

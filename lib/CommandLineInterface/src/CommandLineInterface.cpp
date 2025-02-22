@@ -4,6 +4,8 @@
 
 #include "CommandLineInterface.h"
 
+const String CommandLineInterface::logTag = "CommandLineInterface: ";
+
 String CommandLineInterface::executeCommand(String commandLine) {
     commandLine.trim();
     CommandAndArguments cmd = splitCommandAndArguments(commandLine);
@@ -65,7 +67,7 @@ String CommandLineInterface::uptime() {
 
 String CommandLineInterface::AlarmCLI::executeCommand(String commandLine) {
     CommandAndArguments alarmCommand = commandLineInterface.splitCommandAndArguments(commandLine);
-    Logger::debug("CommandLineInterface::Alarm::executeCommand:'" + alarmCommand.command + "', args: '" +
+    Logger::debug(logTag + "Alarm::executeCommand:'" + alarmCommand.command + "', args: '" +
                        alarmCommand.arguments + "'");
 
     if (alarmCommand.command.equals(CLI_COMMAND_ALARM_CLEAR)) {
@@ -89,7 +91,7 @@ String CommandLineInterface::AlarmCLI::help() {
 
 String CommandLineInterface::ConfigCLI::executeCommand(String commandLine) {
     CommandAndArguments configCommand = commandLineInterface.splitCommandAndArguments(commandLine);
-    Logger::debug("CommandLineInterface::Config::executeCommand:'" + configCommand.command + "', args: '" +
+    Logger::debug(logTag + "Config::executeCommand:'" + configCommand.command + "', args: '" +
                        configCommand.arguments + "'");
 
     if (configCommand.command.equals(CLI_COMMAND_CONFIG_GET)) {
@@ -116,7 +118,7 @@ String CommandLineInterface::ConfigCLI::get(String key) {
         return result.value + "\n";
     }
 
-    Logger::error("CommandLineInterface::ConfigCLI::get: key: '" + key + "', error message: " + result.value);
+    Logger::error(logTag + "ConfigCLI::get: key: '" + key + "', error message: " + result.value);
     return result.value + "\n";
 }
 
@@ -137,7 +139,7 @@ String CommandLineInterface::ConfigCLI::set(String keyAndValue) {
         return "Configuration updated: " + keyAndValue + "\n";
     }
 
-    Logger::error("CommandLineInterface::ConfigCLI::set: "
+    Logger::error(logTag + "ConfigCLI::set: "
                        "key: '" + keyValuePair.key + "', value: '" + keyValuePair.value +
                        "', error message: " + result.message);
     return "ERROR: " + result.message + "\n";
@@ -161,7 +163,7 @@ String CommandLineInterface::ConfigCLI::help() {
 
 String CommandLineInterface::SDCardCLI::executeCommand(String commandLine) {
     CommandAndArguments sdCardCommand = commandLineInterface.splitCommandAndArguments(commandLine);
-    Logger::debug("CommandLineInterface::SDCard::executeCommand:'" + sdCardCommand.command + "', args: '" +
+    Logger::debug(logTag + "SDCard::executeCommand:'" + sdCardCommand.command + "', args: '" +
                        sdCardCommand.arguments + "'");
 
     if (sdCardCommand.command.equals(CLI_COMMAND_SDCARD_CAT)) {
@@ -239,7 +241,7 @@ String CommandLineInterface::SDCardCLI::help() {
 
 String CommandLineInterface::StatusCLI::executeCommand(String commandLine) {
     CommandAndArguments statusCommand = commandLineInterface.splitCommandAndArguments(commandLine);
-    Logger::debug("CommandLineInterface::Status::executeCommand:'" + statusCommand.command + "', args: '" +
+    Logger::debug(logTag + "Status::executeCommand:'" + statusCommand.command + "', args: '" +
                        statusCommand.arguments + "'");
 
     if (statusCommand.command.equals(CLI_COMMAND_STATUS_GET)) {

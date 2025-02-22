@@ -20,6 +20,7 @@ private:
 
     String inputBuffer;
     bool commandReceived = false;
+    static const String logTag;
 };
 
 extern SerialCommandInterface serialCLI;

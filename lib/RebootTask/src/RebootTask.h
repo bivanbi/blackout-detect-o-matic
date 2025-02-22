@@ -18,6 +18,8 @@ private:
     static void unmount();
 
     static void finalDelayBeforeReboot();
+
+    static const String logTag;
 };
 
 #endif //BLACKOUT_DETECT_O_MATIC_REBOOT_TASK_H

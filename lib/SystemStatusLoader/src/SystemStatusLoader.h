@@ -16,6 +16,8 @@ public:
 
 private:
     static JsonDocument getSystemStatusFile(const String &path);
+
+    static const String logTag;
 };
 
 #endif //BLACKOUT_DETECT_O_MATIC_SYSTEM_STATUS_LOADER_H
