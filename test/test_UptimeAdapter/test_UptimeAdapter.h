@@ -1,0 +1,9 @@
+#ifndef BLACKOUT_DETECT_O_MATIC_TEST_UPTIME_ADAPTER_H
+#define BLACKOUT_DETECT_O_MATIC_TEST_UPTIME_ADAPTER_H
+
+#include <Arduino.h>
+#include <unity.h>
+
+#include "UptimeAdapter.h"
+
+#endif //BLACKOUT_DETECT_O_MATIC_TEST_UPTIME_ADAPTER_H
