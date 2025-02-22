@@ -17,34 +17,32 @@ void PowerChangeEventProcessor::processEvents(bool isPowerOnline) {
 }
 
 void PowerChangeEventProcessor::logEventStats(bool isPowerOnline) {
-    Logger::debug("PowerChangeEventProcessor:"
-                       " Registered " + String(powerChangeEventBuffer.powerDownEventCount) + " power down events and "
-                       + String(powerChangeEventBuffer.powerUpEventCount) + " power up events since last run."
-                                                                            " Power is " +
-                       String(isPowerOnline ? "up" : "down") + " at the moment.");
+    Logger::debug(logTag
+                  + "Registered " + String(powerChangeEventBuffer.powerDownEventCount) + " power down events and "
+                  + String(powerChangeEventBuffer.powerUpEventCount) + " power up events since last run."
+                  + " Power is " + String(isPowerOnline ? "up" : "down") + " at the moment.");
 }
 
 void PowerChangeEventProcessor::processEventsWhenPowerIsUp() {
     if (systemStatus.getLastBlackout().isActive()) {
         systemStatus.setPowerStatus(rtcAdapter.getTime(), true);
-        Logger::info("PowerChangeEventProcessor: Power Up at " +
-                          systemStatus.getLastBlackout().getEnd().getFormattedTime());
+        Logger::info(logTag + "Power Up");
     } else if (powerChangeEventBuffer.powerUpEventCount || powerChangeEventBuffer.powerDownEventCount) {
         // register momentary blackout
         systemStatus.setPowerStatus(rtcAdapter.getTime(), false);
         systemStatus.setPowerStatus(rtcAdapter.getTime(), true);
-        Logger::info("PowerChangeEventProcessor: Momentary blackout detected");
+        Logger::info(logTag + "Momentary blackout detected");
     }
 }
 
 void PowerChangeEventProcessor::processEventsWhenPowerIsDown() {
     if (systemStatus.getLastBlackout().isActive()) {
         if (powerChangeEventBuffer.powerDownEventCount || powerChangeEventBuffer.powerUpEventCount) {
-            Logger::info("PowerChangeEventProcessor: power fluctuation detected");
+            Logger::info(logTag + "power fluctuation detected");
         }
     } else {
         systemStatus.setPowerStatus(rtcAdapter.getTime(), false);
-        Logger::info("PowerChangeEventProcessor: Power Down at " + rtcAdapter.getTime().getFormattedTime());
+        Logger::info(logTag + "Power Down");
     }
 }
 

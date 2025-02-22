@@ -26,6 +26,8 @@ private:
     void processEventsWhenPowerIsUp();
 
     void clearEvents();
+
+    const String logTag = "PowerChangeEventProcessor: ";
 };
 
 extern PowerChangeEventProcessor powerChangeEventProcessor;
